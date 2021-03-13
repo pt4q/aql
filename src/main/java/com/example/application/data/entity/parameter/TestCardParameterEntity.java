@@ -16,7 +16,7 @@ import javax.persistence.*;
 public class TestCardParameterEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String parameterName;
     private Integer parameterPoints;

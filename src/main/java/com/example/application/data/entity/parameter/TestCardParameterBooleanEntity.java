@@ -16,7 +16,7 @@ import java.util.List;
 public class TestCardParameterBooleanEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne(mappedBy = "testCardParameterBooleanEntity")
