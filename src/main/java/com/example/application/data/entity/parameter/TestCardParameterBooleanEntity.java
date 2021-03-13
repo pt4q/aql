@@ -16,6 +16,7 @@ import java.util.List;
 public class TestCardParameterBooleanEntity {
 
     @Id
+    @GeneratedValue
     private Long id;
 
     @OneToOne(mappedBy = "testCardParameterBooleanEntity")
