@@ -1,6 +1,5 @@
 package com.example.application.data.entity.parameter;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,17 +12,14 @@ import javax.persistence.*;
 @Builder
 @Data
 @Entity
-public class TestCardParameterEntity {
+public class TestCardParameterBooleanTemplateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String parameterName;
-    private Integer parameterPoints;
 
-    @ManyToOne
-    private TestCardParameterCategoryEntity testCardParameterCategory;
+    @OneToOne(mappedBy = "booleanParameter")
+    private TestCardParameterTemplateEntity parameter;
 
-    @OneToOne
-    private TestCardParameterBooleanEntity testCardParameterBooleanEntity;
+    private Boolean requiredValue;
 }

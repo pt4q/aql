@@ -1,26 +1,29 @@
 package com.example.application.data.entity.parameter;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
 @Entity
-public class TestCardParameterBooleanEntity {
+public class TestCardParameterTemplateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String parameterName;
+    private Integer parameterPoints;
 
-    @OneToOne(mappedBy = "testCardParameterBooleanEntity")
-    private TestCardParameterEntity testCardParameter;
+    @ManyToOne
+    private TestCardParameterCategoryTemplateEntity parameterCategory;
 
-    private Boolean requiredValue;
+    @OneToOne
+    private TestCardParameterBooleanTemplateEntity booleanParameter;
 }

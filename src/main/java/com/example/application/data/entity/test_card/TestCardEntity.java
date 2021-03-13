@@ -1,6 +1,6 @@
 package com.example.application.data.entity.test_card;
 
-import com.example.application.data.entity.parameter.TestCardParameterCategoryEntity;
+import com.example.application.data.entity.parameter.TestCardParameterCategoryTemplateEntity;
 import com.example.application.data.entity.product.ProductEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +29,6 @@ public class TestCardEntity {
     private ProductEntity product;
 
     @OneToMany(mappedBy = "testCard")
-    private Set<TestCardParameterCategoryEntity> testCardParameterCategories;
+    private Set<TestCardParameterCategoryTemplateEntity> testCardParameterCategories;
 
 }

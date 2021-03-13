@@ -14,7 +14,7 @@ import java.util.Set;
 @Builder
 @Data
 @Entity
-public class TestCardParameterCategoryEntity {
+public class TestCardParameterCategoryTemplateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +27,6 @@ public class TestCardParameterCategoryEntity {
     @ManyToOne
     private TestCardEntity testCard;
 
-    @OneToMany(mappedBy = "testCardParameterCategory")
-    private Set<TestCardParameterEntity> parameters;
+    @OneToMany(mappedBy = "parameterCategory")
+    private Set<TestCardParameterTemplateEntity> parameters;
 }
