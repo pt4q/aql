@@ -1,6 +1,6 @@
-package com.example.application.data.entity.test_card;
+package com.example.application.data.entity.test_card_associated.test_card;
 
-import com.example.application.data.entity.parameter.TestCardParameterCategoryTemplateEntity;
+import com.example.application.data.entity.test_card_associated.parameter_category.ParameterCategoryEntity;
 import com.example.application.data.entity.product.ProductEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -23,12 +24,13 @@ public class TestCardEntity {
 
     private String testCardName;
 
-    private Integer version;
+    private LocalDateTime creationTime;
+    private LocalDateTime modificationTime;
 
     @ManyToOne
     private ProductEntity product;
 
     @OneToMany(mappedBy = "testCard")
-    private Set<TestCardParameterCategoryTemplateEntity> testCardParameterCategories;
+    private Set<ParameterCategoryEntity> testCardParameterCategories;
 
 }

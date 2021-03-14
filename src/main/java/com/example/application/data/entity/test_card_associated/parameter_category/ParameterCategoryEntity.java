@@ -1,6 +1,7 @@
-package com.example.application.data.entity.parameter;
+package com.example.application.data.entity.test_card_associated.parameter_category;
 
-import com.example.application.data.entity.test_card.TestCardEntity;
+import com.example.application.data.entity.test_card_associated.parameter.ParameterEntity;
+import com.example.application.data.entity.test_card_associated.test_card.TestCardEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +15,7 @@ import java.util.Set;
 @Builder
 @Data
 @Entity
-public class TestCardParameterCategoryTemplateEntity {
+public class ParameterCategoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,5 +29,5 @@ public class TestCardParameterCategoryTemplateEntity {
     private TestCardEntity testCard;
 
     @OneToMany(mappedBy = "parameterCategory")
-    private Set<TestCardParameterTemplateEntity> parameters;
+    private Set<ParameterEntity> parameters;
 }

@@ -1,4 +1,4 @@
-package com.example.application.data.service.product;
+package com.example.application.data.service.product.exceptions;
 
 public class ProductNotFoundException extends Exception{
 

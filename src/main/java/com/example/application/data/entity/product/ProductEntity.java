@@ -1,6 +1,6 @@
 package com.example.application.data.entity.product;
 
-import com.example.application.data.entity.test_card.TestCardEntity;
+import com.example.application.data.entity.test_card_associated.test_card.TestCardEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

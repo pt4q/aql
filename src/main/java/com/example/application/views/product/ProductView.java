@@ -1,8 +1,8 @@
 package com.example.application.views.product;
 
 import com.example.application.data.entity.product.ProductEntity;
-import com.example.application.data.service.product.ProductCrudService;
-import com.example.application.data.service.product.ProductNotFoundException;
+import com.example.application.data.service.product.ProductBasicCrudService;
+import com.example.application.data.service.product.exceptions.ProductNotFoundException;
 import com.example.application.views.main.MainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasStyle;
@@ -34,7 +34,8 @@ public class ProductView extends VerticalLayout {
     public static final String route = "product";
     public static final String css = "./views/product/product-view.css";
 
-    @Autowired ProductCrudService productCrudService;
+    @Autowired
+    private ProductBasicCrudService productBasicCrudService;
 
     private Grid<ProductEntity> grid = new Grid<>(ProductEntity.class, false);
 
@@ -81,7 +82,7 @@ public class ProductView extends VerticalLayout {
                 ProductEntity productFromBackend = null;
                 // when a row is selected but the data is no longer available, refresh grid
                 try {
-                    productFromBackend = productCrudService.getByIdOrThrow(event.getValue().getId());
+                    productFromBackend = productBasicCrudService.getByIdOrThrow(event.getValue().getId());
                     populateForm(productFromBackend);
                 } catch (ProductNotFoundException ex) {
                     refreshGrid();
@@ -116,9 +117,9 @@ public class ProductView extends VerticalLayout {
                     binder.writeBean(this.product);
 
                     try {
-                        productCrudService.updateOrThrow(this.product);
+                        productBasicCrudService.updateOrThrow(this.product);
                     } catch (ProductNotFoundException productNotFoundException) {
-                        productCrudService.create(this.product);
+                        productBasicCrudService.create(this.product);
                     }
 
                     clearForm();
@@ -179,7 +180,7 @@ public class ProductView extends VerticalLayout {
     private void refreshGrid() {
         grid.select(null);
 //        grid.getDataProvider().refreshAll();
-        grid.setItems(productCrudService.getAll());
+        grid.setItems(productBasicCrudService.getAll());
     }
 
     private void clearForm() {

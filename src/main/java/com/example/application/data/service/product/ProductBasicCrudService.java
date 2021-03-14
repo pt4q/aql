@@ -1,8 +1,9 @@
 package com.example.application.data.service.product;
 
-import com.example.application.data.entity.product.ProductCrudRepository;
 import com.example.application.data.entity.product.ProductEntity;
 import com.example.application.data.service.CustomCrudServiceInterface;
+import com.example.application.data.service.product.exceptions.ProductAlreadyExistsException;
+import com.example.application.data.service.product.exceptions.ProductNotFoundException;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ProductCrudService extends CrudService<ProductEntity, Long> implements CustomCrudServiceInterface<ProductEntity, Long, ProductNotFoundException, ProductAlreadyExistsException> {
+public class ProductBasicCrudService extends CrudService<ProductEntity, Long> implements CustomCrudServiceInterface<ProductEntity, Long, ProductNotFoundException, ProductAlreadyExistsException> {
 
     @Autowired
     private ProductCrudRepository productCrudRepository;
@@ -30,7 +31,7 @@ public class ProductCrudService extends CrudService<ProductEntity, Long> impleme
         } catch (Exception ex) {
             return getRepository().save(product);
         }
-        throw new ProductAlreadyExistsException(String.format("Product %s already exists on id:$d", product.getProductNumber(), product.getId()));
+        throw new ProductAlreadyExistsException(String.format("Product %s already exists on id:%d", product.getProductNumber(), product.getId()));
     }
 
     @Override
@@ -46,7 +47,7 @@ public class ProductCrudService extends CrudService<ProductEntity, Long> impleme
             if (productEntity.isPresent())
                 return productEntity.get();
             else
-                throw new ProductNotFoundException(String.format("Product id:%d not exists", id));
+                throw new ProductNotFoundException(String.format("Product with id:%d not exists", id));
         }
         throw new ProductNotFoundException(String.format("Product id:%d", id));
     }
