@@ -1,8 +1,8 @@
-package com.example.application.views.product;
+package com.example.application.views.product_category;
 
-import com.example.application.data.entity.product.ProductEntity;
-import com.example.application.data.service.product.ProductBasicCrudService;
-import com.example.application.data.service.product.exceptions.ProductNotFoundException;
+import com.example.application.data.entity.product_category.ProductCategoryEntity;
+import com.example.application.data.service.product_category.ProductCategoryCrudService;
+import com.example.application.data.service.product_category.exceptions.ProductCategoryNotFoundException;
 import com.example.application.views.main.MainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasStyle;
@@ -24,32 +24,32 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@CssImport(ProductView.css)
-@Route(value = ProductView.route, layout = MainView.class)
+@CssImport(ProductCategoryView.css)
+@Route(value = ProductCategoryView.route, layout = MainView.class)
 //@RouteAlias(value = "", layout = MainView.class)
-@PageTitle(ProductView.pageTitle)
-public class ProductView extends VerticalLayout {
+@PageTitle(ProductCategoryView.pageTitle)
+public class ProductCategoryView extends VerticalLayout {
 
-    public static final String pageTitle = "Product";
-    public static final String route = "product";
-    public static final String css = "./views/product/product-view.css";
+    public static final String pageTitle = "Product category";
+    public static final String route = "product-category";
+    public static final String css = "./views/product_category/product-category-view.css";
 
-    private ProductBasicCrudService productBasicCrudService;
+    private ProductCategoryCrudService productCategoryCrudService;
 
-    private Grid<ProductEntity> grid = new Grid<>(ProductEntity.class, false);
+    private Grid<ProductCategoryEntity> grid = new Grid<>(ProductCategoryEntity.class, false);
 
     private TextField productName;
 
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
 
-    private BeanValidationBinder<ProductEntity> binder;
+    private BeanValidationBinder<ProductCategoryEntity> binder;
 
-    private ProductEntity product;
+    private ProductCategoryEntity product;
 
     @Autowired
-    public ProductView(ProductBasicCrudService productBasicCrudService) {
-        this.productBasicCrudService = productBasicCrudService;
+    public ProductCategoryView(ProductCategoryCrudService productCategoryCrudService) {
+        this.productCategoryCrudService = productCategoryCrudService;
         addClassName(route + "-view");
         // Create UI
         SplitLayout splitLayout = new SplitLayout();
@@ -61,8 +61,8 @@ public class ProductView extends VerticalLayout {
         add(splitLayout);
 
         // Configure Grid
-        grid.addColumn(ProductEntity::getId).setHeader("Id").setAutoWidth(true);
-        grid.addColumn(ProductEntity::getProductNumber).setHeader("Product number").setAutoWidth(true);
+        grid.addColumn(ProductCategoryEntity::getId).setHeader("Id").setAutoWidth(true);
+        grid.addColumn(ProductCategoryEntity::getProductCategoryName).setHeader("Product category").setAutoWidth(true);
 //        grid.addColumn("lastName").setAutoWidth(true);
 //        grid.addColumn("email").setAutoWidth(true);
 //        grid.addColumn("phone").setAutoWidth(true);
@@ -80,12 +80,12 @@ public class ProductView extends VerticalLayout {
         // when a row is selected or deselected, populate form
         grid.asSingleSelect().addValueChangeListener(event -> {
             if (event.getValue() != null) {
-                ProductEntity productFromBackend = null;
+                ProductCategoryEntity productFromBackend = null;
                 // when a row is selected but the data is no longer available, refresh grid
                 try {
-                    productFromBackend = productBasicCrudService.getByIdOrThrow(event.getValue().getId());
+                    productFromBackend = productCategoryCrudService.getByIdOrThrow(event.getValue().getId());
                     populateForm(productFromBackend);
-                } catch (ProductNotFoundException ex) {
+                } catch (ProductCategoryNotFoundException ex) {
                     refreshGrid();
                 }
 
@@ -96,11 +96,11 @@ public class ProductView extends VerticalLayout {
         refreshGrid();
 
         // Configure Form
-        binder = new BeanValidationBinder<>(ProductEntity.class);
+        binder = new BeanValidationBinder<>(ProductCategoryEntity.class);
 
         // Bind fields. This where you'd define e.g. validation rules
 
-        binder.forField(productName).bind(ProductEntity::getProductNumber, ProductEntity::setProductNumber);
+        binder.forField(productName).bind(ProductCategoryEntity::getProductCategoryName, ProductCategoryEntity::setProductCategoryName);
 
         cancel.addClickListener(e -> {
             clearForm();
@@ -111,17 +111,17 @@ public class ProductView extends VerticalLayout {
             if (productName.getValue() != null) {
                 try {
                     if (this.product == null) {
-                        this.product = ProductEntity
+                        this.product = ProductCategoryEntity
                                 .builder()
-                                .productNumber(productName.getValue())
+                                .productCategoryName(productName.getValue())
                                 .build();
                     }
                     binder.writeBean(this.product);
 
                     try {
-                        productBasicCrudService.updateOrThrow(this.product);
-                    } catch (ProductNotFoundException productNotFoundException) {
-                        productBasicCrudService.create(this.product);
+                        productCategoryCrudService.updateOrThrow(this.product);
+                    } catch (ProductCategoryNotFoundException productCategoryNotFoundException) {
+                        productCategoryCrudService.create(this.product);
                     }
 
                     clearForm();
@@ -182,14 +182,14 @@ public class ProductView extends VerticalLayout {
     private void refreshGrid() {
         grid.select(null);
 //        grid.getDataProvider().refreshAll();
-        grid.setItems(productBasicCrudService.getAll());
+        grid.setItems(productCategoryCrudService.getAll());
     }
 
     private void clearForm() {
         populateForm(null);
     }
 
-    private void populateForm(ProductEntity value) {
+    private void populateForm(ProductCategoryEntity value) {
         this.product = value;
         binder.readBean(this.product);
 

@@ -28,6 +28,6 @@ public class ParameterCategoryEntity {
     @ManyToOne
     private TestCardEntity testCard;
 
-    @OneToMany(mappedBy = "parameterCategory", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "parameterCategory")
     private Set<ParameterEntity> parameters;
 }

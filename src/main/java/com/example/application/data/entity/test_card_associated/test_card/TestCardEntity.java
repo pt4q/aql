@@ -1,7 +1,7 @@
 package com.example.application.data.entity.test_card_associated.test_card;
 
 import com.example.application.data.entity.test_card_associated.parameter_category.ParameterCategoryEntity;
-import com.example.application.data.entity.product.ProductEntity;
+import com.example.application.data.entity.product_category.ProductCategoryEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,8 +27,8 @@ public class TestCardEntity {
     private LocalDateTime creationTime;
     private LocalDateTime modificationTime;
 
-    @ManyToOne
-    private ProductEntity product;
+    @OneToOne
+    private ProductCategoryEntity productCategory;
 
     @OneToMany(mappedBy = "testCard")
     private Set<ParameterCategoryEntity> testCardParameterCategories;

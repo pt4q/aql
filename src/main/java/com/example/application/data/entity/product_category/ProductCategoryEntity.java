@@ -1,4 +1,4 @@
-package com.example.application.data.entity.product;
+package com.example.application.data.entity.product_category;
 
 import com.example.application.data.entity.test_card_associated.test_card.TestCardEntity;
 import lombok.AllArgsConstructor;
@@ -14,13 +14,13 @@ import java.util.List;
 @Builder
 @Data
 @Entity
-public class ProductEntity {
+public class ProductCategoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String productNumber;
+    private String productCategoryName;
 
-    @OneToMany
-    private List<TestCardEntity> testCards;
+    @OneToOne
+    private TestCardEntity testCard;
 }

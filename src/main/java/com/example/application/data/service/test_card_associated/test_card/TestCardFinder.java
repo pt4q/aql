@@ -1,6 +1,6 @@
 package com.example.application.data.service.test_card_associated.test_card;
 
-import com.example.application.data.entity.product.ProductEntity;
+import com.example.application.data.entity.product_category.ProductCategoryEntity;
 import com.example.application.data.entity.test_card_associated.test_card.TestCardEntity;
 import com.example.application.data.service.test_card_associated.test_card.exceptions.TestCardNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class TestCardFinder {
         throw new TestCardNotFoundException(String.format("Test card id:%d", id));
     }
 
-    public List<TestCardEntity> getAllTestCardsByProduct(ProductEntity product) {
-        return testCardCrudRepository.findAllByProduct(product);
+    public List<TestCardEntity> getAllTestCardsByProduct(ProductCategoryEntity product) {
+        return testCardCrudRepository.findAllByProductCategory(product);
     }
 }
