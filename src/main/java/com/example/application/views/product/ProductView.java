@@ -34,7 +34,6 @@ public class ProductView extends VerticalLayout {
     public static final String route = "product";
     public static final String css = "./views/product/product-view.css";
 
-    @Autowired
     private ProductBasicCrudService productBasicCrudService;
 
     private Grid<ProductEntity> grid = new Grid<>(ProductEntity.class, false);
@@ -48,7 +47,9 @@ public class ProductView extends VerticalLayout {
 
     private ProductEntity product;
 
-    public ProductView() {
+    @Autowired
+    public ProductView(ProductBasicCrudService productBasicCrudService) {
+        this.productBasicCrudService = productBasicCrudService;
         addClassName(route + "-view");
         // Create UI
         SplitLayout splitLayout = new SplitLayout();
@@ -92,6 +93,7 @@ public class ProductView extends VerticalLayout {
                 clearForm();
             }
         });
+        refreshGrid();
 
         // Configure Form
         binder = new BeanValidationBinder<>(ProductEntity.class);

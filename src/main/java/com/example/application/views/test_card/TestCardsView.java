@@ -1,6 +1,7 @@
 package com.example.application.views.test_card;
 
 import com.example.application.views.main.MainView;
+import com.example.application.views.test_card.test_card_creator.TestCardCreatorView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -8,17 +9,17 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-@Route(value = TestCardView.route, layout = MainView.class)
+@Route(value = TestCardsView.route, layout = MainView.class)
 //@RouteAlias(value = "", layout = MainView.class)
-@PageTitle(TestCardView.pageTitle)
-public class TestCardView extends VerticalLayout {
+@PageTitle(TestCardsView.pageTitle)
+public class TestCardsView extends VerticalLayout {
 
-    public static final String pageTitle = "Test card";
-    public static final String route = "testcard";
+    public static final String pageTitle = "Product detail";
+    public static final String route = "product-detail";
 
     private Button createTestCardButton = new Button("Create new test card for product");
 
-    public TestCardView() {
+    public TestCardsView() {
         add(buttonsLayout());
     }
 
