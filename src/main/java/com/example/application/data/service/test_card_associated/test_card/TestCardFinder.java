@@ -29,4 +29,8 @@ public class TestCardFinder {
     public List<TestCardEntity> getAllTestCardsByProduct(ProductCategoryEntity product) {
         return testCardCrudRepository.findAllByProductCategory(product);
     }
+
+    public List<TestCardEntity> getAll(){
+        return testCardCrudRepository.findAll();
+    }
 }

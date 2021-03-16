@@ -1,6 +1,8 @@
 package com.example.application.views.test_card;
 
+import com.example.application.data.entity.test_card_associated.test_card.TestCardEntity;
 import com.example.application.data.service.product_category.ProductCategoryCrudService;
+import com.example.application.data.service.test_card_associated.test_card.TestCardFinder;
 import com.example.application.views.main.MainView;
 import com.example.application.views.test_card.test_card_creator.TestCardCreatorView;
 import com.vaadin.flow.component.button.Button;
@@ -13,6 +15,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 @Route(value = TestCardsView.route, layout = MainView.class)
 //@RouteAlias(value = "", layout = MainView.class)
 @PageTitle(TestCardsView.pageTitle)
@@ -22,39 +26,35 @@ public class TestCardsView extends VerticalLayout {
     public static final String route = "test-cards";
 
     private ProductCategoryCrudService productCategoryCrudService;
+    private TestCardFinder testCardFinder;
+    private List<TestCardEntity> testCards;
 
     private Button createTestCardButton = new Button("Create new test card for product category");
-    private TextField productCategoryFiler = new TextField("Product category filter");
-    private Div testCardsDiv;
+    private ProductCategoryFilterDiv productCategoryFiler;
+    private TestCardsGridDiv testCardsDiv;
 
     @Autowired
-    public TestCardsView(ProductCategoryCrudService productCategoryCrudService) {
+    public TestCardsView(ProductCategoryCrudService productCategoryCrudService,
+                         TestCardFinder testCardFinder) {
         this.productCategoryCrudService = productCategoryCrudService;
-        this.productCategoryFiler = initTestCardsFilter();
+        this.testCardFinder = testCardFinder;
+
+        this.productCategoryFiler = new ProductCategoryFilterDiv();
         this.testCardsDiv = initTestCardGrid();
 
         add(
                 productCategoryFiler,
-                buttonsLayout()
+                testCardsDiv
         );
     }
 
-    private TextField initTestCardsFilter() {
-        productCategoryFiler.setAutofocus(true);
-        productCategoryFiler.setAutoselect(true);
-        productCategoryFiler.setRequired(true);
-        productCategoryFiler.setAutocorrect(true);
-        productCategoryFiler.setValueChangeMode(ValueChangeMode.LAZY);
-        productCategoryFiler.setValueChangeTimeout(1000);
-        productCategoryFiler.addValueChangeListener(e -> {
+    private void refreshTestCardList(){
+        this.testCards = testCardFinder.getAll();
 
-        });
-        return productCategoryFiler;
     }
 
-    private Div initTestCardGrid() {
-        return new TestCardsGridDiv()
-                .create();
+    private TestCardsGridDiv initTestCardGrid() {
+        return new TestCardsGridDiv();
     }
 
     private Div buttonsLayout() {

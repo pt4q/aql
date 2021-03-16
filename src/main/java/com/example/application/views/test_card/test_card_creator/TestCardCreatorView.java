@@ -60,7 +60,7 @@ public class TestCardCreatorView extends VerticalLayout {
     }
 
     private Div initTestCardCategoriesDiv() {
-        return new TestCardParamCategoriesDiv(this.testCardParamCategories)
+        return new TestCardParamCategoriesFactoryDiv(this.testCardParamCategories)
                 .create();
     }
 }
