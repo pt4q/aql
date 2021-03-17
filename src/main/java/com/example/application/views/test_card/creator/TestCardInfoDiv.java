@@ -1,4 +1,4 @@
-package com.example.application.views.test_card.test_card_creator;
+package com.example.application.views.test_card.creator;
 
 import com.example.application.data.entity.test_card_associated.test_card.TestCardEntity;
 import com.vaadin.flow.component.Text;

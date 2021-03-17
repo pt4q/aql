@@ -1,4 +1,4 @@
-package com.example.application.views.test_card.test_card_creator;
+package com.example.application.views.test_card.creator;
 
 import com.example.application.data.entity.test_card_associated.parameter_category.ParameterCategoryEntity;
 import com.vaadin.flow.component.accordion.Accordion;

@@ -1,4 +1,4 @@
-package com.example.application.views.test_card.test_card_creator;
+package com.example.application.views.test_card.creator;
 
 import com.vaadin.flow.component.html.Div;
 

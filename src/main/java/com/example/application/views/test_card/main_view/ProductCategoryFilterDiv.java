@@ -1,4 +1,4 @@
-package com.example.application.views.test_card;
+package com.example.application.views.test_card.main_view;
 
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.textfield.TextField;

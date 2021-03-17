@@ -1,4 +1,4 @@
-package com.example.application.views.test_card;
+package com.example.application.views.test_card.main_view;
 
 import com.example.application.data.entity.test_card_associated.test_card.TestCardEntity;
 import com.example.application.data.service.product_category.ProductCategoryCrudService;
