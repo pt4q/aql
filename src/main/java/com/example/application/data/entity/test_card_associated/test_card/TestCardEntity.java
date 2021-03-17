@@ -30,7 +30,7 @@ public class TestCardEntity {
     @OneToOne
     private ProductCategoryEntity productCategory;
 
-    @OneToMany(mappedBy = "testCard")
+    @OneToMany(mappedBy = "testCard", fetch = FetchType.EAGER)
     private Set<ParameterCategoryEntity> testCardParameterCategories;
 
 }

@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 class ProductCategoryFilterDiv extends Div {
 
-    private TextField productCategoryFiler;
+    private TextField productCategoryFiler = new TextField("Product category filter");
 
     public ProductCategoryFilterDiv() {
         initTestCardsFilter();

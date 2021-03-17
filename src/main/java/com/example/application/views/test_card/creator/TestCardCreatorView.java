@@ -5,22 +5,27 @@ import com.example.application.data.entity.test_card_associated.parameter_catego
 import com.example.application.data.entity.test_card_associated.test_card.TestCardEntity;
 import com.example.application.data.service.test_card_associated.test_card.TestCardFinder;
 import com.example.application.data.service.test_card_associated.test_card.TestCardForProductCategoryCreator;
+import com.example.application.data.service.test_card_associated.test_card.exceptions.TestCardNotFoundException;
 import com.example.application.views.main.MainView;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 
-@Route(value = TestCardCreatorView.route, layout = MainView.class)
-@PageTitle(TestCardCreatorView.pageTitle)
-public class TestCardCreatorView extends VerticalLayout {
+@Route(value = TestCardCreatorView.ROUTE, layout = MainView.class)
+@PageTitle(TestCardCreatorView.PAGE_TITLE)
+public class TestCardCreatorView extends VerticalLayout implements HasUrlParameter<String> {
 
-    public static final String pageTitle = "Test card creator";
-    public static final String route = "testcard-creator";
+    public static final String PAGE_TITLE = "Test card creator";
+    public static final String ROUTE = "testcard-creator";
+    public static final String QUERY_PARAM_ID_NAME = "testCardId";
 
     private TestCardForProductCategoryCreator testCardForProductCategoryCreator;
     private TestCardFinder testCardFinder;
@@ -62,5 +67,22 @@ public class TestCardCreatorView extends VerticalLayout {
     private Div initTestCardCategoriesDiv() {
         return new TestCardParamCategoriesFactoryDiv(this.testCardParamCategories)
                 .create();
+    }
+
+    @Override
+    public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String urlQuery) {
+        Location location = beforeEvent.getLocation();
+        QueryParameters queryParameters = location.getQueryParameters();
+        Map<String, List<String>> parametersMap = queryParameters.getParameters();
+
+        if (parametersMap.containsKey(QUERY_PARAM_ID_NAME)) {
+            try {
+                Long id = Long.valueOf(parametersMap.get(QUERY_PARAM_ID_NAME).get(0));
+                this.testCard = testCardFinder.findTestCardById(id);
+
+            } catch (TestCardNotFoundException e) {
+                Notification.show(e.getMessage());
+            }
+        }
     }
 }

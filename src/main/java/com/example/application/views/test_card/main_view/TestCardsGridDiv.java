@@ -1,33 +1,75 @@
 package com.example.application.views.test_card.main_view;
 
 import com.example.application.data.entity.test_card_associated.test_card.TestCardEntity;
-import com.example.application.data.service.product_category.ProductCategoryCrudService;
+import com.example.application.data.service.test_card_associated.test_card.TestCardFinder;
+import com.example.application.views.test_card.creator.TestCardCreatorView;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.function.ValueProvider;
-import lombok.*;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
+import lombok.Data;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-
 
 @Data
 class TestCardsGridDiv extends Div {
 
     private Grid<TestCardEntity> testCardsGrid = new Grid<>();
+    private TestCardFinder testCardFinder;
 
-    public Div create(){
+    public TestCardsGridDiv(TestCardFinder testCardFinder) {
+        this.testCardFinder = testCardFinder;
+
         initGrid();
-        add(testCardsGrid);
-        return this;
+
+        VerticalLayout gridLayout = new VerticalLayout(this.testCardsGrid);
+        gridLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+
+        setSizeFull();
+        add(gridLayout);
     }
 
-    public void refreshGrid (List<TestCardEntity> testCards){
+    private void initGrid() {
+        String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+
+        this.testCardsGrid
+                .addColumn(testCardEntity -> testCardEntity.getProductCategory().getProductCategoryName())
+                .setHeader("Product category")
+                .setSortable(true);
+        this.testCardsGrid
+                .addColumn(new ComponentRenderer<>(tc ->
+                        new Anchor(createLinkWithParam(TestCardCreatorView.ROUTE, TestCardCreatorView.QUERY_PARAM_ID_NAME, tc.getId()), tc.getTestCardName())))
+                .setHeader("Test card name")
+                .setSortable(true);
+        this.testCardsGrid
+                .addColumn(testCardEntity -> testCardEntity.getTestCardParameterCategories().size())
+                .setHeader("Number of param categories")
+                .setSortable(true);
+        this.testCardsGrid
+                .addColumn(testCardEntity ->
+                        testCardEntity.getCreationTime() != null ? testCardEntity.getCreationTime().format(DateTimeFormatter.ofPattern(dateTimeFormat)) : null)
+                .setHeader("Creation time")
+                .setSortable(true);
+        this.testCardsGrid
+                .addColumn(testCardEntity ->
+                testCardEntity.getModificationTime() != null ? testCardEntity.getModificationTime().format(DateTimeFormatter.ofPattern(dateTimeFormat)) : null)
+                .setHeader("Modification time")
+                .setSortable(true);
+
+        this.testCardsGrid.setWidthFull();
+        this.testCardsGrid.setHeightByRows(true);
+        this.refreshGrid(testCardFinder.getAll());
+    }
+
+    private String createLinkWithParam(String url, String paramName, Long id) {
+        return url + "?" + paramName + "=" + id.toString();
+    }
+
+    public void refreshGrid(List<TestCardEntity> testCards) {
         this.testCardsGrid.select(null);
         this.testCardsGrid.setItems(testCards);
-    }
-
-    private void initGrid(){
-        this.testCardsGrid.addColumn(testCardEntity -> testCardEntity.getProductCategory().getProductCategoryName());
-        this.testCardsGrid.addColumn(TestCardEntity::getTestCardName);
     }
 }
