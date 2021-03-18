@@ -2,9 +2,8 @@ package com.example.application.views.main;
 
 import java.util.Optional;
 
-import com.example.application.data.entity.product.ProductEntity;
-import com.example.application.views.product.ProductView;
-import com.example.application.views.test_card.TestCardView;
+import com.example.application.views.product_category.ProductCategoryView;
+import com.example.application.views.test_card.main_view.TestCardsMainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -22,10 +21,7 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
-import com.vaadin.flow.theme.Theme;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
-import com.example.application.views.main.MainView;
 import com.example.application.views.helloworld.HelloWorldView;
 import com.example.application.views.about.AboutView;
 import com.example.application.views.personform.PersonFormView;
@@ -90,12 +86,12 @@ public class MainView extends AppLayout {
 
     private Component[] createMenuItems() {
         return new Tab[]{
-                createTab("Hello World", HelloWorldView.class),
-                createTab("About", AboutView.class),
-                createTab("Person Form", PersonFormView.class),
-                createTab("Master-Detail", MasterDetailView.class),
-                createTab(ProductView.pageTitle, ProductView.class),
-                createTab(TestCardView.pageTitle, TestCardView.class)};
+//                createTab("Hello World", HelloWorldView.class),
+//                createTab("About", AboutView.class),
+//                createTab("Person Form", PersonFormView.class),
+//                createTab("Master-Detail", MasterDetailView.class),
+                createTab(ProductCategoryView.pageTitle, ProductCategoryView.class),
+                createTab(TestCardsMainView.pageTitle, TestCardsMainView.class)};
     }
 
     private static Tab createTab(String text, Class<? extends Component> navigationTarget) {
