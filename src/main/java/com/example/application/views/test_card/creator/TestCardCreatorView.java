@@ -14,7 +14,6 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 
-import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -39,14 +38,18 @@ public class TestCardCreatorView extends VerticalLayout implements HasUrlParamet
 
     public TestCardCreatorView(TestCardFinder testCardFinder,
                                TestCardForProductCategoryCreator testCardForProductCategoryCreator) {
+        setId(ROUTE);
+
         this.testCardFinder = testCardFinder;
         this.testCardForProductCategoryCreator = testCardForProductCategoryCreator;
         this.productCategoryEntity = loadProductFromContext();
         this.testCard = initEmptyTestCardForProduct();
-        this.testCardInfoDiv = initTestCardInfoDiv();
-        this.testCardCategoriesDiv = initTestCardCategoriesDiv();
+        this.testCardInfoDiv = new TestCardInfoDiv(this.testCard);
+        this.testCardCategoriesDiv = new TestCardParamCategoriesFactoryDiv(this.testCardParamCategories).create();
 
         add(testCardInfoDiv, testCardCategoriesDiv);
+        setAlignItems(Alignment.CENTER);
+        setWidth("80%");
     }
 
     private TestCardEntity initEmptyTestCardForProduct() {
@@ -57,16 +60,6 @@ public class TestCardCreatorView extends VerticalLayout implements HasUrlParamet
 
     private ProductCategoryEntity loadProductFromContext() {
         return ComponentUtil.getData(UI.getCurrent(), ProductCategoryEntity.class);
-    }
-
-    private Div initTestCardInfoDiv() {
-        return new TestCardInfoDiv(this.testCard)
-                .create();
-    }
-
-    private Div initTestCardCategoriesDiv() {
-        return new TestCardParamCategoriesFactoryDiv(this.testCardParamCategories)
-                .create();
     }
 
     @Override

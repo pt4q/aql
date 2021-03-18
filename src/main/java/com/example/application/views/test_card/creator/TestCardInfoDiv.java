@@ -3,7 +3,9 @@ package com.example.application.views.test_card.creator;
 import com.example.application.data.entity.test_card_associated.test_card.TestCardEntity;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import lombok.Data;
@@ -12,43 +14,60 @@ import lombok.Data;
 class TestCardInfoDiv extends Div {
 
     private TextField testCardNameTextField = new TextField("Test card name");
-    private Text creationTimeText;
-    private Text modificationTimeText;
+    private TextField creationTimeText = new TextField("Creation time:");
+    private TextField modificationTimeText = new TextField("Modification time:");
 
     private TestCardEntity testCard;
 
     public TestCardInfoDiv(TestCardEntity testCard) {
         this.testCard = testCard;
+
+        initTestCardNameTextField();
+
+        if (testCard != null){
+            initCreationTimeField();
+            initModificationTimeField();
+        }
+
+        VerticalLayout divLayout = new VerticalLayout();
+
+        HorizontalLayout timeInfoInHorizontal = new HorizontalLayout(creationTimeText, modificationTimeText);
+
+        divLayout.add(testCardNameTextField, timeInfoInHorizontal);
+        divLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+        divLayout.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
+
+        add(divLayout);
+        setWidthFull();
     }
 
-    public Div create() {
-        HorizontalLayout hl = new HorizontalLayout();
+    private void initTestCardNameTextField() {
+//        this.testCardNameTextField.setAutofocus(true);
+//        this.testCardNameTextField.setAutoselect(true);
+        this.testCardNameTextField.setRequired(true);
+        this.testCardNameTextField.setAutocorrect(true);
+        this.testCardNameTextField.setValueChangeMode(ValueChangeMode.LAZY);
+        this.testCardNameTextField.setValueChangeTimeout(1000);
+        this.testCardNameTextField.setWidthFull();
 
-        testCardNameTextField.setAutofocus(true);
-        testCardNameTextField.setAutoselect(true);
-        testCardNameTextField.setRequired(true);
-        testCardNameTextField.setAutocorrect(true);
-        testCardNameTextField.setValueChangeMode(ValueChangeMode.LAZY);
-        testCardNameTextField.setValueChangeTimeout(1000);
-        testCardNameTextField.addValueChangeListener(e -> {
+        this.testCardNameTextField.addValueChangeListener(e -> {
             String testCardName = testCardNameTextField.getValue();
             if (!testCardName.isEmpty())
                 this.testCard.setTestCardName(testCardName);
         });
-        hl.add(testCardNameTextField);
+    }
 
-        if (testCard != null) {
-            if (testCard.getCreationTime() != null) {
-                this.creationTimeText = new Text(String.format("Creation time: %s", testCard.getCreationTime()));
-                hl.add(creationTimeText);
-            }
-            if (testCard.getModificationTime() != null) {
-                this.modificationTimeText = new Text(String.format("Modification time: %s", testCard.getCreationTime()));
-                hl.add(modificationTimeText);
-            }
+    private void initCreationTimeField () {
+        if (testCard.getCreationTime() != null) {
+            this.creationTimeText.setValue(String.format("Creation time: %s", testCard.getCreationTime()));
         }
-        add(hl);
-        return this;
+        this.creationTimeText.setReadOnly(true);
+    }
+    private void initModificationTimeField (){
+            if (testCard.getModificationTime() != null) {
+                this.modificationTimeText.setValue(String.format("Modification time: %s", testCard.getCreationTime()));
+            }
+            this.modificationTimeText.setReadOnly(true);
     }
 
 }
