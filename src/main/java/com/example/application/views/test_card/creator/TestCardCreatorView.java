@@ -49,7 +49,7 @@ public class TestCardCreatorView extends VerticalLayout implements HasUrlParamet
         this.productCategoryEntity = loadProductFromContext();
         this.testCard = initEmptyTestCardForProduct();
         this.testCardInfoDiv = new TestCardInfoDiv(this.testCard, productCategoryCrudService);
-        this.testCardCategoriesDiv = new TestCardParamCategoriesFactoryDiv(this.testCardParamCategories).create();
+        this.testCardCategoriesDiv = new TestCardPartFactoryDiv();
 
         add(testCardInfoDiv, testCardCategoriesDiv);
         setAlignItems(Alignment.CENTER);
