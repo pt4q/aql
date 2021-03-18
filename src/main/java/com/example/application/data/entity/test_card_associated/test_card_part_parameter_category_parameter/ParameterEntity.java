@@ -1,8 +1,8 @@
-package com.example.application.data.entity.test_card_associated.parameter;
+package com.example.application.data.entity.test_card_associated.test_card_part_parameter_category_parameter;
 
 
-import com.example.application.data.entity.test_card_associated.parameter.parameter_types.BooleanParameterTemplateEntity;
-import com.example.application.data.entity.test_card_associated.parameter_category.ParameterCategoryEntity;
+import com.example.application.data.entity.test_card_associated.test_card_part_parameter_category_parameter.parameter_types.BooleanParameterTemplateEntity;
+import com.example.application.data.entity.test_card_associated.test_card_part_parameter_category.ParameterCategoryEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

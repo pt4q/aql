@@ -45,7 +45,7 @@ class TestCardsGridDiv extends Div {
                 .setHeader("Test card name")
                 .setSortable(true);
         this.testCardsGrid
-                .addColumn(testCardEntity -> testCardEntity.getTestCardParameterCategories().size())
+                .addColumn(testCardEntity -> testCardEntity.getTestCardParts().size())
                 .setHeader("Number of param categories")
                 .setSortable(true);
         this.testCardsGrid

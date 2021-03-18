@@ -1,6 +1,6 @@
-package com.example.application.data.entity.test_card_associated.parameter.parameter_types;
+package com.example.application.data.entity.test_card_associated.test_card_part_parameter_category_parameter.parameter_types;
 
-import com.example.application.data.entity.test_card_associated.parameter.ParameterEntity;
+import com.example.application.data.entity.test_card_associated.test_card_part_parameter_category_parameter.ParameterEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

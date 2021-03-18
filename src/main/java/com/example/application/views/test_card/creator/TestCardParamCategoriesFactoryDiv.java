@@ -1,6 +1,6 @@
 package com.example.application.views.test_card.creator;
 
-import com.example.application.data.entity.test_card_associated.parameter_category.ParameterCategoryEntity;
+import com.example.application.data.entity.test_card_associated.test_card_part_parameter_category.ParameterCategoryEntity;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.details.DetailsVariant;

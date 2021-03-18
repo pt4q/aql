@@ -1,8 +1,9 @@
 package com.example.application.views.test_card.creator;
 
 import com.example.application.data.entity.product_category.ProductCategoryEntity;
-import com.example.application.data.entity.test_card_associated.parameter_category.ParameterCategoryEntity;
 import com.example.application.data.entity.test_card_associated.test_card.TestCardEntity;
+import com.example.application.data.entity.test_card_associated.test_card_part_parameter_category.ParameterCategoryEntity;
+import com.example.application.data.service.product_category.ProductCategoryCrudService;
 import com.example.application.data.service.test_card_associated.test_card.TestCardFinder;
 import com.example.application.data.service.test_card_associated.test_card.TestCardForProductCategoryCreator;
 import com.example.application.data.service.test_card_associated.test_card.exceptions.TestCardNotFoundException;
@@ -26,6 +27,7 @@ public class TestCardCreatorView extends VerticalLayout implements HasUrlParamet
     public static final String ROUTE = "testcard-creator";
     public static final String QUERY_PARAM_ID_NAME = "testCardId";
 
+    private ProductCategoryCrudService productCategoryCrudService;
     private TestCardForProductCategoryCreator testCardForProductCategoryCreator;
     private TestCardFinder testCardFinder;
 
@@ -36,15 +38,17 @@ public class TestCardCreatorView extends VerticalLayout implements HasUrlParamet
     private Div testCardInfoDiv;
     private Div testCardCategoriesDiv;
 
-    public TestCardCreatorView(TestCardFinder testCardFinder,
+    public TestCardCreatorView(ProductCategoryCrudService productCategoryCrudService,
+                               TestCardFinder testCardFinder,
                                TestCardForProductCategoryCreator testCardForProductCategoryCreator) {
         setId(ROUTE);
 
+        this.productCategoryCrudService = productCategoryCrudService;
         this.testCardFinder = testCardFinder;
         this.testCardForProductCategoryCreator = testCardForProductCategoryCreator;
         this.productCategoryEntity = loadProductFromContext();
         this.testCard = initEmptyTestCardForProduct();
-        this.testCardInfoDiv = new TestCardInfoDiv(this.testCard);
+        this.testCardInfoDiv = new TestCardInfoDiv(this.testCard, productCategoryCrudService);
         this.testCardCategoriesDiv = new TestCardParamCategoriesFactoryDiv(this.testCardParamCategories).create();
 
         add(testCardInfoDiv, testCardCategoriesDiv);
@@ -52,14 +56,14 @@ public class TestCardCreatorView extends VerticalLayout implements HasUrlParamet
         setWidth("80%");
     }
 
+    private ProductCategoryEntity loadProductFromContext() {
+        return ComponentUtil.getData(UI.getCurrent(), ProductCategoryEntity.class);
+    }
+
     private TestCardEntity initEmptyTestCardForProduct() {
         return TestCardEntity.builder()
                 .productCategory(productCategoryEntity != null ? productCategoryEntity : null)
                 .build();
-    }
-
-    private ProductCategoryEntity loadProductFromContext() {
-        return ComponentUtil.getData(UI.getCurrent(), ProductCategoryEntity.class);
     }
 
     @Override

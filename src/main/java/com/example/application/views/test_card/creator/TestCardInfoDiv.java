@@ -1,7 +1,9 @@
 package com.example.application.views.test_card.creator;
 
+import com.example.application.data.entity.product_category.ProductCategoryEntity;
 import com.example.application.data.entity.test_card_associated.test_card.TestCardEntity;
-import com.vaadin.flow.component.Text;
+import com.example.application.data.service.product_category.ProductCategoryCrudService;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -10,35 +12,53 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import lombok.Data;
 
+import java.util.stream.Collectors;
+
 @Data
 class TestCardInfoDiv extends Div {
 
+    private ComboBox<String> productCategoryComboBox = new ComboBox<>("Product category");
     private TextField testCardNameTextField = new TextField("Test card name");
     private TextField creationTimeText = new TextField("Creation time:");
     private TextField modificationTimeText = new TextField("Modification time:");
 
+    private ProductCategoryCrudService productCategoryCrudService;
     private TestCardEntity testCard;
 
-    public TestCardInfoDiv(TestCardEntity testCard) {
+    public TestCardInfoDiv(TestCardEntity testCard, ProductCategoryCrudService productCategoryCrudService) {
         this.testCard = testCard;
+        this.productCategoryCrudService = productCategoryCrudService;
 
+        initProductCategoryComboBox();
         initTestCardNameTextField();
 
-        if (testCard != null){
+        if (testCard != null) {
             initCreationTimeField();
             initModificationTimeField();
         }
 
         VerticalLayout divLayout = new VerticalLayout();
-
+        HorizontalLayout productCategoryAndTestCardNameLayout = new HorizontalLayout(productCategoryComboBox, testCardNameTextField);
+        productCategoryAndTestCardNameLayout.setSizeFull();
         HorizontalLayout timeInfoInHorizontal = new HorizontalLayout(creationTimeText, modificationTimeText);
 
-        divLayout.add(testCardNameTextField, timeInfoInHorizontal);
+        divLayout.add(productCategoryAndTestCardNameLayout, timeInfoInHorizontal);
         divLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         divLayout.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
 
         add(divLayout);
         setWidthFull();
+    }
+
+    private void initProductCategoryComboBox() {
+        this.productCategoryComboBox
+                .setItems(productCategoryCrudService.getAll()
+                        .stream()
+                        .map(ProductCategoryEntity::getProductCategoryName)
+                        .collect(Collectors.toList()));
+        this.productCategoryComboBox.setRequired(true);
+        this.productCategoryComboBox.setWidth("20%");
+        this.productCategoryComboBox.setMinWidth("20%");
     }
 
     private void initTestCardNameTextField() {
@@ -57,17 +77,18 @@ class TestCardInfoDiv extends Div {
         });
     }
 
-    private void initCreationTimeField () {
+    private void initCreationTimeField() {
         if (testCard.getCreationTime() != null) {
             this.creationTimeText.setValue(String.format("Creation time: %s", testCard.getCreationTime()));
         }
         this.creationTimeText.setReadOnly(true);
     }
-    private void initModificationTimeField (){
-            if (testCard.getModificationTime() != null) {
-                this.modificationTimeText.setValue(String.format("Modification time: %s", testCard.getCreationTime()));
-            }
-            this.modificationTimeText.setReadOnly(true);
+
+    private void initModificationTimeField() {
+        if (testCard.getModificationTime() != null) {
+            this.modificationTimeText.setValue(String.format("Modification time: %s", testCard.getCreationTime()));
+        }
+        this.modificationTimeText.setReadOnly(true);
     }
 
 }
