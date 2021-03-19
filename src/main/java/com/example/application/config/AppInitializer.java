@@ -26,6 +26,12 @@ public class AppInitializer implements CommandLineRunner {
                         .build());
         log.info(String.format("TEST INIT: Created product category: %s (id:%d)", productCategoryEntity.getProductCategoryName(), productCategoryEntity.getId()));
 
+        ProductCategoryEntity productCategoryEntity2 = productCategoryCrudService
+                .create(ProductCategoryEntity.builder()
+                        .productCategoryName("Młotowiertarki TEST")
+                        .build());
+        log.info(String.format("TEST INIT: Created product category: %s (id:%d)", productCategoryEntity2.getProductCategoryName(), productCategoryEntity2.getId()));
+
         TestCardEntity testCardEntity = cardForProductCreator
                 .createEmptyTestCardForProduct(TestCardEntity.builder()
                         .productCategory(productCategoryEntity)

@@ -1,4 +1,4 @@
-package com.example.application.views.test_card.creator;
+package com.example.application.views.test_card.test_card_creator;
 
 import com.example.application.data.entity.product_category.ProductCategoryEntity;
 import com.example.application.data.entity.test_card_associated.test_card.TestCardEntity;

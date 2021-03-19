@@ -2,7 +2,7 @@ package com.example.application.views.test_card.main_view;
 
 import com.example.application.data.entity.test_card_associated.test_card.TestCardEntity;
 import com.example.application.data.service.test_card_associated.test_card.TestCardFinder;
-import com.example.application.views.test_card.creator.TestCardCreatorView;
+import com.example.application.views.test_card.test_card_creator.TestCardCreatorView;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;

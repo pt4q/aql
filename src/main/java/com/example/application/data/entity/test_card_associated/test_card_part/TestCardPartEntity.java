@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -21,6 +22,10 @@ public class TestCardPartEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String testCardPartName;
+    private Integer testCardPartNumber;
+
+    private LocalDateTime creationTime;
+    private LocalDateTime modificationTime;
 
     @ManyToOne
     private TestCardEntity testCard;

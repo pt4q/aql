@@ -1,4 +1,4 @@
-package com.example.application.views.test_card.creator;
+package com.example.application.views.test_card.test_card_creator;
 
 import com.example.application.data.entity.product_category.ProductCategoryEntity;
 import com.example.application.data.entity.test_card_associated.test_card.TestCardEntity;
@@ -49,7 +49,7 @@ public class TestCardCreatorView extends VerticalLayout implements HasUrlParamet
         this.productCategoryEntity = loadProductFromContext();
         this.testCard = initEmptyTestCardForProduct();
         this.testCardInfoDiv = new TestCardInfoDiv(this.testCard, productCategoryCrudService);
-        this.testCardCategoriesDiv = new TestCardPartFactoryDiv();
+        this.testCardCategoriesDiv = new TestCardPartsDiv(this.testCard);
 
         add(testCardInfoDiv, testCardCategoriesDiv);
         setAlignItems(Alignment.CENTER);
@@ -62,6 +62,7 @@ public class TestCardCreatorView extends VerticalLayout implements HasUrlParamet
 
     private TestCardEntity initEmptyTestCardForProduct() {
         return TestCardEntity.builder()
+                .testCardName("New empty test card")
                 .productCategory(productCategoryEntity != null ? productCategoryEntity : null)
                 .build();
     }
