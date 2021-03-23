@@ -17,7 +17,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Data
-class TestCardPartsDiv extends Div {
+class TestCardPartsGridDiv extends Div {
 
     private Grid<TestCardPartEntity> testCardPartEntityGrid = new Grid<>();
     private AddNewTestCardPartToGridDiv addNewTestCardPartToGridDiv;
@@ -25,7 +25,7 @@ class TestCardPartsDiv extends Div {
     private TestCardEntity testCardEntity;
     private LinkedHashSet<ParameterCategoryEntity> testCardCategories;
 
-    public TestCardPartsDiv(TestCardEntity testCardEntity) {
+    public TestCardPartsGridDiv(TestCardEntity testCardEntity) {
         this.testCardEntity = testCardEntity;
         this.addNewTestCardPartToGridDiv = new AddNewTestCardPartToGridDiv(this.testCardEntity, testCardPartEntityGrid);
         initTestCardPartsGrid();
@@ -43,7 +43,7 @@ class TestCardPartsDiv extends Div {
                         new Anchor(createLinkWithParam(TestCardPartCreatorView.ROUTE, TestCardPartCreatorView.QUERY_PARAM_ID_NAME, tcpe.getId()), tcpe.getTestCardPartName())))
                 .setHeader("Test card part name");
         this.testCardPartEntityGrid
-                .addColumn(TestCardPartEntity::getTestCardPartName)
+                .addColumn(tcpe -> tcpe.getTestCardParameterCategories() != null ? tcpe.getTestCardParameterCategories().size() : null)
                 .setHeader("Number of param category");
         this.testCardPartEntityGrid
                 .addColumn(testCardPartEntity ->

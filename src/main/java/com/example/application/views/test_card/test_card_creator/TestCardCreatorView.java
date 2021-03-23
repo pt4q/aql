@@ -31,7 +31,6 @@ public class TestCardCreatorView extends VerticalLayout implements HasUrlParamet
     private TestCardForProductCategoryCreator testCardForProductCategoryCreator;
     private TestCardFinder testCardFinder;
 
-    private ProductCategoryEntity productCategoryEntity;
     private TestCardEntity testCard;
     private LinkedHashSet<ParameterCategoryEntity> testCardParamCategories;
 
@@ -46,24 +45,26 @@ public class TestCardCreatorView extends VerticalLayout implements HasUrlParamet
         this.productCategoryCrudService = productCategoryCrudService;
         this.testCardFinder = testCardFinder;
         this.testCardForProductCategoryCreator = testCardForProductCategoryCreator;
-        this.productCategoryEntity = loadProductFromContext();
-        this.testCard = initEmptyTestCardForProduct();
+//        this.productCategoryEntity = loadProductFromContext();
+        this.testCard = getTestCardFromContext();
         this.testCardInfoDiv = new TestCardInfoDiv(this.testCard, productCategoryCrudService);
-        this.testCardCategoriesDiv = new TestCardPartsDiv(this.testCard);
+        this.testCardCategoriesDiv = new TestCardPartsGridDiv(this.testCard);
 
         add(testCardInfoDiv, testCardCategoriesDiv);
         setAlignItems(Alignment.CENTER);
         setWidth("80%");
     }
 
-    private ProductCategoryEntity loadProductFromContext() {
+    private ProductCategoryEntity getProductFromContext() {
         return ComponentUtil.getData(UI.getCurrent(), ProductCategoryEntity.class);
     }
 
-    private TestCardEntity initEmptyTestCardForProduct() {
-        return TestCardEntity.builder()
+    private TestCardEntity getTestCardFromContext() {
+        TestCardEntity testCardEntity = ComponentUtil.getData(UI.getCurrent(), TestCardEntity.class);
+        return testCardEntity != null ? testCardEntity : TestCardEntity
+                .builder()
                 .testCardName("New empty test card")
-                .productCategory(productCategoryEntity != null ? productCategoryEntity : null)
+                .productCategory(getProductFromContext())
                 .build();
     }
 

@@ -24,11 +24,13 @@ class AddNewTestCardPartToGridDiv extends Div {
     private Grid<TestCardPartEntity> testCardPartEntityGrid;
 
     private TestCardEntity testCardEntity;
+    private Set<TestCardPartEntity> testCardPartSet;
 
     public AddNewTestCardPartToGridDiv(TestCardEntity testCardEntity, Grid<TestCardPartEntity> testCardPartEntityGrid) {
         this.testCardEntity = testCardEntity;
         this.testCardPartEntityGrid = testCardPartEntityGrid;
 
+        this.testCardPartSet = initTestCardPartsSet();
         initAddNewTestCardPartButton();
 
         HorizontalLayout layout = new HorizontalLayout(testCardPartToAddLabel, testCardPartToAddComboBox, addNewTestCardPartButton);
@@ -37,24 +39,21 @@ class AddNewTestCardPartToGridDiv extends Div {
         add(layout);
     }
 
+    private Set<TestCardPartEntity> initTestCardPartsSet() {
+        Set<TestCardPartEntity> testCardParts = this.testCardEntity.getTestCardParts();
+        return testCardParts != null ? testCardParts : new LinkedHashSet<>();
+    }
+
     private void initAddNewTestCardPartButton() {
         this.addNewTestCardPartButton.addClickListener(e -> {
-            Set<TestCardPartEntity> testCardPartSet = this.testCardEntity.getTestCardParts();
-
-            if (testCardPartSet == null)
-                testCardPartSet = new LinkedHashSet<>();
-
-            String testCardPartName = "new test card part name";
             TestCardPartEntity testCardPartEntity = TestCardPartEntity
                     .builder()
                     .testCard(testCardEntity)
-                    .testCardPartName(testCardPartName)
+                    .testCardPartName("new test card part name")
                     .build();
 
-            testCardPartSet.add(testCardPartEntity);
-//            this.testCardEntity.setTestCardParts(testCardPartSet);
-
-            refreshGrid(testCardPartSet);
+            this.testCardPartSet.add(testCardPartEntity);
+            refreshGrid(this.testCardPartSet);
         });
     }
 
