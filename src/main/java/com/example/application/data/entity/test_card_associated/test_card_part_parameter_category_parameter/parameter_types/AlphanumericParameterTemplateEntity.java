@@ -7,22 +7,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
 @Entity
-public class BooleanParameterTemplateEntity {
+public class AlphanumericParameterTemplateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "booleanParameter")
+    @OneToOne(mappedBy = "alphanumericParameter")
     private ParameterEntity parameter;
 
-    private Boolean requiredValue;
-
-    private Integer points;
+    @OneToMany(fetch = FetchType.EAGER)
+    private Set<AlphanumericPossibleRequiredValue> alphanumericPossibleRequiredValues;
 }

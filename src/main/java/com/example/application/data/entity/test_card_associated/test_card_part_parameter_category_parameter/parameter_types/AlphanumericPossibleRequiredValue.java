@@ -1,6 +1,5 @@
 package com.example.application.data.entity.test_card_associated.test_card_part_parameter_category_parameter.parameter_types;
 
-import com.example.application.data.entity.test_card_associated.test_card_part_parameter_category_parameter.ParameterEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,16 +12,16 @@ import javax.persistence.*;
 @Builder
 @Data
 @Entity
-public class BooleanParameterTemplateEntity {
+public class AlphanumericPossibleRequiredValue {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "booleanParameter")
-    private ParameterEntity parameter;
+    @ManyToOne
+    private AlphanumericParameterTemplateEntity alphanumericParameterTemplateEntity;
 
-    private Boolean requiredValue;
+    private String requiredValue;
 
     private Integer points;
 }

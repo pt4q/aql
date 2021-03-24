@@ -26,6 +26,9 @@ public class TestCardPartCreatorView extends VerticalLayout implements HasUrlPar
     private TestCardPartEntity testCardPartEntity;
     private Set<ParameterEntity> testCardPartParameters;
 
+
+
+
     @Override
     public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String urlQuery) {
         Location location = beforeEvent.getLocation();
@@ -34,7 +37,7 @@ public class TestCardPartCreatorView extends VerticalLayout implements HasUrlPar
 
         if (parametersMap.containsKey(QUERY_PARAM_ID_NAME)) {
             String paramValueString = parametersMap.get(QUERY_PARAM_ID_NAME).get(0);
-            Long id = Long.valueOf(paramValueString);
+//            Long id = Long.valueOf(paramValueString);
 
         }
     }

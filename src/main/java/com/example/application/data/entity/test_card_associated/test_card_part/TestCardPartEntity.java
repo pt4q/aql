@@ -22,7 +22,7 @@ public class TestCardPartEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String testCardPartName;
-    private Integer testCardPartNumber;
+//    private Integer testCardPartNumber;
 
     private LocalDateTime creationTime;
     private LocalDateTime modificationTime;
