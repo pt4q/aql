@@ -1,7 +1,7 @@
-package com.example.application.data.entity.test_card_associated.parameter_category;
+package com.example.application.data.entity.test_card_associated.test_card_part_parameter_category;
 
-import com.example.application.data.entity.test_card_associated.parameter.ParameterEntity;
-import com.example.application.data.entity.test_card_associated.test_card.TestCardEntity;
+import com.example.application.data.entity.test_card_associated.test_card_part_parameter_category_parameter.ParameterEntity;
+import com.example.application.data.entity.test_card_associated.test_card_part.TestCardPartEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,8 +26,8 @@ public class ParameterCategoryEntity {
     private Integer parameterCategoryPoints;
 
     @ManyToOne
-    private TestCardEntity testCard;
+    private TestCardPartEntity testCardPart;
 
-    @OneToMany(mappedBy = "parameterCategory")
+    @OneToMany(mappedBy = "parameterCategory", fetch = FetchType.EAGER)
     private Set<ParameterEntity> parameters;
 }

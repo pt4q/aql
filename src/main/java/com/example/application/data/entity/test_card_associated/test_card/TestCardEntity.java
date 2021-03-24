@@ -1,7 +1,7 @@
 package com.example.application.data.entity.test_card_associated.test_card;
 
-import com.example.application.data.entity.test_card_associated.parameter_category.ParameterCategoryEntity;
 import com.example.application.data.entity.product_category.ProductCategoryEntity;
+import com.example.application.data.entity.test_card_associated.test_card_part.TestCardPartEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +23,7 @@ public class TestCardEntity {
     private Long id;
 
     private String testCardName;
+    private Integer points = 100;
 
     private LocalDateTime creationTime;
     private LocalDateTime modificationTime;
@@ -31,6 +32,6 @@ public class TestCardEntity {
     private ProductCategoryEntity productCategory;
 
     @OneToMany(mappedBy = "testCard", fetch = FetchType.EAGER)
-    private Set<ParameterCategoryEntity> testCardParameterCategories;
+    private Set<TestCardPartEntity> testCardParts;
 
 }

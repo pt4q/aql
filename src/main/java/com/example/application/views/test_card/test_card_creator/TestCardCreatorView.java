@@ -1,8 +1,9 @@
-package com.example.application.views.test_card.creator;
+package com.example.application.views.test_card.test_card_creator;
 
 import com.example.application.data.entity.product_category.ProductCategoryEntity;
-import com.example.application.data.entity.test_card_associated.parameter_category.ParameterCategoryEntity;
 import com.example.application.data.entity.test_card_associated.test_card.TestCardEntity;
+import com.example.application.data.entity.test_card_associated.test_card_part_parameter_category.ParameterCategoryEntity;
+import com.example.application.data.service.product_category.ProductCategoryCrudService;
 import com.example.application.data.service.test_card_associated.test_card.TestCardFinder;
 import com.example.application.data.service.test_card_associated.test_card.TestCardForProductCategoryCreator;
 import com.example.application.data.service.test_card_associated.test_card.exceptions.TestCardNotFoundException;
@@ -14,7 +15,6 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 
-import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -27,46 +27,45 @@ public class TestCardCreatorView extends VerticalLayout implements HasUrlParamet
     public static final String ROUTE = "testcard-creator";
     public static final String QUERY_PARAM_ID_NAME = "testCardId";
 
+    private ProductCategoryCrudService productCategoryCrudService;
     private TestCardForProductCategoryCreator testCardForProductCategoryCreator;
     private TestCardFinder testCardFinder;
 
-    private ProductCategoryEntity productCategoryEntity;
     private TestCardEntity testCard;
     private LinkedHashSet<ParameterCategoryEntity> testCardParamCategories;
 
     private Div testCardInfoDiv;
     private Div testCardCategoriesDiv;
 
-    public TestCardCreatorView(TestCardFinder testCardFinder,
+    public TestCardCreatorView(ProductCategoryCrudService productCategoryCrudService,
+                               TestCardFinder testCardFinder,
                                TestCardForProductCategoryCreator testCardForProductCategoryCreator) {
+        setId(ROUTE);
+
+        this.productCategoryCrudService = productCategoryCrudService;
         this.testCardFinder = testCardFinder;
         this.testCardForProductCategoryCreator = testCardForProductCategoryCreator;
-        this.productCategoryEntity = loadProductFromContext();
-        this.testCard = initEmptyTestCardForProduct();
-        this.testCardInfoDiv = initTestCardInfoDiv();
-        this.testCardCategoriesDiv = initTestCardCategoriesDiv();
+//        this.productCategoryEntity = loadProductFromContext();
+        this.testCard = getTestCardFromContext();
+        this.testCardInfoDiv = new TestCardInfoDiv(this.testCard, productCategoryCrudService);
+        this.testCardCategoriesDiv = new TestCardPartsGridDiv(this.testCard);
 
         add(testCardInfoDiv, testCardCategoriesDiv);
+        setAlignItems(Alignment.CENTER);
+        setWidth("80%");
     }
 
-    private TestCardEntity initEmptyTestCardForProduct() {
-        return TestCardEntity.builder()
-                .productCategory(productCategoryEntity != null ? productCategoryEntity : null)
-                .build();
-    }
-
-    private ProductCategoryEntity loadProductFromContext() {
+    private ProductCategoryEntity getProductFromContext() {
         return ComponentUtil.getData(UI.getCurrent(), ProductCategoryEntity.class);
     }
 
-    private Div initTestCardInfoDiv() {
-        return new TestCardInfoDiv(this.testCard)
-                .create();
-    }
-
-    private Div initTestCardCategoriesDiv() {
-        return new TestCardParamCategoriesFactoryDiv(this.testCardParamCategories)
-                .create();
+    private TestCardEntity getTestCardFromContext() {
+        TestCardEntity testCardEntity = ComponentUtil.getData(UI.getCurrent(), TestCardEntity.class);
+        return testCardEntity != null ? testCardEntity : TestCardEntity
+                .builder()
+                .testCardName("New empty test card")
+                .productCategory(getProductFromContext())
+                .build();
     }
 
     @Override
