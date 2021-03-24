@@ -62,8 +62,8 @@ class TestCardInfoDiv extends Div {
     }
 
     private void initTestCardNameTextField() {
-//        this.testCardNameTextField.setAutofocus(true);
-//        this.testCardNameTextField.setAutoselect(true);
+        this.testCardNameTextField.setAutofocus(true);
+        this.testCardNameTextField.setAutoselect(true);
         this.testCardNameTextField.setRequired(true);
         this.testCardNameTextField.setAutocorrect(true);
         this.testCardNameTextField.setValueChangeMode(ValueChangeMode.LAZY);

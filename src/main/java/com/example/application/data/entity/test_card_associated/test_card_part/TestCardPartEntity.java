@@ -23,6 +23,7 @@ public class TestCardPartEntity {
     private Long id;
     private String testCardPartName;
 //    private Integer testCardPartNumber;
+    private Integer points;
 
     private LocalDateTime creationTime;
     private LocalDateTime modificationTime;
