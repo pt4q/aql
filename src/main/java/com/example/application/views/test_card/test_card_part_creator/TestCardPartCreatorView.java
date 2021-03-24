@@ -4,11 +4,7 @@ import com.example.application.data.entity.test_card_associated.test_card.TestCa
 import com.example.application.data.entity.test_card_associated.test_card_part.TestCardPartEntity;
 import com.example.application.data.entity.test_card_associated.test_card_part_parameter_category_parameter.ParameterEntity;
 import com.example.application.views.main.MainView;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.NumberField;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.*;
 
 import java.util.List;
@@ -23,7 +19,8 @@ public class TestCardPartCreatorView extends VerticalLayout implements HasUrlPar
     public static final String ROUTE = "testcard-part-creator";
     public static final String QUERY_PARAM_ID_NAME = "testCardPartId";
 
-   private TestCardPartInfoDiv testCardPartInfoDiv;
+    private TestCardPartInfoDiv testCardPartInfoDiv;
+    private TestCardPartParamsGridDiv testCardPartParamsGridDiv;
 
     private TestCardEntity testCardEntity;
     private TestCardPartEntity testCardPartEntity;
@@ -32,10 +29,11 @@ public class TestCardPartCreatorView extends VerticalLayout implements HasUrlPar
     public TestCardPartCreatorView() {
 
         this.testCardPartInfoDiv = new TestCardPartInfoDiv(this.testCardPartEntity);
+        this.testCardPartParamsGridDiv = new TestCardPartParamsGridDiv(this.testCardPartEntity);
 
         setWidthFull();
         setAlignItems(Alignment.CENTER);
-        add(testCardPartInfoDiv);
+        add(testCardPartInfoDiv, testCardPartParamsGridDiv);
     }
 
     @Override
