@@ -98,7 +98,7 @@ public class MasterDetailView extends Div {
 
         // Bind fields. This where you'd define e.g. validation rules
 
-        binder.bindInstanceFields(this);
+        binder.bindInstanceFields(SamplePerson.class);
 
         cancel.addClickListener(e -> {
             clearForm();
