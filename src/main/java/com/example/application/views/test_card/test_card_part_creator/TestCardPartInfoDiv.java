@@ -52,6 +52,5 @@ class TestCardPartInfoDiv extends Div {
         this.testCardPartPointsNumberField.setMax(100);
         this.testCardPartPointsNumberField.setStep(10d);
         this.testCardPartPointsNumberField.setMinWidth("10%");
-        this.testCardPartPointsNumberField.setWidth("10%");
     }
 }

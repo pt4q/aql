@@ -5,6 +5,7 @@ import com.example.application.data.entity.test_card_associated.test_card_part.T
 import com.example.application.data.entity.test_card_associated.test_card_part_parameter_category_parameter.ParameterEntity;
 import com.example.application.views.main.MainView;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.router.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class TestCardPartCreatorView extends VerticalLayout implements HasUrlPar
     public static final String ROUTE = "testcard-part-creator";
     public static final String QUERY_PARAM_ID_NAME = "testCardPartId";
 
+    private SaveTestCardPartOrBackButtonsDiv saveTestCardPartOrBackButtonsDiv;
     private TestCardPartInfoDiv testCardPartInfoDiv;
     private TestCardPartParamsGridDiv testCardPartParamsGridDiv;
 
@@ -27,13 +29,19 @@ public class TestCardPartCreatorView extends VerticalLayout implements HasUrlPar
     private Set<ParameterEntity> testCardPartParameters;
 
     public TestCardPartCreatorView() {
-
+        this.saveTestCardPartOrBackButtonsDiv = new SaveTestCardPartOrBackButtonsDiv();
         this.testCardPartInfoDiv = new TestCardPartInfoDiv(this.testCardPartEntity);
         this.testCardPartParamsGridDiv = new TestCardPartParamsGridDiv(this.testCardPartEntity);
 
+        SplitLayout splitLayout = new SplitLayout();
+        splitLayout.setSizeFull();
+        splitLayout.addToPrimary(testCardPartParamsGridDiv);
+        splitLayout.addToSecondary();
+
+
         setWidthFull();
         setAlignItems(Alignment.CENTER);
-        add(testCardPartInfoDiv, testCardPartParamsGridDiv);
+        add(saveTestCardPartOrBackButtonsDiv, testCardPartInfoDiv, splitLayout);
     }
 
     @Override
