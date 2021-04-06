@@ -4,6 +4,7 @@ import com.example.application.data.entity.test_card_associated.test_card.TestCa
 import com.example.application.data.entity.test_card_associated.test_card_part.TestCardPartEntity;
 import com.example.application.data.entity.test_card_associated.test_card_part_parameter_category_parameter.ParameterEntity;
 import com.example.application.views.main.MainView;
+import com.example.application.views.test_card.test_card_part_parameters.TestCardParameterCreatorDiv;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.router.*;
@@ -23,6 +24,7 @@ public class TestCardPartCreatorView extends VerticalLayout implements HasUrlPar
     private SaveTestCardPartOrBackButtonsDiv saveTestCardPartOrBackButtonsDiv;
     private TestCardPartInfoDiv testCardPartInfoDiv;
     private TestCardPartParamsGridDiv testCardPartParamsGridDiv;
+    private TestCardParameterCreatorDiv testCardParameterCreatorDiv;
 
     private TestCardEntity testCardEntity;
     private TestCardPartEntity testCardPartEntity;
@@ -32,12 +34,12 @@ public class TestCardPartCreatorView extends VerticalLayout implements HasUrlPar
         this.saveTestCardPartOrBackButtonsDiv = new SaveTestCardPartOrBackButtonsDiv();
         this.testCardPartInfoDiv = new TestCardPartInfoDiv(this.testCardPartEntity);
         this.testCardPartParamsGridDiv = new TestCardPartParamsGridDiv(this.testCardPartEntity);
+        this.testCardParameterCreatorDiv = new TestCardParameterCreatorDiv(this.testCardPartEntity);
 
         SplitLayout splitLayout = new SplitLayout();
         splitLayout.setSizeFull();
         splitLayout.addToPrimary(testCardPartParamsGridDiv);
-        splitLayout.addToSecondary();
-
+        splitLayout.addToSecondary(testCardParameterCreatorDiv);
 
         setWidthFull();
         setAlignItems(Alignment.CENTER);
