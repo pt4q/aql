@@ -1,6 +1,6 @@
 package com.example.application.views.product_category;
 
-import com.example.application.data.entity.product_category.ProductCategoryEntity;
+import com.example.application.data.entity.product_associated.product_category.ProductCategoryEntity;
 import com.example.application.data.service.product_category.ProductCategoryCrudService;
 import com.example.application.data.service.product_category.exceptions.ProductCategoryNotFoundException;
 import com.example.application.views.main.MainView;
