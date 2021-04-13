@@ -1,4 +1,4 @@
-package com.example.application.data.entity.product_category;
+package com.example.application.data.entity.product_associated.product_category;
 
 import com.example.application.data.entity.test_card_associated.test_card.TestCardEntity;
 import lombok.AllArgsConstructor;
@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor

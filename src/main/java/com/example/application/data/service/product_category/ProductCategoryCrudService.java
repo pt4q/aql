@@ -1,6 +1,6 @@
 package com.example.application.data.service.product_category;
 
-import com.example.application.data.entity.product_category.ProductCategoryEntity;
+import com.example.application.data.entity.product_associated.product_category.ProductCategoryEntity;
 import com.example.application.data.service.CustomCrudServiceInterface;
 import com.example.application.data.service.product_category.exceptions.ProductCategoryAlreadyExistsException;
 import com.example.application.data.service.product_category.exceptions.ProductCategoryNotFoundException;
@@ -10,8 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.vaadin.artur.helpers.CrudService;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
