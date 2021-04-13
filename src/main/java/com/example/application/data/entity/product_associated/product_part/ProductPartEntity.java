@@ -21,7 +21,9 @@ public class ProductPartEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
+    @ManyToOne
     private ProductEntity product;
+    @ManyToOne
     private ProductSeriesEntity productSeries;
     private LocalDateTime modificationTime;
     private Boolean actualPart;

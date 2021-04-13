@@ -1,16 +1,14 @@
 package com.example.application.data.entity.product_associated.product;
 
 import com.example.application.data.entity.product_associated.product_category.ProductCategoryEntity;
+import com.example.application.data.entity.product_associated.product_part.ProductPartEntity;
 import com.example.application.data.entity.product_associated.product_series.ProductSeriesEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -21,12 +19,16 @@ import java.util.Set;
 @Entity
 public class ProductEntity {
 
-    @javax.persistence.Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
+    @ManyToOne
     private ProductCategoryEntity productCategory;
     private String productName;
+    @OneToMany
     private Set<ProductSeriesEntity> productSeries;
+    @OneToMany
+    private Set<ProductPartEntity> productParts;
 
     private LocalDateTime creationTime;
     private LocalDateTime modificationTime;
