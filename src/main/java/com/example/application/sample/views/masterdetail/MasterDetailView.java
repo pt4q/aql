@@ -3,7 +3,6 @@ package com.example.application.sample.views.masterdetail;
 import java.util.Optional;
 
 import com.example.application.sample.entity.sample.SamplePerson;
-import com.example.application.sample.service.sample.SamplePersonService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.button.Button;
@@ -23,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.artur.helpers.CrudServiceDataProvider;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
-import com.example.application.ui_main.MainView;
+import com.example.application.views.main.MainView;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -51,7 +50,7 @@ public class MasterDetailView extends Div {
 
     private SamplePerson samplePerson;
 
-    public MasterDetailView(@Autowired SamplePersonService samplePersonService) {
+    public MasterDetailView() {
         addClassName("master-detail-view");
         // Create UI
         SplitLayout splitLayout = new SplitLayout();
@@ -74,20 +73,20 @@ public class MasterDetailView extends Div {
                 .withProperty("important", SamplePerson::isImportant);
         grid.addColumn(importantRenderer).setHeader("Important").setAutoWidth(true);
 
-        grid.setDataProvider(new CrudServiceDataProvider<>(samplePersonService));
+//        grid.setDataProvider(new CrudServiceDataProvider<>(samplePersonService));
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         grid.setHeightFull();
 
         // when a row is selected or deselected, populate form
         grid.asSingleSelect().addValueChangeListener(event -> {
             if (event.getValue() != null) {
-                Optional<SamplePerson> samplePersonFromBackend = samplePersonService.get(event.getValue().getId());
+//                Optional<SamplePerson> samplePersonFromBackend = samplePersonService.get(event.getValue().getId());
                 // when a row is selected but the data is no longer available, refresh grid
-                if (samplePersonFromBackend.isPresent()) {
-                    populateForm(samplePersonFromBackend.get());
-                } else {
-                    refreshGrid();
-                }
+//                if (samplePersonFromBackend.isPresent()) {
+//                    populateForm(samplePersonFromBackend.get());
+//                } else {
+//                    refreshGrid();
+//                }
             } else {
                 clearForm();
             }
@@ -112,7 +111,7 @@ public class MasterDetailView extends Div {
                 }
                 binder.writeBean(this.samplePerson);
 
-                samplePersonService.update(this.samplePerson);
+//                samplePersonService.update(this.samplePerson);
                 clearForm();
                 refreshGrid();
                 Notification.show("SamplePerson details stored.");

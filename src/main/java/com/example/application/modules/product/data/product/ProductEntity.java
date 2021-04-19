@@ -1,6 +1,8 @@
 package com.example.application.modules.product.data.product;
 
+import com.example.application.modules.product.data.product_picture.ProductPictureEntity;
 import com.example.application.modules.product.data.product_category.ProductCategoryEntity;
+import com.example.application.modules.product.data.product_manufacturer.ProductManufacturerEntity;
 import com.example.application.modules.product.data.product_part.ProductPartEntity;
 import com.example.application.modules.product.data.product_series.ProductSeriesEntity;
 import lombok.AllArgsConstructor;
@@ -10,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -24,12 +27,17 @@ public class ProductEntity {
     private Long Id;
     @ManyToOne
     private ProductCategoryEntity productCategory;
-    private String productName;
+    @ManyToOne
+    private ProductManufacturerEntity productManufacturer;
+    private String productSku;
     @OneToMany
     private Set<ProductSeriesEntity> productSeries;
     @OneToMany
-    private Set<ProductPartEntity> productParts;
+    private List<ProductPartEntity> productParts;
 
     private LocalDateTime creationTime;
     private LocalDateTime modificationTime;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private ProductPictureEntity productPicture;
 }

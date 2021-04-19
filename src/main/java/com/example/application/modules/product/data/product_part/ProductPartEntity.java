@@ -1,6 +1,8 @@
 package com.example.application.modules.product.data.product_part;
 
+import com.example.application.modules.product.data.product_picture.ProductPictureEntity;
 import com.example.application.modules.product.data.product.ProductEntity;
+import com.example.application.modules.product.data.product_manufacturer.ProductManufacturerEntity;
 import com.example.application.modules.product.data.product_series.ProductSeriesEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,11 +27,17 @@ public class ProductPartEntity {
     private ProductEntity product;
     @ManyToOne
     private ProductSeriesEntity productSeries;
-    private LocalDateTime modificationTime;
-    private Boolean actualPart;
+
+    @ManyToOne
+    private ProductManufacturerEntity productManufacturer;
+    private String partModel;
     private String partDescription;
 
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    private byte[] partPicture;
+    private LocalDateTime validFromTime;
+    private Boolean currentPart;
+
+    private LocalDateTime modificationTime;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private ProductPictureEntity partPicture;
 }

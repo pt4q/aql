@@ -2,7 +2,7 @@ package com.example.application.sample.generator;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 
-import com.example.application.sample.service.sample.SamplePersonRepository;
+
 import com.example.application.sample.entity.sample.SamplePerson;
 
 import java.time.LocalDateTime;
@@ -18,13 +18,13 @@ import org.vaadin.artur.exampledata.ExampleDataGenerator;
 public class DataGenerator {
 
     @Bean
-    public CommandLineRunner loadData(SamplePersonRepository samplePersonRepository) {
+    public CommandLineRunner loadData() {
         return args -> {
             Logger logger = LoggerFactory.getLogger(getClass());
-            if (samplePersonRepository.count() != 0L) {
-                logger.info("Using existing database");
-                return;
-            }
+//            if (samplePersonRepository.count() != 0L) {
+//                logger.info("Using existing database");
+//                return;
+//            }
             int seed = 123;
 
             logger.info("Generating demo data");
@@ -40,7 +40,7 @@ public class DataGenerator {
             samplePersonRepositoryGenerator.setData(SamplePerson::setDateOfBirth, DataType.DATE_OF_BIRTH);
             samplePersonRepositoryGenerator.setData(SamplePerson::setOccupation, DataType.OCCUPATION);
             samplePersonRepositoryGenerator.setData(SamplePerson::setImportant, DataType.BOOLEAN_10_90);
-            samplePersonRepository.saveAll(samplePersonRepositoryGenerator.create(100, seed));
+//            samplePersonRepository.saveAll(samplePersonRepositoryGenerator.create(100, seed));
 
             logger.info("Generated demo data");
         };

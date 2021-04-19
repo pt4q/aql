@@ -1,6 +1,6 @@
 package com.example.application.sample.entity.sample;
 
-import com.example.application.sample.entity.AbstractEntity;
+import com.example.application.modules.test_card.data.AbstractEntity;
 
 import javax.persistence.Entity;
 import java.time.LocalDate;

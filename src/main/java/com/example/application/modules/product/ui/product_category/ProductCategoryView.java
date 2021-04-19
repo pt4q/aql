@@ -3,7 +3,7 @@ package com.example.application.modules.product.ui.product_category;
 import com.example.application.modules.product.data.product_category.ProductCategoryEntity;
 import com.example.application.modules.product.services.product_category.ProductCategoryCrudService;
 import com.example.application.modules.product.services.product_category.exceptions.ProductCategoryNotFoundException;
-import com.example.application.ui_main.MainView;
+import com.example.application.views.main.MainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.button.Button;
@@ -24,15 +24,15 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@CssImport(ProductCategoryView.css)
-@Route(value = ProductCategoryView.route, layout = MainView.class)
+@CssImport(ProductCategoryView.CSS)
+@Route(value = ProductCategoryView.ROUTE, layout = MainView.class)
 //@RouteAlias(value = "", layout = MainView.class)
-@PageTitle(ProductCategoryView.pageTitle)
+@PageTitle(ProductCategoryView.PAGE_TITLE)
 public class ProductCategoryView extends VerticalLayout {
 
-    public static final String pageTitle = "Product category";
-    public static final String route = "product-category";
-    public static final String css = "./views/product_category/product-category-view.css";
+    public static final String PAGE_TITLE = "Product category";
+    public static final String ROUTE = "product-category";
+    public static final String CSS = "./views/product_category/product-category-view.css";
 
     private ProductCategoryCrudService productCategoryCrudService;
 
@@ -50,7 +50,7 @@ public class ProductCategoryView extends VerticalLayout {
     @Autowired
     public ProductCategoryView(ProductCategoryCrudService productCategoryCrudService) {
         this.productCategoryCrudService = productCategoryCrudService;
-        addClassName(route + "-view");
+        addClassName(ROUTE + "-view");
         // Create UI
         SplitLayout splitLayout = new SplitLayout();
         splitLayout.setSizeFull();

@@ -5,7 +5,7 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
-import com.example.application.ui_main.MainView;
+import com.example.application.views.main.MainView;
 
 @CssImport("./views/about/about-view.css")
 @Route(value = "about", layout = MainView.class)

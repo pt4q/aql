@@ -1,7 +1,7 @@
 package com.example.application.modules.product.services.product_category;
 
 import com.example.application.modules.product.data.product_category.ProductCategoryEntity;
-import com.example.application.sample.service.CustomCrudServiceInterface;
+import com.example.application.modules.test_card.services.CustomCrudServiceInterface;
 import com.example.application.modules.product.services.product_category.exceptions.ProductCategoryAlreadyExistsException;
 import com.example.application.modules.product.services.product_category.exceptions.ProductCategoryNotFoundException;
 import lombok.SneakyThrows;

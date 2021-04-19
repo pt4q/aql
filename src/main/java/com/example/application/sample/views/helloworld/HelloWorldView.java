@@ -7,7 +7,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
-import com.example.application.ui_main.MainView;
+import com.example.application.views.main.MainView;
 
 @CssImport("./views/helloworld/hello-world-view.css")
 @Route(value = "hello", layout = MainView.class)
