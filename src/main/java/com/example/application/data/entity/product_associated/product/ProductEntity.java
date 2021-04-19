@@ -1,5 +1,6 @@
 package com.example.application.data.entity.product_associated.product;
 
+import com.example.application.data.entity.product_associated.product_picture.ProductPictureEntity;
 import com.example.application.data.entity.product_associated.product_category.ProductCategoryEntity;
 import com.example.application.data.entity.product_associated.product_manufacturer.ProductManufacturerEntity;
 import com.example.application.data.entity.product_associated.product_part.ProductPartEntity;
@@ -36,4 +37,7 @@ public class ProductEntity {
 
     private LocalDateTime creationTime;
     private LocalDateTime modificationTime;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private ProductPictureEntity productPicture;
 }
