@@ -2,9 +2,9 @@ package com.example.application.views.main;
 
 import java.util.Optional;
 
-import com.example.application.views.product_associated.product.general.ProductsGeneralView;
-import com.example.application.views.product_associated.product_category.ProductCategoryView;
-import com.example.application.views.test_card.main_view.TestCardsMainView;
+import com.example.application.modules.product.ui.product.general.ProductsGeneralView;
+import com.example.application.modules.product.ui.product_category.ProductCategoryView;
+import com.example.application.modules.test_card.ui.main_view.TestCardsMainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.AppLayout;

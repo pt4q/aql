@@ -1,9 +1,9 @@
 package com.example.application.config;
 
-import com.example.application.data.entity.product_associated.product_category.ProductCategoryEntity;
-import com.example.application.data.entity.test_card_associated.test_card.TestCardEntity;
-import com.example.application.data.service.product_category.ProductCategoryCrudService;
-import com.example.application.data.service.test_card_associated.test_card.TestCardForProductCategoryCreator;
+import com.example.application.modules.product.data.product_category.ProductCategoryEntity;
+import com.example.application.modules.test_card.data.test_card.TestCardEntity;
+import com.example.application.modules.product.services.product_category.ProductCategoryCrudService;
+import com.example.application.modules.test_card.services.test_card.TestCardForProductCategoryCreator;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
