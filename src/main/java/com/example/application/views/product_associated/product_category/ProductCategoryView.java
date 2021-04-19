@@ -1,4 +1,4 @@
-package com.example.application.views.product_category;
+package com.example.application.views.product_associated.product_category;
 
 import com.example.application.data.entity.product_associated.product_category.ProductCategoryEntity;
 import com.example.application.data.service.product_category.ProductCategoryCrudService;
@@ -24,15 +24,15 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@CssImport(ProductCategoryView.css)
-@Route(value = ProductCategoryView.route, layout = MainView.class)
+@CssImport(ProductCategoryView.CSS)
+@Route(value = ProductCategoryView.ROUTE, layout = MainView.class)
 //@RouteAlias(value = "", layout = MainView.class)
-@PageTitle(ProductCategoryView.pageTitle)
+@PageTitle(ProductCategoryView.PAGE_TITLE)
 public class ProductCategoryView extends VerticalLayout {
 
-    public static final String pageTitle = "Product category";
-    public static final String route = "product-category";
-    public static final String css = "./views/product_category/product-category-view.css";
+    public static final String PAGE_TITLE = "Product category";
+    public static final String ROUTE = "product-category";
+    public static final String CSS = "./views/product_category/product-category-view.css";
 
     private ProductCategoryCrudService productCategoryCrudService;
 
@@ -50,7 +50,7 @@ public class ProductCategoryView extends VerticalLayout {
     @Autowired
     public ProductCategoryView(ProductCategoryCrudService productCategoryCrudService) {
         this.productCategoryCrudService = productCategoryCrudService;
-        addClassName(route + "-view");
+        addClassName(ROUTE + "-view");
         // Create UI
         SplitLayout splitLayout = new SplitLayout();
         splitLayout.setSizeFull();

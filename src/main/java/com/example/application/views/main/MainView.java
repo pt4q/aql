@@ -2,7 +2,8 @@ package com.example.application.views.main;
 
 import java.util.Optional;
 
-import com.example.application.views.product_category.ProductCategoryView;
+import com.example.application.views.product_associated.product.ProductsGeneralView;
+import com.example.application.views.product_associated.product_category.ProductCategoryView;
 import com.example.application.views.test_card.main_view.TestCardsMainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
@@ -86,7 +87,8 @@ public class MainView extends AppLayout {
 //                createTab("About", AboutView.class),
 //                createTab("Person Form", PersonFormView.class),
 //                createTab("Master-Detail", MasterDetailView.class),
-                createTab(ProductCategoryView.pageTitle, ProductCategoryView.class),
+                createTab(ProductsGeneralView.PAGE_TITLE, ProductsGeneralView.class),
+                createTab(ProductCategoryView.PAGE_TITLE, ProductCategoryView.class),
                 createTab(TestCardsMainView.PAGE_TITLE, TestCardsMainView.class)};
     }
 
