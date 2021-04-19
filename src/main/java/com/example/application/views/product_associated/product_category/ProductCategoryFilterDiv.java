@@ -1,4 +1,4 @@
-package com.example.application.views.test_card.main_view;
+package com.example.application.views.product_associated.product_category;
 
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -8,7 +8,7 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import lombok.Data;
 
 @Data
-class ProductCategoryFilterDiv extends Div {
+public class ProductCategoryFilterDiv extends Div {
 
     private TextField productCategoryFiler = new TextField("Product category filter");
 

@@ -29,7 +29,7 @@ public class ProductEntity {
     private ProductCategoryEntity productCategory;
     @ManyToOne
     private ProductManufacturerEntity productManufacturer;
-    private String productName;
+    private String productSku;
     @OneToMany
     private Set<ProductSeriesEntity> productSeries;
     @OneToMany

@@ -4,6 +4,7 @@ import com.example.application.data.entity.test_card_associated.test_card.TestCa
 import com.example.application.data.service.product_category.ProductCategoryCrudService;
 import com.example.application.data.service.test_card_associated.test_card.TestCardFinder;
 import com.example.application.views.main.MainView;
+import com.example.application.views.product_associated.product_category.ProductCategoryFilterDiv;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;

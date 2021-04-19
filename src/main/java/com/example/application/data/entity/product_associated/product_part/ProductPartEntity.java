@@ -27,10 +27,9 @@ public class ProductPartEntity {
     private ProductEntity product;
     @ManyToOne
     private ProductSeriesEntity productSeries;
+
     @ManyToOne
     private ProductManufacturerEntity productManufacturer;
-
-    private String partName;
     private String partModel;
     private String partDescription;
    
