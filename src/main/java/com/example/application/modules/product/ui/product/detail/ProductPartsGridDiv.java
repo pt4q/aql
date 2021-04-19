@@ -1,5 +1,6 @@
 package com.example.application.modules.product.ui.product.detail;
 
+
 import com.example.application.modules.product.data.product_part.ProductPartEntity;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Anchor;

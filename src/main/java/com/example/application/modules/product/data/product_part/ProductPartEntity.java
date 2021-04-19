@@ -32,7 +32,7 @@ public class ProductPartEntity {
     private ProductManufacturerEntity productManufacturer;
     private String partModel;
     private String partDescription;
-   
+
     private LocalDateTime validFromTime;
     private Boolean currentPart;
 
