@@ -22,10 +22,6 @@ import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.router.PageTitle;
-import com.example.application.views.helloworld.HelloWorldView;
-import com.example.application.views.about.AboutView;
-import com.example.application.views.personform.PersonFormView;
-import com.example.application.views.masterdetail.MasterDetailView;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -91,7 +87,7 @@ public class MainView extends AppLayout {
 //                createTab("Person Form", PersonFormView.class),
 //                createTab("Master-Detail", MasterDetailView.class),
                 createTab(ProductCategoryView.pageTitle, ProductCategoryView.class),
-                createTab(TestCardsMainView.pageTitle, TestCardsMainView.class)};
+                createTab(TestCardsMainView.PAGE_TITLE, TestCardsMainView.class)};
     }
 
     private static Tab createTab(String text, Class<? extends Component> navigationTarget) {

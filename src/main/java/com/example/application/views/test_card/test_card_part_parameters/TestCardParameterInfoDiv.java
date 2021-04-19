@@ -1,28 +1,29 @@
-package com.example.application.views.test_card.test_card_part_creator;
+package com.example.application.views.test_card.test_card_part_parameters;
 
 import com.example.application.data.entity.test_card_associated.test_card_part.TestCardPartEntity;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 
-class TestCardPartInfoDiv extends Div {
+class TestCardParameterInfoDiv extends Div {
 
-    private TextField testCardPartNameTextField = new TextField("Test card part name");
+    private TextField testCardPartNameTextField = new TextField("Parameter name");
     private NumberField testCardPartPointsNumberField = new NumberField("Points");
 
     private TestCardPartEntity testCardPartEntity;
 
-    public TestCardPartInfoDiv(TestCardPartEntity testCardPartEntity) {
+    public TestCardParameterInfoDiv(TestCardPartEntity testCardPartEntity) {
         this.testCardPartEntity = testCardPartEntity;
 
         initTestCardPartNameTextField();
         initTestCardPartPoints();
 
-        HorizontalLayout infoLayout = new HorizontalLayout(testCardPartNameTextField, testCardPartPointsNumberField);
-        infoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+        VerticalLayout infoLayout = new VerticalLayout(testCardPartNameTextField, testCardPartPointsNumberField);
+        infoLayout.setAlignItems(FlexComponent.Alignment.START);
         infoLayout.setWidthFull();
 
         setWidthFull();

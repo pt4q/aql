@@ -1,6 +1,6 @@
 package com.example.application.data.service.test_card_associated.test_card;
 
-import com.example.application.data.entity.product_category.ProductCategoryEntity;
+import com.example.application.data.entity.product_associated.product_category.ProductCategoryEntity;
 import com.example.application.data.entity.test_card_associated.test_card.TestCardEntity;
 import com.example.application.data.service.test_card_associated.test_card.exceptions.TestCardNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

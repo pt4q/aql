@@ -14,13 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-@Route(value = TestCardsMainView.route, layout = MainView.class)
+@Route(value = TestCardsMainView.ROUTE, layout = MainView.class)
 @RouteAlias(value = "", layout = MainView.class)
-@PageTitle(TestCardsMainView.pageTitle)
+@PageTitle(TestCardsMainView.PAGE_TITLE)
 public class TestCardsMainView extends VerticalLayout {
 
-    public static final String pageTitle = "Test cards";
-    public static final String route = "test-cards";
+    public static final String PAGE_TITLE = "Test cards";
+    public static final String ROUTE = "test-cards";
 
     private ProductCategoryFilterDiv productCategoryFiler;
     private AddNewTestCardToGridDiv addNewTestCardToGridDiv;

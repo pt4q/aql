@@ -1,6 +1,6 @@
 package com.example.application.views.test_card.test_card_creator;
 
-import com.example.application.data.entity.product_category.ProductCategoryEntity;
+import com.example.application.data.entity.product_associated.product_category.ProductCategoryEntity;
 import com.example.application.data.entity.test_card_associated.test_card.TestCardEntity;
 import com.example.application.data.entity.test_card_associated.test_card_part_parameter_category.ParameterCategoryEntity;
 import com.example.application.data.service.product_category.ProductCategoryCrudService;
@@ -10,7 +10,6 @@ import com.example.application.data.service.test_card_associated.test_card.excep
 import com.example.application.views.main.MainView;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
@@ -34,25 +33,28 @@ public class TestCardCreatorView extends VerticalLayout implements HasUrlParamet
     private TestCardEntity testCard;
     private LinkedHashSet<ParameterCategoryEntity> testCardParamCategories;
 
-    private Div testCardInfoDiv;
-    private Div testCardCategoriesDiv;
+    private SaveTestCardOrBackButtonsDiv saveTestCardOrBackButtonsDiv;
+    private TestCardInfoDiv testCardInfoDiv;
+    private TestCardPartsGridDiv testCardCategoriesDiv;
 
     public TestCardCreatorView(ProductCategoryCrudService productCategoryCrudService,
                                TestCardFinder testCardFinder,
                                TestCardForProductCategoryCreator testCardForProductCategoryCreator) {
         setId(ROUTE);
+        setAlignItems(Alignment.CENTER);
+        setWidthFull();
 
         this.productCategoryCrudService = productCategoryCrudService;
         this.testCardFinder = testCardFinder;
         this.testCardForProductCategoryCreator = testCardForProductCategoryCreator;
 //        this.productCategoryEntity = loadProductFromContext();
+
         this.testCard = getTestCardFromContext();
         this.testCardInfoDiv = new TestCardInfoDiv(this.testCard, productCategoryCrudService);
         this.testCardCategoriesDiv = new TestCardPartsGridDiv(this.testCard);
+        this.saveTestCardOrBackButtonsDiv = new SaveTestCardOrBackButtonsDiv();
 
-        add(testCardInfoDiv, testCardCategoriesDiv);
-        setAlignItems(Alignment.CENTER);
-        setWidth("80%");
+        add(saveTestCardOrBackButtonsDiv, testCardInfoDiv, testCardCategoriesDiv);
     }
 
     private ProductCategoryEntity getProductFromContext() {

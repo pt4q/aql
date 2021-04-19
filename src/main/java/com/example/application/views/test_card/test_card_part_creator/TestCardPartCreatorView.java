@@ -4,11 +4,9 @@ import com.example.application.data.entity.test_card_associated.test_card.TestCa
 import com.example.application.data.entity.test_card_associated.test_card_part.TestCardPartEntity;
 import com.example.application.data.entity.test_card_associated.test_card_part_parameter_category_parameter.ParameterEntity;
 import com.example.application.views.main.MainView;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.example.application.views.test_card.test_card_part_parameters.TestCardParameterCreatorDiv;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.NumberField;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.router.*;
 
 import java.util.List;
@@ -23,19 +21,29 @@ public class TestCardPartCreatorView extends VerticalLayout implements HasUrlPar
     public static final String ROUTE = "testcard-part-creator";
     public static final String QUERY_PARAM_ID_NAME = "testCardPartId";
 
-   private TestCardPartInfoDiv testCardPartInfoDiv;
+    private SaveTestCardPartOrBackButtonsDiv saveTestCardPartOrBackButtonsDiv;
+    private TestCardPartInfoDiv testCardPartInfoDiv;
+    private TestCardPartParamsGridDiv testCardPartParamsGridDiv;
+    private TestCardParameterCreatorDiv testCardParameterCreatorDiv;
 
     private TestCardEntity testCardEntity;
     private TestCardPartEntity testCardPartEntity;
     private Set<ParameterEntity> testCardPartParameters;
 
     public TestCardPartCreatorView() {
-
+        this.saveTestCardPartOrBackButtonsDiv = new SaveTestCardPartOrBackButtonsDiv();
         this.testCardPartInfoDiv = new TestCardPartInfoDiv(this.testCardPartEntity);
+        this.testCardPartParamsGridDiv = new TestCardPartParamsGridDiv(this.testCardPartEntity);
+        this.testCardParameterCreatorDiv = new TestCardParameterCreatorDiv(this.testCardPartEntity);
+
+        SplitLayout splitLayout = new SplitLayout();
+        splitLayout.setSizeFull();
+        splitLayout.addToPrimary(testCardPartParamsGridDiv);
+        splitLayout.addToSecondary(testCardParameterCreatorDiv);
 
         setWidthFull();
         setAlignItems(Alignment.CENTER);
-        add(testCardPartInfoDiv);
+        add(saveTestCardPartOrBackButtonsDiv, testCardPartInfoDiv, splitLayout);
     }
 
     @Override
