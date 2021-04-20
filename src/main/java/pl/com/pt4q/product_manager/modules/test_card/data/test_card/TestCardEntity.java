@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -32,6 +33,6 @@ public class TestCardEntity {
     private ProductCategoryEntity productCategory;
 
     @OneToMany(mappedBy = "testCard", fetch = FetchType.EAGER)
-    private Set<TestCardPartEntity> testCardParts;
+    private List<TestCardPartEntity> testCardParts;
 
 }

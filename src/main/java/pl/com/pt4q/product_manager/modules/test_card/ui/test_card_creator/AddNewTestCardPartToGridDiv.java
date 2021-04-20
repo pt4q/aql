@@ -13,6 +13,8 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 class AddNewTestCardPartToGridDiv extends Div {
@@ -24,7 +26,7 @@ class AddNewTestCardPartToGridDiv extends Div {
     private Grid<TestCardPartEntity> testCardPartEntityGrid;
 
     private TestCardEntity testCardEntity;
-    private Set<TestCardPartEntity> testCardPartSet;
+    private List<TestCardPartEntity> testCardPartSet;
 
     public AddNewTestCardPartToGridDiv(TestCardEntity testCardEntity, Grid<TestCardPartEntity> testCardPartEntityGrid) {
         this.testCardEntity = testCardEntity;
@@ -39,9 +41,9 @@ class AddNewTestCardPartToGridDiv extends Div {
         add(layout);
     }
 
-    private Set<TestCardPartEntity> initTestCardPartsSet() {
-        Set<TestCardPartEntity> testCardParts = this.testCardEntity.getTestCardParts();
-        return testCardParts != null ? testCardParts : new LinkedHashSet<>();
+    private List<TestCardPartEntity> initTestCardPartsSet() {
+        List<TestCardPartEntity> testCardParts = this.testCardEntity.getTestCardParts();
+        return testCardParts != null ? testCardParts : new LinkedList<>();
     }
 
     private void initAddNewTestCardPartButton() {
@@ -57,7 +59,7 @@ class AddNewTestCardPartToGridDiv extends Div {
         });
     }
 
-    public void refreshGrid(Set<TestCardPartEntity> testCardParts) {
+    public void refreshGrid(List<TestCardPartEntity> testCardParts) {
         this.testCardPartEntityGrid.select(null);
         this.testCardPartEntityGrid.setItems(testCardParts);
     }

@@ -1,5 +1,8 @@
 package pl.com.pt4q.product_manager.modules.product.ui.product.detail;
 
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import org.springframework.ui.context.support.UiApplicationContextUtils;
+import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.views.main.MainView;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
@@ -18,15 +21,31 @@ public class ProductDetailView extends VerticalLayout implements HasUrlParameter
     private SaveProductOrBackButtonsDiv saveProductOrBackButtonsDiv;
     private ProductDetailFormDiv productDetailFormDiv;
     private ProductPartsGridDiv productPartsGridDiv;
+    private AddNewProductPartToGridDiv addNewProductPartToGridDiv;
+
+    private ProductEntity productEntity;
 
     public ProductDetailView() {
+        this.productEntity = initProduct();
+
         this.saveProductOrBackButtonsDiv = new SaveProductOrBackButtonsDiv();
         this.productDetailFormDiv = new ProductDetailFormDiv();
         this.productPartsGridDiv = new ProductPartsGridDiv();
+        this.addNewProductPartToGridDiv = new AddNewProductPartToGridDiv(this.productEntity, this.productPartsGridDiv.getProductPartsGrid());
 
-        add(this.saveProductOrBackButtonsDiv,
-                this.productDetailFormDiv,
-                this.productPartsGridDiv);
+        HorizontalLayout hl = new HorizontalLayout(this.productDetailFormDiv);
+
+        setAlignItems(Alignment.CENTER);
+        add(
+                this.saveProductOrBackButtonsDiv,
+                hl,
+                this.productPartsGridDiv,
+                this.addNewProductPartToGridDiv
+        );
+    }
+
+    private ProductEntity initProduct(){
+        return productEntity != null ? productEntity : new ProductEntity();
     }
 
     @Override
