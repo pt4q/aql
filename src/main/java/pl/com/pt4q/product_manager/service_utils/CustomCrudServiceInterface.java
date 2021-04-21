@@ -1,4 +1,4 @@
-package pl.com.pt4q.product_manager.modules.test_card.services;
+package pl.com.pt4q.product_manager.service_utils;
 
 public interface CustomCrudServiceInterface<E, ID, NOT_FOUND extends Exception, ALREADY_EXISTS extends Exception> {
 
