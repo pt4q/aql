@@ -2,7 +2,8 @@ package pl.com.pt4q.product_manager.modules.product.ui.product_part;
 
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
-import pl.com.pt4q.product_manager.modules.product.ui.product.detail.ProductDetailView;
+import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
+import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 import java.util.List;
@@ -14,10 +15,37 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
 
     public static final String PAGE_TITLE = "Product part detail";
     public static final String ROUTE = "product-part-detail";
-    public static final String QUERY_PARAM_ID_NAME = "productId";
+    public static final String QUERY_PARAM_ID_NAME = "productPartId";
+
+    private PartFormDiv partFormDiv;
+    private SaveProductPartOrBackButtonsDiv saveProductPartOrBackButtonsDiv;
+
+    private ProductEntity product;
+    private ProductPartEntity productPart;
 
     public ProductPartDetailView() {
+        this.product = getProductFromContext();
+        this.productPart = initEmptyProductPart();
 
+        this.partFormDiv = new PartFormDiv(productPart);
+        this.saveProductPartOrBackButtonsDiv = new SaveProductPartOrBackButtonsDiv(productPart);
+
+        setSizeFull();
+        setAlignItems(Alignment.CENTER);
+        setHorizontalComponentAlignment(Alignment.CENTER);
+
+        add(
+                partFormDiv,
+                saveProductPartOrBackButtonsDiv
+        );
+    }
+
+    private ProductPartEntity initEmptyProductPart(){
+        return new ProductPartEntity();
+    }
+
+    private ProductEntity getProductFromContext() {
+        return product != null ? product : new ProductEntity();
     }
 
     @Override

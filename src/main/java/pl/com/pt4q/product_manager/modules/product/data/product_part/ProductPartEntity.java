@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -32,8 +33,8 @@ public class ProductPartEntity {
     private ProductManufacturerEntity productManufacturer;
     private String partModel;
     private String partDescription;
+    private LocalDate validFromDate;
 
-    private LocalDateTime validFromTime;
     private Boolean currentPart;
 
     private LocalDateTime modificationTime;

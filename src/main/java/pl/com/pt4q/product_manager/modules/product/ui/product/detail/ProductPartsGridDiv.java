@@ -54,8 +54,8 @@ class ProductPartsGridDiv extends Div {
                 .setSortable(true);
         this.productPartsGrid
                 .addColumn(productPartEntity ->
-                        productPartEntity.getValidFromTime() != null ?
-                        productPartEntity.getValidFromTime()
+                        productPartEntity.getValidFromDate() != null ?
+                        productPartEntity.getValidFromDate()
                         : "")
                 .setHeader("Valid from time")
                 .setSortable(true);
