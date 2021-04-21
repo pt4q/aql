@@ -2,7 +2,7 @@ package pl.com.pt4q.product_manager.modules.product.data.product_part;
 
 import pl.com.pt4q.product_manager.modules.product.data.product_picture.ProductPictureEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
-import pl.com.pt4q.product_manager.modules.product.data.product_manufacturer.ProductManufacturerEntity;
+import pl.com.pt4q.product_manager.modules.product.data.manufacturer.ManufacturerEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_series.ProductSeriesEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +30,7 @@ public class ProductPartEntity {
     private ProductSeriesEntity productSeries;
 
     @ManyToOne
-    private ProductManufacturerEntity productManufacturer;
+    private ManufacturerEntity manufacturer;
     private String partModel;
     private String partDescription;
     private LocalDate validFromDate;

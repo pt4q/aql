@@ -1,7 +1,7 @@
 package pl.com.pt4q.product_manager.modules.product.services.product_category;
 
 import pl.com.pt4q.product_manager.modules.product.data.product_category.ProductCategoryEntity;
-import pl.com.pt4q.product_manager.modules.test_card.services.CustomCrudServiceInterface;
+import pl.com.pt4q.product_manager.service_utils.CustomCrudServiceInterface;
 import pl.com.pt4q.product_manager.modules.product.services.product_category.exceptions.ProductCategoryAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.product.services.product_category.exceptions.ProductCategoryNotFoundException;
 import lombok.SneakyThrows;

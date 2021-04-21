@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import pl.com.pt4q.product_manager.modules.product.ui.product.general.ProductsGeneralView;
 import pl.com.pt4q.product_manager.modules.product.ui.product_category.ProductCategoryView;
+import pl.com.pt4q.product_manager.modules.product.ui.manufacturer.ManufacturerView;
 import pl.com.pt4q.product_manager.modules.test_card.ui.main_view.TestCardsMainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
@@ -87,8 +88,9 @@ public class MainView extends AppLayout {
 //                createTab("About", AboutView.class),
 //                createTab("Person Form", PersonFormView.class),
 //                createTab("Master-Detail", MasterDetailView.class),
-                createTab(ProductsGeneralView.PAGE_TITLE, ProductsGeneralView.class),
                 createTab(ProductCategoryView.PAGE_TITLE, ProductCategoryView.class),
+                createTab(ManufacturerView.PAGE_TITLE, ManufacturerView.class),
+                createTab(ProductsGeneralView.PAGE_TITLE, ProductsGeneralView.class),
                 createTab(TestCardsMainView.PAGE_TITLE, TestCardsMainView.class)};
     }
 
