@@ -12,7 +12,6 @@ import pl.com.pt4q.product_manager.modules.product.data.product_series.ProductSe
 import pl.com.pt4q.product_manager.modules.product.services.LastProductSeries;
 import pl.com.pt4q.product_manager.modules.product.ui.product.detail.ProductDetailView;
 
-import java.time.format.DateTimeFormatter;
 import java.util.OptionalInt;
 import java.util.Set;
 
@@ -38,28 +37,36 @@ class ProductGeneralProductsGridDiv extends Div {
                 .addColumn(new ComponentRenderer<>(pe ->
                         new Anchor(createLinkWithParam(ProductDetailView.ROUTE, ProductDetailView.QUERY_PARAM_ID_NAME, pe.getId()), pe.getProductSku())))
                 .setHeader("Product SKU")
-                .setSortable(true);
+                .setSortable(true)
+                .setAutoWidth(true);
         this.productEntityGrid
                 .addColumn(productEntity -> {
                     Set<ProductSeriesEntity> seriesSet = productEntity.getProductSeries();
                     OptionalInt optionalInt = new LastProductSeries(seriesSet).getLatest();
                     return optionalInt.isPresent() ? optionalInt.getAsInt() : "";
                 })
-                .setHeader("Product version");
+                .setHeader("Product version")
+                .setAutoWidth(true);
         this.productEntityGrid
                 .addColumn(productEntity -> productEntity.getProductCategory().getProductCategoryName())
                 .setHeader("Product category")
-                .setSortable(true);
+                .setSortable(true)
+                .setAutoWidth(true);
         this.productEntityGrid
-                .addColumn(productEntity ->
-                        productEntity.getCreationTime() != null ? productEntity.getCreationTime().format(DateTimeFormatter.ofPattern(dateTimeFormat)) : null)
-                .setHeader("Creation time")
-                .setSortable(true);
-        this.productEntityGrid
-                .addColumn(productEntity ->
-                        productEntity.getModificationTime() != null ? productEntity.getModificationTime().format(DateTimeFormatter.ofPattern(dateTimeFormat)) : null)
-                .setHeader("Modification time")
-                .setSortable(true);
+                .addColumn(productEntity -> productEntity.getManufacturer().getManufacturerName())
+                .setHeader("Manufacturer")
+                .setSortable(true)
+                .setAutoWidth(true);
+//        this.productEntityGrid
+//                .addColumn(productEntity ->
+//                        productEntity.getCreationTime() != null ? productEntity.getCreationTime().format(DateTimeFormatter.ofPattern(dateTimeFormat)) : null)
+//                .setHeader("Creation time")
+//                .setSortable(true);
+//        this.productEntityGrid
+//                .addColumn(productEntity ->
+//                        productEntity.getModificationTime() != null ? productEntity.getModificationTime().format(DateTimeFormatter.ofPattern(dateTimeFormat)) : null)
+//                .setHeader("Modification time")
+//                .setSortable(true);
 
         this.productEntityGrid.setWidthFull();
         this.productEntityGrid.setHeightByRows(true);

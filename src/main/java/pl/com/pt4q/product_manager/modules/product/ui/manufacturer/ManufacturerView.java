@@ -1,4 +1,4 @@
-package pl.com.pt4q.product_manager.modules.product.ui.product_manufacturer;
+package pl.com.pt4q.product_manager.modules.product.ui.manufacturer;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasStyle;
@@ -19,37 +19,38 @@ import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.com.pt4q.product_manager.modules.product.data.product_category.ProductCategoryEntity;
-import pl.com.pt4q.product_manager.modules.product.services.product_category.ProductCategoryCrudService;
-import pl.com.pt4q.product_manager.modules.product.services.product_category.exceptions.ProductCategoryNotFoundException;
+import pl.com.pt4q.product_manager.modules.product.data.manufacturer.ManufacturerEntity;
+import pl.com.pt4q.product_manager.modules.product.services.manufacturer.ManufacturerCrudService;
+import pl.com.pt4q.product_manager.modules.product.services.manufacturer.exceptions.ManufacturerNotFoundException;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
-@CssImport(ProductManufacturerView.CSS)
-@Route(value = ProductManufacturerView.ROUTE, layout = MainView.class)
+@CssImport(ManufacturerView.CSS)
+@Route(value = ManufacturerView.ROUTE, layout = MainView.class)
 //@RouteAlias(value = "", layout = MainView.class)
-@PageTitle(ProductManufacturerView.PAGE_TITLE)
-public class ProductManufacturerView extends VerticalLayout {
+@PageTitle(ManufacturerView.PAGE_TITLE)
+public class ManufacturerView extends VerticalLayout {
 
-    public static final String PAGE_TITLE = "Product category";
-    public static final String ROUTE = "product-category";
-    public static final String CSS = "./views/product_category/product-category-view.css";
+    public static final String PAGE_TITLE = "Manufacturer";
+    public static final String ROUTE = "manufacturer";
+    public static final String CSS = "./views/product_module/manufacturer/manufacturer-view.css";
 
-    private ProductCategoryCrudService productCategoryCrudService;
+    private ManufacturerCrudService manufacturerCrudService;
 
-    private Grid<ProductCategoryEntity> grid = new Grid<>(ProductCategoryEntity.class, false);
+    private Grid<ManufacturerEntity> grid = new Grid<>(ManufacturerEntity.class, false);
 
-    private TextField productName;
+    private TextField manufacturerNameTextField = new TextField("Manufacturer name");
+    private TextField manufacturerDescriptionTextField = new TextField("Description");
 
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
 
-    private BeanValidationBinder<ProductCategoryEntity> binder;
+    private BeanValidationBinder<ManufacturerEntity> binder;
 
-    private ProductCategoryEntity product;
+    private ManufacturerEntity manufacturerEntity;
 
     @Autowired
-    public ProductManufacturerView(ProductCategoryCrudService productCategoryCrudService) {
-        this.productCategoryCrudService = productCategoryCrudService;
+    public ManufacturerView(ManufacturerCrudService manufacturerCrudService) {
+        this.manufacturerCrudService = manufacturerCrudService;
         addClassName(ROUTE + "-view");
         // Create UI
         SplitLayout splitLayout = new SplitLayout();
@@ -61,8 +62,9 @@ public class ProductManufacturerView extends VerticalLayout {
         add(splitLayout);
 
         // Configure Grid
-        grid.addColumn(ProductCategoryEntity::getId).setHeader("Id").setAutoWidth(true);
-        grid.addColumn(ProductCategoryEntity::getProductCategoryName).setHeader("Product category").setAutoWidth(true);
+        grid.addColumn(ManufacturerEntity::getId).setHeader("Id").setAutoWidth(true);
+        grid.addColumn(ManufacturerEntity::getManufacturerName).setHeader("Manufacturer name").setAutoWidth(true);
+        grid.addColumn(ManufacturerEntity::getDescription).setHeader("Description").setAutoWidth(true);
 //        grid.addColumn("lastName").setAutoWidth(true);
 //        grid.addColumn("email").setAutoWidth(true);
 //        grid.addColumn("phone").setAutoWidth(true);
@@ -80,12 +82,12 @@ public class ProductManufacturerView extends VerticalLayout {
         // when a row is selected or deselected, populate form
         grid.asSingleSelect().addValueChangeListener(event -> {
             if (event.getValue() != null) {
-                ProductCategoryEntity productFromBackend = null;
+                ManufacturerEntity manufacturerFromBackend = null;
                 // when a row is selected but the data is no longer available, refresh grid
                 try {
-                    productFromBackend = productCategoryCrudService.getByIdOrThrow(event.getValue().getId());
-                    populateForm(productFromBackend);
-                } catch (ProductCategoryNotFoundException ex) {
+                    manufacturerFromBackend = manufacturerCrudService.getByIdOrThrow(event.getValue().getId());
+                    populateForm(manufacturerFromBackend);
+                } catch (ManufacturerNotFoundException ex) {
                     refreshGrid();
                 }
 
@@ -96,11 +98,12 @@ public class ProductManufacturerView extends VerticalLayout {
         refreshGrid();
 
         // Configure Form
-        binder = new BeanValidationBinder<>(ProductCategoryEntity.class);
+        binder = new BeanValidationBinder<>(ManufacturerEntity.class);
 
         // Bind fields. This where you'd define e.g. validation rules
 
-        binder.forField(productName).bind(ProductCategoryEntity::getProductCategoryName, ProductCategoryEntity::setProductCategoryName);
+        binder.forField(manufacturerNameTextField).bind(ManufacturerEntity::getManufacturerName, ManufacturerEntity::setManufacturerName);
+        binder.forField(manufacturerDescriptionTextField).bind(ManufacturerEntity::getDescription, ManufacturerEntity::setDescription);
 
         cancel.addClickListener(e -> {
             clearForm();
@@ -108,20 +111,20 @@ public class ProductManufacturerView extends VerticalLayout {
         });
 
         save.addClickListener(e -> {
-            if (productName.getValue() != null) {
+            if (manufacturerNameTextField.getValue() != null) {
                 try {
-                    if (this.product == null) {
-                        this.product = ProductCategoryEntity
+                    if (this.manufacturerEntity == null) {
+                        this.manufacturerEntity = ManufacturerEntity
                                 .builder()
-                                .productCategoryName(productName.getValue())
+                                .ManufacturerName(manufacturerNameTextField.getValue())
                                 .build();
                     }
-                    binder.writeBean(this.product);
+                    binder.writeBean(this.manufacturerEntity);
 
                     try {
-                        productCategoryCrudService.updateOrThrow(this.product);
-                    } catch (ProductCategoryNotFoundException productCategoryNotFoundException) {
-                        productCategoryCrudService.create(this.product);
+                        manufacturerCrudService.updateOrThrow(this.manufacturerEntity);
+                    } catch (ManufacturerNotFoundException ex) {
+                        manufacturerCrudService.create(this.manufacturerEntity);
                     }
 
                     clearForm();
@@ -146,9 +149,7 @@ public class ProductManufacturerView extends VerticalLayout {
 
         FormLayout formLayout = new FormLayout();
 
-        productName = new TextField("Product number");
-
-        Component[] fields = new Component[]{productName};
+        Component[] fields = new Component[]{manufacturerNameTextField, manufacturerDescriptionTextField};
 
         for (Component field : fields) {
             ((HasStyle) field).addClassName("full-width");
@@ -182,16 +183,16 @@ public class ProductManufacturerView extends VerticalLayout {
     private void refreshGrid() {
         grid.select(null);
 //        grid.getDataProvider().refreshAll();
-        grid.setItems(productCategoryCrudService.getAll());
+        grid.setItems(manufacturerCrudService.getAll());
     }
 
     private void clearForm() {
         populateForm(null);
     }
 
-    private void populateForm(ProductCategoryEntity value) {
-        this.product = value;
-        binder.readBean(this.product);
+    private void populateForm(ManufacturerEntity value) {
+        this.manufacturerEntity = value;
+        binder.readBean(this.manufacturerEntity);
 
     }
 }

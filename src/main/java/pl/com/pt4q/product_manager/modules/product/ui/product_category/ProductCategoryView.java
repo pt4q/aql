@@ -32,13 +32,13 @@ public class ProductCategoryView extends VerticalLayout {
 
     public static final String PAGE_TITLE = "Product category";
     public static final String ROUTE = "product-category";
-    public static final String CSS = "./views/product_category/product-category-view.css";
+    public static final String CSS = "./views/product_module/product_category/product-category-view.css";
 
     private ProductCategoryCrudService productCategoryCrudService;
 
     private Grid<ProductCategoryEntity> grid = new Grid<>(ProductCategoryEntity.class, false);
 
-    private TextField productName;
+    private TextField productCategory = new TextField("Category name");
 
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
@@ -100,7 +100,7 @@ public class ProductCategoryView extends VerticalLayout {
 
         // Bind fields. This where you'd define e.g. validation rules
 
-        binder.forField(productName).bind(ProductCategoryEntity::getProductCategoryName, ProductCategoryEntity::setProductCategoryName);
+        binder.forField(productCategory).bind(ProductCategoryEntity::getProductCategoryName, ProductCategoryEntity::setProductCategoryName);
 
         cancel.addClickListener(e -> {
             clearForm();
@@ -108,12 +108,12 @@ public class ProductCategoryView extends VerticalLayout {
         });
 
         save.addClickListener(e -> {
-            if (productName.getValue() != null) {
+            if (productCategory.getValue() != null) {
                 try {
                     if (this.product == null) {
                         this.product = ProductCategoryEntity
                                 .builder()
-                                .productCategoryName(productName.getValue())
+                                .productCategoryName(productCategory.getValue())
                                 .build();
                     }
                     binder.writeBean(this.product);
@@ -146,9 +146,7 @@ public class ProductCategoryView extends VerticalLayout {
 
         FormLayout formLayout = new FormLayout();
 
-        productName = new TextField("Product number");
-
-        Component[] fields = new Component[]{productName};
+        Component[] fields = new Component[]{productCategory};
 
         for (Component field : fields) {
             ((HasStyle) field).addClassName("full-width");
