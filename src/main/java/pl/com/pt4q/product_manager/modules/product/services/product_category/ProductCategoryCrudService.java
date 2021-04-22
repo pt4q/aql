@@ -1,17 +1,18 @@
 package pl.com.pt4q.product_manager.modules.product.services.product_category;
 
-import pl.com.pt4q.product_manager.modules.product.data.product_category.ProductCategoryEntity;
-import pl.com.pt4q.product_manager.service_utils.CustomCrudServiceInterface;
-import pl.com.pt4q.product_manager.modules.product.services.product_category.exceptions.ProductCategoryAlreadyExistsException;
-import pl.com.pt4q.product_manager.modules.product.services.product_category.exceptions.ProductCategoryNotFoundException;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.vaadin.artur.helpers.CrudService;
+import pl.com.pt4q.product_manager.modules.product.data.product_category.ProductCategoryEntity;
+import pl.com.pt4q.product_manager.modules.product.services.product_category.exceptions.ProductCategoryAlreadyExistsException;
+import pl.com.pt4q.product_manager.modules.product.services.product_category.exceptions.ProductCategoryNotFoundException;
+import pl.com.pt4q.product_manager.service_utils.CustomCrudServiceInterface;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductCategoryCrudService extends CrudService<ProductCategoryEntity, Long> implements CustomCrudServiceInterface<ProductCategoryEntity, Long, ProductCategoryNotFoundException, ProductCategoryAlreadyExistsException> {
@@ -31,7 +32,7 @@ public class ProductCategoryCrudService extends CrudService<ProductCategoryEntit
         } catch (Exception ex) {
             return getRepository().save(product);
         }
-        throw new ProductCategoryAlreadyExistsException(String.format("Product category %s already exists on id:%d", product.getProductCategoryName(), product.getId()));
+        throw new ProductCategoryAlreadyExistsException(String.format("Product category %s already exists on id:%d", product.getCategoryName(), product.getId()));
     }
 
     @Override
@@ -52,7 +53,7 @@ public class ProductCategoryCrudService extends CrudService<ProductCategoryEntit
         throw new ProductCategoryNotFoundException(String.format("Product category id:%d", id));
     }
 
-    public List<ProductCategoryEntity> getAll(){
+    public List<ProductCategoryEntity> getAll() {
         return productCategoryCrudRepository.findAll();
     }
 }

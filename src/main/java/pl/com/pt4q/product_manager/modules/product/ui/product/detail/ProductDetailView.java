@@ -1,11 +1,17 @@
 package pl.com.pt4q.product_manager.modules.product.ui.product.detail;
 
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import org.springframework.ui.context.support.UiApplicationContextUtils;
-import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
-import pl.com.pt4q.product_manager.views.main.MainView;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
+import pl.com.pt4q.product_manager.modules.product.services.manufacturer.ManufacturerCrudService;
+import pl.com.pt4q.product_manager.modules.product.services.product.AddNewProductService;
+import pl.com.pt4q.product_manager.modules.product.services.product.ProductCrudFinder;
+import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.ProductNotFoundException;
+import pl.com.pt4q.product_manager.modules.product.services.product_category.ProductCategoryCrudService;
+import pl.com.pt4q.product_manager.views.main.MainView;
 
 import java.util.List;
 import java.util.Map;
@@ -23,13 +29,29 @@ public class ProductDetailView extends VerticalLayout implements HasUrlParameter
     private ProductPartsGridDiv productPartsGridDiv;
     private AddNewProductPartToGridDiv addNewProductPartToGridDiv;
 
+    private ProductCategoryCrudService productCategoryCrudService;
+    private ManufacturerCrudService manufacturerCrudService;
+    private ProductCrudFinder productCrudFinder;
+    private AddNewProductService addNewProductService;
+
     private ProductEntity productEntity;
 
-    public ProductDetailView() {
+    @Autowired
+    public ProductDetailView(
+            ProductCategoryCrudService productCategoryCrudService,
+            ManufacturerCrudService manufacturerCrudService,
+            ProductCrudFinder productCrudFinder,
+            AddNewProductService addNewProductService) {
+
+        this.productCategoryCrudService = productCategoryCrudService;
+        this.manufacturerCrudService = manufacturerCrudService;
+        this.productCrudFinder = productCrudFinder;
+        this.addNewProductService = addNewProductService;
+
         this.productEntity = initProduct();
 
         this.saveProductOrBackButtonsDiv = new SaveProductOrBackButtonsDiv();
-        this.productDetailFormDiv = new ProductDetailFormDiv();
+        this.productDetailFormDiv = new ProductDetailFormDiv(productEntity, productCategoryCrudService, manufacturerCrudService);
         this.productPartsGridDiv = new ProductPartsGridDiv();
         this.addNewProductPartToGridDiv = new AddNewProductPartToGridDiv(this.productEntity, this.productPartsGridDiv.getProductPartsGrid());
 
@@ -44,7 +66,7 @@ public class ProductDetailView extends VerticalLayout implements HasUrlParameter
         );
     }
 
-    private ProductEntity initProduct(){
+    private ProductEntity initProduct() {
         return productEntity != null ? productEntity : new ProductEntity();
     }
 
@@ -55,13 +77,13 @@ public class ProductDetailView extends VerticalLayout implements HasUrlParameter
         Map<String, List<String>> parametersMap = queryParameters.getParameters();
 
         if (parametersMap.containsKey(QUERY_PARAM_ID_NAME)) {
-//            try {
-            Long id = Long.valueOf(parametersMap.get(QUERY_PARAM_ID_NAME).get(0));
-//                this.testCard = testCardFinder.findTestCardById(id);
-
-//            } catch (TestCardNotFoundException e) {
-//                Notification.show(e.getMessage());
-//            }
+            try {
+                Long id = Long.valueOf(parametersMap.get(QUERY_PARAM_ID_NAME).get(0));
+                this.productEntity = productCrudFinder.findByIdOrThrowException(id);
+            } catch (ProductNotFoundException e) {
+                Notification.show(e.getMessage());
+                this.productEntity = initProduct();
+            }
         }
     }
 }

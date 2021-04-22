@@ -20,6 +20,6 @@ public class ManufacturerEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    private String ManufacturerName;
+    private String manufacturerName;
     private String description;
 }

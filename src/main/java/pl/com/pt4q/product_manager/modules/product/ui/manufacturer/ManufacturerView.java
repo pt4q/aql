@@ -116,7 +116,7 @@ public class ManufacturerView extends VerticalLayout {
                     if (this.manufacturerEntity == null) {
                         this.manufacturerEntity = ManufacturerEntity
                                 .builder()
-                                .ManufacturerName(manufacturerNameTextField.getValue())
+                                .manufacturerName(manufacturerNameTextField.getValue())
                                 .build();
                     }
                     binder.writeBean(this.manufacturerEntity);

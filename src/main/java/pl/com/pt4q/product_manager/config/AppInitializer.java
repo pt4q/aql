@@ -22,15 +22,15 @@ public class AppInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         ProductCategoryEntity productCategoryEntity = productCategoryCrudService
                 .create(ProductCategoryEntity.builder()
-                        .productCategoryName("Wkrętarki TEST")
+                        .categoryName("Wkrętarki TEST")
                         .build());
-        log.info(String.format("TEST INIT: Created product category: %s (id:%d)", productCategoryEntity.getProductCategoryName(), productCategoryEntity.getId()));
+        log.info(String.format("TEST INIT: Created product category: %s (id:%d)", productCategoryEntity.getCategoryName(), productCategoryEntity.getId()));
 
         ProductCategoryEntity productCategoryEntity2 = productCategoryCrudService
                 .create(ProductCategoryEntity.builder()
-                        .productCategoryName("Młotowiertarki TEST")
+                        .categoryName("Młotowiertarki TEST")
                         .build());
-        log.info(String.format("TEST INIT: Created product category: %s (id:%d)", productCategoryEntity2.getProductCategoryName(), productCategoryEntity2.getId()));
+        log.info(String.format("TEST INIT: Created product category: %s (id:%d)", productCategoryEntity2.getCategoryName(), productCategoryEntity2.getId()));
 
         TestCardEntity testCardEntity = cardForProductCreator
                 .createEmptyTestCardForProduct(TestCardEntity.builder()
@@ -39,6 +39,6 @@ public class AppInitializer implements CommandLineRunner {
                         .build());
         log.info(String.format("TEST INIT: Created test card \"%s\" (id:%d) for TEST product category %s (id:%d)",
                 testCardEntity.getTestCardName(), testCardEntity.getId(),
-                productCategoryEntity.getProductCategoryName(), productCategoryEntity.getId()));
+                productCategoryEntity.getCategoryName(), productCategoryEntity.getId()));
     }
 }

@@ -10,8 +10,10 @@ import lombok.Data;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_series.ProductSeriesEntity;
 import pl.com.pt4q.product_manager.modules.product.services.LastProductSeries;
+import pl.com.pt4q.product_manager.modules.product.services.product.ProductCrudFinder;
 import pl.com.pt4q.product_manager.modules.product.ui.product.detail.ProductDetailView;
 
+import java.util.List;
 import java.util.OptionalInt;
 import java.util.Set;
 
@@ -20,7 +22,11 @@ class ProductGeneralProductsGridDiv extends Div {
 
     private Grid<ProductEntity> productEntityGrid = new Grid<>();
 
-    public ProductGeneralProductsGridDiv() {
+    private ProductCrudFinder productCrudFinder;
+
+    public ProductGeneralProductsGridDiv(ProductCrudFinder productCrudFinder) {
+        this.productCrudFinder = productCrudFinder;
+
         initGrid();
 
         VerticalLayout gridLayout = new VerticalLayout(this.productEntityGrid);
@@ -48,7 +54,7 @@ class ProductGeneralProductsGridDiv extends Div {
                 .setHeader("Product version")
                 .setAutoWidth(true);
         this.productEntityGrid
-                .addColumn(productEntity -> productEntity.getProductCategory().getProductCategoryName())
+                .addColumn(productEntity -> productEntity.getProductCategory().getCategoryName())
                 .setHeader("Product category")
                 .setSortable(true)
                 .setAutoWidth(true);
@@ -70,15 +76,15 @@ class ProductGeneralProductsGridDiv extends Div {
 
         this.productEntityGrid.setWidthFull();
         this.productEntityGrid.setHeightByRows(true);
-//        this.refreshGrid(testCardFinder.getAll());
+        this.refreshGrid(productCrudFinder.findAll());
     }
 
     private String createLinkWithParam(String url, String paramName, Long id) {
         return url + "?" + paramName + "=" + id.toString();
     }
 
-//    public void refreshGrid(List<TestCardEntity> testCards) {
-//        this.productEntityGrid.select(null);
-//        this.productEntityGrid.setItems(testCards);
-//    }
+    public void refreshGrid(List<ProductEntity> products) {
+        this.productEntityGrid.select(null);
+        this.productEntityGrid.setItems(products);
+    }
 }

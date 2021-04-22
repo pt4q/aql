@@ -62,7 +62,7 @@ public class ProductCategoryView extends VerticalLayout {
 
         // Configure Grid
         grid.addColumn(ProductCategoryEntity::getId).setHeader("Id").setAutoWidth(true);
-        grid.addColumn(ProductCategoryEntity::getProductCategoryName).setHeader("Product category").setAutoWidth(true);
+        grid.addColumn(ProductCategoryEntity::getCategoryName).setHeader("Product category").setAutoWidth(true);
 //        grid.addColumn("lastName").setAutoWidth(true);
 //        grid.addColumn("email").setAutoWidth(true);
 //        grid.addColumn("phone").setAutoWidth(true);
@@ -100,7 +100,7 @@ public class ProductCategoryView extends VerticalLayout {
 
         // Bind fields. This where you'd define e.g. validation rules
 
-        binder.forField(productCategory).bind(ProductCategoryEntity::getProductCategoryName, ProductCategoryEntity::setProductCategoryName);
+        binder.forField(productCategory).bind(ProductCategoryEntity::getCategoryName, ProductCategoryEntity::setCategoryName);
 
         cancel.addClickListener(e -> {
             clearForm();
@@ -113,7 +113,7 @@ public class ProductCategoryView extends VerticalLayout {
                     if (this.product == null) {
                         this.product = ProductCategoryEntity
                                 .builder()
-                                .productCategoryName(productCategory.getValue())
+                                .categoryName(productCategory.getValue())
                                 .build();
                     }
                     binder.writeBean(this.product);

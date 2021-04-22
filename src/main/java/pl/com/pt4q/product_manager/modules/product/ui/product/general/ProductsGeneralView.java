@@ -1,6 +1,8 @@
 package pl.com.pt4q.product_manager.modules.product.ui.product.general;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
+import pl.com.pt4q.product_manager.modules.product.services.product.ProductCrudFinder;
 import pl.com.pt4q.product_manager.views.main.MainView;
 import pl.com.pt4q.product_manager.modules.product.ui.product.detail.ProductDetailView;
 import pl.com.pt4q.product_manager.modules.product.ui.product_category.ProductCategoryFilterDiv;
@@ -27,11 +29,16 @@ public class ProductsGeneralView extends VerticalLayout {
 
     private Button addNewProductButton = new Button("Add new product");
 
+    private ProductCrudFinder productCrudFinder;
+
     private ProductEntity productEntity;
 
-    public ProductsGeneralView() {
+    @Autowired
+    public ProductsGeneralView(ProductCrudFinder productCrudFinder) {
+        this.productCrudFinder = productCrudFinder;
+
         this.productCategoryFilterDiv = new ProductCategoryFilterDiv();
-        this.productsGridDiv = new ProductGeneralProductsGridDiv();
+        this.productsGridDiv = new ProductGeneralProductsGridDiv(productCrudFinder);
 
         initAddProductButton();
 

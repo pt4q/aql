@@ -18,7 +18,7 @@ public class ProductCategoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String productCategoryName;
+    private String categoryName;
 
 //    @OneToMany(fetch = FetchType.LAZY)
 //    private Set<ProductEntity> products;

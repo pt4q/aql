@@ -36,7 +36,7 @@ class TestCardsGridDiv extends Div {
         String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
 
         this.testCardsGrid
-                .addColumn(testCardEntity -> testCardEntity.getProductCategory().getProductCategoryName())
+                .addColumn(testCardEntity -> testCardEntity.getProductCategory().getCategoryName())
                 .setHeader("Product category")
                 .setSortable(true);
         this.testCardsGrid

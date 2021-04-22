@@ -54,7 +54,7 @@ class TestCardInfoDiv extends Div {
         this.productCategoryComboBox
                 .setItems(productCategoryCrudService.getAll()
                         .stream()
-                        .map(ProductCategoryEntity::getProductCategoryName)
+                        .map(ProductCategoryEntity::getCategoryName)
                         .collect(Collectors.toList()));
         this.productCategoryComboBox.setRequired(true);
         this.productCategoryComboBox.setWidth("20%");
