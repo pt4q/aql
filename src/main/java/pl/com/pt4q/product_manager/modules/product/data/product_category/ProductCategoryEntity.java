@@ -23,6 +23,6 @@ public class ProductCategoryEntity {
 //    @OneToMany(fetch = FetchType.LAZY)
 //    private Set<ProductEntity> products;
 
-    @OneToOne
-    private TestCardEntity testCard;
+//    @OneToOne
+//    private TestCardEntity testCard;
 }

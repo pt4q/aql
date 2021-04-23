@@ -14,7 +14,7 @@ public class ProductCategoriesInMemoryManager {
 
     private List<ProductCategoryEntity> categories;
 
-    public Optional<ProductCategoryEntity> findByName(String name) {
+    public Optional<ProductCategoryEntity> getByName(String name) {
         return categories.stream()
                 .filter(category -> category.getCategoryName().equals(name))
                 .findFirst();

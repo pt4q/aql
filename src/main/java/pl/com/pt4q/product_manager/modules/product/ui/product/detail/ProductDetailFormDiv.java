@@ -7,10 +7,13 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import pl.com.pt4q.product_manager.modules.product.data.manufacturer.ManufacturerEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
+import pl.com.pt4q.product_manager.modules.product.data.product_category.ProductCategoryEntity;
 import pl.com.pt4q.product_manager.modules.product.services.manufacturer.ManufacturerCrudService;
 import pl.com.pt4q.product_manager.modules.product.services.manufacturer.ManufacturersInMemoryManager;
 import pl.com.pt4q.product_manager.modules.product.services.product_category.ProductCategoriesInMemoryManager;
 import pl.com.pt4q.product_manager.modules.product.services.product_category.ProductCategoryCrudService;
+
+import java.util.Optional;
 
 class ProductDetailFormDiv extends Div {
 
@@ -69,15 +72,17 @@ class ProductDetailFormDiv extends Div {
 
     private void configCategoryComboBox() {
         categoryComboBox.setItems(categoriesInMemoryListManager.getCategoriesNames());
+        categoryComboBox.addValueChangeListener(event -> {
+            Optional<ProductCategoryEntity> category = categoriesInMemoryListManager.getByName(event.getValue());
+            category.ifPresent(productCategoryEntity -> product.setProductCategory(productCategoryEntity));
+        });
     }
 
     private void configManufacturerComboBox() {
         manufacturerComboBox.setItems(manufacturersInMemoryManager.getManufacturersNames());
         manufacturerComboBox.addValueChangeListener(event -> {
-           product.setManufacturer(ManufacturerEntity.builder()
-                   .manufacturerName(event.getValue()).build());
-
-           manufacturerComboBox.setValue(event.getValue());
+            Optional<ManufacturerEntity> manufacturer = manufacturersInMemoryManager.getByName(event.getValue());
+            manufacturer.ifPresent(manufacturerEntity -> product.setManufacturer(manufacturerEntity));
         });
     }
 

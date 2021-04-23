@@ -32,7 +32,7 @@ public class TestCardEntity {
     @OneToOne
     private ProductCategoryEntity productCategory;
 
-    @OneToMany(mappedBy = "testCard", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "testCard", fetch = FetchType.LAZY)
     private List<TestCardPartEntity> testCardParts;
 
 }

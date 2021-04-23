@@ -30,9 +30,9 @@ public class ProductEntity {
     @ManyToOne
     private ManufacturerEntity manufacturer;
     private String productSku;
-    @OneToMany
+    @OneToMany (fetch = FetchType.EAGER)
     private Set<ProductSeriesEntity> productSeries;
-    @OneToMany
+    @OneToMany (fetch = FetchType.LAZY, mappedBy = "product")
     private List<ProductPartEntity> productParts;
 
     private LocalDateTime creationTime;
