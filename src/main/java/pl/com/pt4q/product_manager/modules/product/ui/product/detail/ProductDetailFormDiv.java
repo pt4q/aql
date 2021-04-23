@@ -32,12 +32,14 @@ class ProductDetailFormDiv extends Div {
     private ManufacturersInMemoryManager manufacturersInMemoryManager;
     private ProductEntity product;
 
-    public ProductDetailFormDiv(ProductEntity product,
+    public ProductDetailFormDiv(ProductEntity productEntity,
                                 ProductCategoryCrudService productCategoryCrudService,
                                 ManufacturerCrudService manufacturerCrudService) {
-        this.product = product;
+
         this.productCategoryCrudService = productCategoryCrudService;
         this.manufacturerCrudService = manufacturerCrudService;
+
+        this.product = productEntity;
 
         this.categoriesInMemoryListManager = new ProductCategoriesInMemoryManager(productCategoryCrudService.getAll());
         this.manufacturersInMemoryManager = new ManufacturersInMemoryManager(manufacturerCrudService.getAll());

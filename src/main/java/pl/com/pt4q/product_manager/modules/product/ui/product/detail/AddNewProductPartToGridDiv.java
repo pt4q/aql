@@ -12,7 +12,6 @@ import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
 import pl.com.pt4q.product_manager.modules.product.ui.product_part.ProductPartDetailView;
 
-import java.util.LinkedList;
 import java.util.List;
 
 class AddNewProductPartToGridDiv extends Div {
@@ -24,12 +23,15 @@ class AddNewProductPartToGridDiv extends Div {
     private ProductEntity productEntity;
     private List<ProductPartEntity> productPartList;
 
-    public AddNewProductPartToGridDiv(ProductEntity productEntity, Grid<ProductPartEntity> testCardPartEntityGrid) {
-        this.productEntity = productEntity;
-        this.testCardPartEntityGrid = testCardPartEntityGrid;
+    public AddNewProductPartToGridDiv(
+            ProductEntity productEntity,
+            Grid<ProductPartEntity> testCardPartEntityGrid) {
 
-        this.productPartList = initProductPartList();
-        initAddNewTestCardPartButton();
+        this.testCardPartEntityGrid = testCardPartEntityGrid;
+        this.productEntity = productEntity;
+
+//        this.productPartList = initProductPartList();
+        initAddProductPartButton();
 
         HorizontalLayout layout = new HorizontalLayout(addNewTestCardPartButton);
         layout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
@@ -37,12 +39,12 @@ class AddNewProductPartToGridDiv extends Div {
         add(layout);
     }
 
-    private List<ProductPartEntity> initProductPartList() {
-        List<ProductPartEntity> testCardParts = this.productEntity.getProductParts();
-        return testCardParts != null ? testCardParts : new LinkedList<>();
-    }
+//    private List<ProductPartEntity> initProductPartList() {
+//        List<ProductPartEntity> testCardParts = this.productEntity.getProductParts();
+//        return testCardParts != null ? testCardParts : new LinkedList<>();
+//    }
 
-    private void initAddNewTestCardPartButton() {
+    private void initAddProductPartButton() {
         this.addNewTestCardPartButton.addClickListener(e -> {
             UI.getCurrent().navigate(ProductPartDetailView.ROUTE);
         });

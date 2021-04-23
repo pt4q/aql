@@ -52,10 +52,6 @@ public class ProductsGeneralView extends VerticalLayout {
 
     private void initAddProductButton(){
         this.addNewProductButton.addClickListener(buttonClickEvent -> {
-            this.productEntity = ProductEntity.builder()
-                    .build();
-
-            ComponentUtil.setData(UI.getCurrent(), ProductEntity.class, productEntity);
             UI.getCurrent().navigate(ProductDetailView.ROUTE);
         });
     }

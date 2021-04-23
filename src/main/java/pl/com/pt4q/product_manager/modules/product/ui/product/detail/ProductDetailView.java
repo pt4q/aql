@@ -1,5 +1,7 @@
 package pl.com.pt4q.product_manager.modules.product.ui.product.detail;
 
+import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -48,26 +50,26 @@ public class ProductDetailView extends VerticalLayout implements HasUrlParameter
         this.productCrudFinder = productCrudFinder;
         this.addNewProductService = addNewProductService;
 
-        this.productEntity = initProduct();
+        this.productEntity = getProductFromContext();
 
-        this.saveProductOrBackButtonsDiv = new SaveProductOrBackButtonsDiv();
-        this.productDetailFormDiv = new ProductDetailFormDiv(productEntity, productCategoryCrudService, manufacturerCrudService);
-        this.productPartsGridDiv = new ProductPartsGridDiv();
-        this.addNewProductPartToGridDiv = new AddNewProductPartToGridDiv(this.productEntity, this.productPartsGridDiv.getProductPartsGrid());
+        saveProductOrBackButtonsDiv = new SaveProductOrBackButtonsDiv(this.productEntity, this.addNewProductService);
+        productDetailFormDiv = new ProductDetailFormDiv(this.productEntity, productCategoryCrudService, manufacturerCrudService);
+        productPartsGridDiv = new ProductPartsGridDiv();
+        addNewProductPartToGridDiv = new AddNewProductPartToGridDiv(this.productEntity, this.productPartsGridDiv.getProductPartsGrid());
 
         HorizontalLayout hl = new HorizontalLayout(this.productDetailFormDiv);
 
         setAlignItems(Alignment.CENTER);
         add(
-                this.saveProductOrBackButtonsDiv,
+                saveProductOrBackButtonsDiv,
                 hl,
-                this.productPartsGridDiv,
-                this.addNewProductPartToGridDiv
+                productPartsGridDiv,
+                addNewProductPartToGridDiv
         );
     }
 
-    private ProductEntity initProduct() {
-        return productEntity != null ? productEntity : new ProductEntity();
+    private ProductEntity getProductFromContext() {
+        return ComponentUtil.getData(UI.getCurrent(), ProductEntity.class);
     }
 
     @Override
@@ -80,9 +82,9 @@ public class ProductDetailView extends VerticalLayout implements HasUrlParameter
             try {
                 Long id = Long.valueOf(parametersMap.get(QUERY_PARAM_ID_NAME).get(0));
                 this.productEntity = productCrudFinder.findByIdOrThrowException(id);
+                ComponentUtil.setData(UI.getCurrent(), ProductEntity.class, productEntity);
             } catch (ProductNotFoundException e) {
                 Notification.show(e.getMessage());
-                this.productEntity = initProduct();
             }
         }
     }
