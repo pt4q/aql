@@ -10,7 +10,7 @@ import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.P
 
 @Log4j2
 @Service
-public class AddNewProductService {
+public class AddNewOrUpdateExistingProductService {
 
     @Autowired
     private ProductCrudFinder productCrudFinder;
@@ -20,12 +20,19 @@ public class AddNewProductService {
     public ProductEntity add(ProductEntity product) throws ProductAlreadyExistsException, ProductValidatorException {
         new ProductValidator(product)
                 .validate();
-
         try {
             product = findProduct(product.getId());
             throw new ProductAlreadyExistsException(String.format("Product already exists on id:%d", product.getId()));
         } catch (ProductNotFoundException e) {
             return productCrudSaver.save(product);
+        }
+    }
+
+    public ProductEntity updateExisting(ProductEntity product) throws ProductValidatorException {
+        try {
+            return add(product);
+        } catch (ProductAlreadyExistsException e) {
+            return productCrudSaver.update(product);
         }
     }
 

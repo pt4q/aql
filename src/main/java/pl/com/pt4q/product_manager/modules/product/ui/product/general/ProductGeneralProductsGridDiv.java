@@ -45,14 +45,14 @@ class ProductGeneralProductsGridDiv extends Div {
                 .setHeader("Product SKU")
                 .setSortable(true)
                 .setAutoWidth(true);
-        this.productEntityGrid
-                .addColumn(productEntity -> {
-                    Set<ProductSeriesEntity> seriesSet = productEntity.getProductSeries();
-                    OptionalInt optionalInt = new LastProductSeries(seriesSet).getLatest();
-                    return optionalInt.isPresent() ? optionalInt.getAsInt() : "";
-                })
-                .setHeader("Product version")
-                .setAutoWidth(true);
+//        this.productEntityGrid
+//                .addColumn(productEntity -> {
+//                    Set<ProductSeriesEntity> seriesSet = productEntity.getProductSeries();
+//                    OptionalInt optionalInt = new LastProductSeries(seriesSet).getLatest();
+//                    return optionalInt.isPresent() ? optionalInt.getAsInt() : "";
+//                })
+//                .setHeader("Product version")
+//                .setAutoWidth(true);
         this.productEntityGrid
                 .addColumn(productEntity -> productEntity.getProductCategory().getCategoryName())
                 .setHeader("Product category")

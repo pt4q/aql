@@ -29,10 +29,11 @@ import com.vaadin.flow.router.PageTitle;
  * The main view is a top-level placeholder for other views.
  */
 @CssImport("./views/main/main-view.css")
-@PWA(name = "AQL", shortName = "AQL", enableInstallPrompt = false)
+@PWA(name = MainView.PWA_APP_NAME, shortName = MainView.PWA_APP_NAME, enableInstallPrompt = false)
 @JsModule("./styles/shared-styles.js")
 public class MainView extends AppLayout {
 
+    public static final String PWA_APP_NAME = "Product manager";
     private final Tabs menu;
     private H1 viewTitle;
 

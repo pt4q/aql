@@ -11,7 +11,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import lombok.Data;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
-import pl.com.pt4q.product_manager.modules.product.services.product.AddNewProductService;
+import pl.com.pt4q.product_manager.modules.product.services.product.AddNewOrUpdateExistingProductService;
 import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.ProductAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.ProductValidatorException;
 import pl.com.pt4q.product_manager.modules.product.ui.product.general.ProductsGeneralView;
@@ -19,19 +19,20 @@ import pl.com.pt4q.product_manager.modules.product.ui.product.general.ProductsGe
 @Data
 class SaveProductOrBackButtonsDiv extends Div {
 
-    private Button saveButton;
-    private Button backButton;
+    private Button saveButton = new Button("Save product");
+    private Button backButton = new Button(new Icon(VaadinIcon.ARROW_BACKWARD));
 
-    private AddNewProductService addNewProductService;
-    private ProductEntity productEntity;
+    private ProductDetailFormDiv productDetailFormDiv;
 
-    public SaveProductOrBackButtonsDiv(ProductEntity productEntity,
-                                       AddNewProductService addNewProductService) {
-        this.productEntity = productEntity;
-        this.addNewProductService = addNewProductService;
+    private AddNewOrUpdateExistingProductService addNewOrUpdateExistingProductService;
+    private ProductEntity product;
 
-        initBackButton();
-        initSaveButton();
+    public SaveProductOrBackButtonsDiv(ProductDetailFormDiv productDetailFormDiv, AddNewOrUpdateExistingProductService addNewOrUpdateExistingProductService) {
+        this.productDetailFormDiv = productDetailFormDiv;
+        this.addNewOrUpdateExistingProductService = addNewOrUpdateExistingProductService;
+
+        configBackButton();
+        configSaveButton();
 
         HorizontalLayout buttonLayout = new HorizontalLayout(this.backButton, this.saveButton);
         buttonLayout.setWidthFull();
@@ -40,30 +41,54 @@ class SaveProductOrBackButtonsDiv extends Div {
         add(buttonLayout);
     }
 
-    private void initSaveButton() {
-        this.saveButton = new Button("Save product");
+    private void configSaveButton() {
         this.saveButton.addClickListener(buttonClickEvent -> {
-            if (productEntity != null) {
+            this.product = getProductFromContext();
+            if (product != null) {
                 try {
-                    productEntity = addNewProductService.add(productEntity);
-                    if (productEntity.getId() != null && productEntity.getProductSku() != null) {
-                        ComponentUtil.setData(UI.getCurrent(), ProductEntity.class, null);
-                        UI.getCurrent().navigate(ProductsGeneralView.ROUTE);
-                    } else
-                        Notification.show("After check the product is null");
-                } catch (ProductAlreadyExistsException | ProductValidatorException e) {
+                   createIfProductIsNewScenario();
+                } catch (ProductValidatorException e) {
                     Notification.show(e.getMessage());
+                } catch (ProductAlreadyExistsException e) {
+                    updateIfProductExistsScenario(product);
                 }
             } else
                 Notification.show("Product is null");
         });
     }
 
-    private void initBackButton() {
-        this.backButton = new Button(new Icon(VaadinIcon.ARROW_BACKWARD));
+    private void createIfProductIsNewScenario() throws ProductAlreadyExistsException, ProductValidatorException {
+        this.product = addNewOrUpdateExistingProductService.add(product);
+        if (product.getId() != null && product.getProductSku() != null) {
+            Notification.show(String.format("Product %s has been created", product.getProductSku()));
+            saveDataToContext(product);
+        } else
+            Notification.show("After check the product is null");
+    }
+
+    private void updateIfProductExistsScenario(ProductEntity productEntity) {
+        try {
+            this.product = addNewOrUpdateExistingProductService.updateExisting(productEntity);
+            Notification.show(String.format("Product %s has been updated", product.getProductSku()));
+            saveDataToContext(product);
+        } catch (ProductValidatorException ex) {
+            Notification.show(ex.getMessage());
+        }
+    }
+
+    private void configBackButton() {
         this.backButton.getElement().getStyle().set("margin-right", "auto");
         this.backButton.addClickListener(buttonClickEvent -> {
+            saveDataToContext(null);
             UI.getCurrent().navigate(ProductsGeneralView.ROUTE);
         });
+    }
+
+    private ProductEntity getProductFromContext() {
+        return ComponentUtil.getData(UI.getCurrent(), ProductEntity.class);
+    }
+
+    private void saveDataToContext(ProductEntity product) {
+        ComponentUtil.setData(UI.getCurrent(), ProductEntity.class, product);
     }
 }

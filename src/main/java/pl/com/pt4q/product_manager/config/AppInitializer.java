@@ -8,16 +8,12 @@ import org.springframework.stereotype.Component;
 import pl.com.pt4q.product_manager.modules.product.data.manufacturer.ManufacturerEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_category.ProductCategoryEntity;
-import pl.com.pt4q.product_manager.modules.product.data.product_series.ProductSeriesEntity;
 import pl.com.pt4q.product_manager.modules.product.services.manufacturer.ManufacturerCrudService;
-import pl.com.pt4q.product_manager.modules.product.services.product.AddNewProductService;
-import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.ProductAlreadyExistsException;
-import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.ProductValidatorException;
+import pl.com.pt4q.product_manager.modules.product.services.product.AddNewOrUpdateExistingProductService;
 import pl.com.pt4q.product_manager.modules.product.services.product_category.ProductCategoryCrudService;
 import pl.com.pt4q.product_manager.modules.test_card.data.test_card.TestCardEntity;
 import pl.com.pt4q.product_manager.modules.test_card.services.test_card.TestCardForProductCategoryCreator;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,7 +26,7 @@ public class AppInitializer implements CommandLineRunner {
     @Autowired
     private ManufacturerCrudService manufacturerCrudService;
     @Autowired
-    private AddNewProductService addNewProductService;
+    private AddNewOrUpdateExistingProductService addNewOrUpdateExistingProductService;
     @Autowired
     private TestCardForProductCategoryCreator cardForProductCreator;
 
@@ -76,7 +72,7 @@ public class AppInitializer implements CommandLineRunner {
 
     @SneakyThrows
     private List<ProductEntity> initProducts(List<ProductCategoryEntity> categories, List<ManufacturerEntity> manufacturers) {
-        ProductEntity productEntity1 = addNewProductService.add(ProductEntity.builder()
+        ProductEntity productEntity1 = addNewOrUpdateExistingProductService.add(ProductEntity.builder()
                 .productSku("DED1234")
                 .productCategory(categories.get(0))
                 .manufacturer(manufacturers.get(0))

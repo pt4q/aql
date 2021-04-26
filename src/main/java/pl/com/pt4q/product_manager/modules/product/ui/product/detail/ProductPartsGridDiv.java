@@ -40,8 +40,8 @@ class ProductPartsGridDiv extends Div {
                 .setSortable(true);
         this.productPartsGrid
                 .addColumn(productPartEntity ->
-                        productPartEntity.getManufacturer() != null ?
-                                productPartEntity.getManufacturer()
+                        productPartEntity.getPartManufacturer() != null ?
+                                productPartEntity.getPartManufacturer()
                                 : "")
                 .setHeader("Part manufacturer")
                 .setSortable(true);

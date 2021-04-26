@@ -26,16 +26,16 @@ public class ProductPartEntity {
 
     @ManyToOne
     private ProductEntity product;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private ProductSeriesEntity productSeries;
-
     @ManyToOne
-    private ManufacturerEntity manufacturer;
+    private ManufacturerEntity partManufacturer;
+
     private String partModel;
     private String partDescription;
     private LocalDate validFromDate;
 
-    private Boolean currentPart;
+    private Boolean activePart;
 
     private LocalDateTime modificationTime;
 

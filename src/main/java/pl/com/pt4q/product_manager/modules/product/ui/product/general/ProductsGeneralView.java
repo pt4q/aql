@@ -1,5 +1,7 @@
 package pl.com.pt4q.product_manager.modules.product.ui.product.general;
 
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.services.product.ProductCrudFinder;
@@ -18,7 +20,7 @@ import com.vaadin.flow.router.Route;
 @Route(value = ProductsGeneralView.ROUTE, layout = MainView.class)
 //@RouteAlias(value = "", layout = MainView.class)
 @PageTitle(ProductsGeneralView.PAGE_TITLE)
-public class ProductsGeneralView extends VerticalLayout {
+public class ProductsGeneralView extends Div {
 
     public static final String PAGE_TITLE = "Products";
     public static final String ROUTE = "products";
@@ -43,8 +45,8 @@ public class ProductsGeneralView extends VerticalLayout {
         initAddProductButton();
 
         HorizontalLayout toolPanel = new HorizontalLayout(productCategoryFilterDiv, addNewProductButton);
-        toolPanel.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
-        toolPanel.setJustifyContentMode(JustifyContentMode.BETWEEN);
+        toolPanel.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
+        toolPanel.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
 
         add(toolPanel,
                 productsGridDiv);
