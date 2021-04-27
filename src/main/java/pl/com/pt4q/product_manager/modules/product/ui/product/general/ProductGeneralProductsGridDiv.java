@@ -8,24 +8,20 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import lombok.Data;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
-import pl.com.pt4q.product_manager.modules.product.data.product_series.ProductSeriesEntity;
-import pl.com.pt4q.product_manager.modules.product.services.LastProductSeries;
-import pl.com.pt4q.product_manager.modules.product.services.product.ProductCrudFinder;
+import pl.com.pt4q.product_manager.modules.product.services.product.ProductFinderService;
 import pl.com.pt4q.product_manager.modules.product.ui.product.detail.ProductDetailView;
 
 import java.util.List;
-import java.util.OptionalInt;
-import java.util.Set;
 
 @Data
 class ProductGeneralProductsGridDiv extends Div {
 
     private Grid<ProductEntity> productEntityGrid = new Grid<>();
 
-    private ProductCrudFinder productCrudFinder;
+    private ProductFinderService productFinderService;
 
-    public ProductGeneralProductsGridDiv(ProductCrudFinder productCrudFinder) {
-        this.productCrudFinder = productCrudFinder;
+    public ProductGeneralProductsGridDiv(ProductFinderService productFinderService) {
+        this.productFinderService = productFinderService;
 
         initGrid();
 
@@ -76,7 +72,7 @@ class ProductGeneralProductsGridDiv extends Div {
 
         this.productEntityGrid.setWidthFull();
         this.productEntityGrid.setHeightByRows(true);
-        this.refreshGrid(productCrudFinder.findAll());
+        this.refreshGrid(productFinderService.findAll());
     }
 
     private String createLinkWithParam(String url, String paramName, Long id) {

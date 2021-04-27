@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ProductCrudFinder {
+public class ProductFinderService {
 
     private ProductCrudRepository productCrudRepository;
 
     @Autowired
-    public ProductCrudFinder(ProductCrudRepository productCrudRepository) {
+    public ProductFinderService(ProductCrudRepository productCrudRepository) {
         this.productCrudRepository = productCrudRepository;
     }
 

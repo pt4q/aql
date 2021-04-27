@@ -4,15 +4,13 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
-import pl.com.pt4q.product_manager.modules.product.services.product.ProductCrudFinder;
+import pl.com.pt4q.product_manager.modules.product.services.product.ProductFinderService;
 import pl.com.pt4q.product_manager.views.main.MainView;
 import pl.com.pt4q.product_manager.modules.product.ui.product.detail.ProductDetailView;
 import pl.com.pt4q.product_manager.modules.product.ui.product_category.ProductCategoryFilterDiv;
-import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
@@ -31,16 +29,16 @@ public class ProductsGeneralView extends Div {
 
     private Button addNewProductButton = new Button("Add new product");
 
-    private ProductCrudFinder productCrudFinder;
+    private ProductFinderService productFinderService;
 
     private ProductEntity productEntity;
 
     @Autowired
-    public ProductsGeneralView(ProductCrudFinder productCrudFinder) {
-        this.productCrudFinder = productCrudFinder;
+    public ProductsGeneralView(ProductFinderService productFinderService) {
+        this.productFinderService = productFinderService;
 
         this.productCategoryFilterDiv = new ProductCategoryFilterDiv();
-        this.productsGridDiv = new ProductGeneralProductsGridDiv(productCrudFinder);
+        this.productsGridDiv = new ProductGeneralProductsGridDiv(productFinderService);
 
         initAddProductButton();
 

@@ -12,10 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.services.manufacturer.ManufacturerCrudService;
 import pl.com.pt4q.product_manager.modules.product.services.product.AddNewOrUpdateExistingProductService;
-import pl.com.pt4q.product_manager.modules.product.services.product.ProductCrudFinder;
+import pl.com.pt4q.product_manager.modules.product.services.product.ProductFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.ProductNotFoundException;
 import pl.com.pt4q.product_manager.modules.product.services.product_category.ProductCategoryCrudService;
-import pl.com.pt4q.product_manager.modules.product.ui.product.general.ProductsGeneralView;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 import java.util.List;
@@ -36,7 +35,7 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
 
     private ProductCategoryCrudService productCategoryCrudService;
     private ManufacturerCrudService manufacturerCrudService;
-    private ProductCrudFinder productCrudFinder;
+    private ProductFinderService productFinderService;
     private AddNewOrUpdateExistingProductService addNewOrUpdateExistingProductService;
 
     private ProductEntity productEntity;
@@ -45,12 +44,12 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
     public ProductDetailView(
             ProductCategoryCrudService productCategoryCrudService,
             ManufacturerCrudService manufacturerCrudService,
-            ProductCrudFinder productCrudFinder,
+            ProductFinderService productFinderService,
             AddNewOrUpdateExistingProductService addNewOrUpdateExistingProductService) {
 
         this.productCategoryCrudService = productCategoryCrudService;
         this.manufacturerCrudService = manufacturerCrudService;
-        this.productCrudFinder = productCrudFinder;
+        this.productFinderService = productFinderService;
         this.addNewOrUpdateExistingProductService = addNewOrUpdateExistingProductService;
 
         this.productEntity = getProductFromContext();
@@ -86,7 +85,7 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
         if (parametersMap.containsKey(QUERY_PARAM_ID_NAME)) {
             try {
                 Long id = Long.valueOf(parametersMap.get(QUERY_PARAM_ID_NAME).get(0));
-                this.productEntity = productCrudFinder.findByIdOrThrowException(id);
+                this.productEntity = productFinderService.findByIdOrThrowException(id);
                 saveProductToContext(productEntity);
                 this.productDetailFormDiv.populateForm(this.productEntity);
             } catch (ProductNotFoundException e) {

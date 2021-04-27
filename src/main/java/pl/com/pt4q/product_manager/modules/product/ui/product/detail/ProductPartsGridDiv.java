@@ -31,7 +31,7 @@ class ProductPartsGridDiv extends Div {
         String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
         this.productPartsGrid
                 .addColumn(new ComponentRenderer<>(ppe ->
-                        new Anchor(createLinkWithParam(ProductDetailView.ROUTE, ProductDetailView.QUERY_PARAM_ID_NAME, ppe.getId()), ppe.getPartModel())))
+                        new Anchor(createLinkWithParam(ProductDetailView.ROUTE, ProductDetailView.QUERY_PARAM_ID_NAME, ppe.getId()), ppe.getPartModelOrPartName())))
                 .setHeader("Part model")
                 .setSortable(true);
         this.productPartsGrid
@@ -59,16 +59,6 @@ class ProductPartsGridDiv extends Div {
                         : "")
                 .setHeader("Valid from time")
                 .setSortable(true);
-
-//        this.productEntityGrid
-//                .addColumn(testCardEntity -> testCardEntity.getTestCardParts().size())
-//                .setHeader("Number of param categories")
-//                .setSortable(true);
-//        this.productPartsGrid
-//                .addColumn(productPartEntity ->
-//                        productPartEntity.getCreationTime() != null ? productPartEntity.getCreationTime().format(DateTimeFormatter.ofPattern(dateTimeFormat)) : null)
-//                .setHeader("Creation time")
-//                .setSortable(true);
         this.productPartsGrid
                 .addColumn(productEntity ->
                         productEntity.getModificationTime() != null ? productEntity.getModificationTime().format(DateTimeFormatter.ofPattern(dateTimeFormat)) : null)

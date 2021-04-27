@@ -68,7 +68,7 @@ class PartFormDiv extends Div {
         partEntityBinder
                 .forField(partModelTextField)
                 .asRequired("Part model can't be empty")
-                .bind(ProductPartEntity::getPartModel, ProductPartEntity::setPartModel);
+                .bind(ProductPartEntity::getPartModelOrPartName, ProductPartEntity::setPartModelOrPartName);
         partEntityBinder
                 .forField(partDescriptionTextField)
                 .bind(ProductPartEntity::getPartDescription, ProductPartEntity::setPartDescription);

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,11 +32,14 @@ public class ProductPartEntity {
     @ManyToOne
     private ManufacturerEntity partManufacturer;
 
-    private String partModel;
+    private String partModelOrPartName;
     private String partDescription;
     private LocalDate validFromDate;
 
     private Boolean activePart;
+
+    @ManyToMany
+    private Set<ProductPartAttributeEntity> partAttributes;
 
     private LocalDateTime modificationTime;
 

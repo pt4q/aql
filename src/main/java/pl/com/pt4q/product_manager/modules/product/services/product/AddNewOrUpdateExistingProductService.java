@@ -13,7 +13,7 @@ import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.P
 public class AddNewOrUpdateExistingProductService {
 
     @Autowired
-    private ProductCrudFinder productCrudFinder;
+    private ProductFinderService productFinderService;
     @Autowired
     private ProductCrudSaver productCrudSaver;
 
@@ -37,6 +37,6 @@ public class AddNewOrUpdateExistingProductService {
     }
 
     private ProductEntity findProduct(Long id) throws ProductNotFoundException {
-        return productCrudFinder.findByIdOrThrowException(id);
+        return productFinderService.findByIdOrThrowException(id);
     }
 }
