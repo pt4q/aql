@@ -38,13 +38,13 @@ class ProductPartsGridDiv extends Div {
                 .addColumn(ProductPartEntity::getPartDescription)
                 .setHeader("Part description")
                 .setSortable(true);
-        this.productPartsGrid
-                .addColumn(productPartEntity ->
-                        productPartEntity.getPartManufacturer() != null ?
-                                productPartEntity.getPartManufacturer()
-                                : "")
-                .setHeader("Part manufacturer")
-                .setSortable(true);
+//        this.productPartsGrid
+//                .addColumn(productPartEntity ->
+//                        productPartEntity.getPartManufacturer() != null ?
+//                                productPartEntity.getPartManufacturer()
+//                                : "")
+//                .setHeader("Part manufacturer")
+//                .setSortable(true);
         this.productPartsGrid
                 .addColumn(productPartEntity ->
                         productPartEntity.getProductSeries() != null ?

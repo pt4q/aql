@@ -29,8 +29,8 @@ public class ProductPartEntity {
     private ProductEntity product;
     @ManyToOne(fetch = FetchType.EAGER)
     private ProductSeriesEntity productSeries;
-    @ManyToOne
-    private ManufacturerEntity partManufacturer;
+//    @ManyToOne
+//    private ManufacturerEntity partManufacturer;
 
     private String partModelOrPartName;
     private String partDescription;
@@ -41,8 +41,8 @@ public class ProductPartEntity {
     @ManyToMany
     private Set<ProductPartAttributeEntity> partAttributes;
 
-    private LocalDateTime modificationTime;
-
     @OneToOne(fetch = FetchType.LAZY)
     private ProductPictureEntity partPicture;
+
+    private LocalDateTime modificationTime;
 }

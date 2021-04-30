@@ -4,28 +4,22 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.com.pt4q.product_manager.modules.product.data.product_category.ProductCategoryEntity;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
 @Entity
-class ProductPartAttributeEntity {
+public class ProductPartAttributeEntity {
 
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    @ManyToOne
-    private ProductCategoryEntity productCategory;
-
-
+    @ManyToMany(mappedBy = "partAttributes")
+    private Set<ProductPartEntity> partEntity;
 
     private String attributeName;
     private String attributeValue;

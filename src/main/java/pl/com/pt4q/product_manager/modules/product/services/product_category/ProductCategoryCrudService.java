@@ -12,7 +12,6 @@ import pl.com.pt4q.product_manager.service_utils.CustomCrudServiceInterface;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductCategoryCrudService extends CrudService<ProductCategoryEntity, Long> implements CustomCrudServiceInterface<ProductCategoryEntity, Long, ProductCategoryNotFoundException, ProductCategoryAlreadyExistsException> {
@@ -53,6 +52,7 @@ public class ProductCategoryCrudService extends CrudService<ProductCategoryEntit
         throw new ProductCategoryNotFoundException(String.format("Product category id:%d", id));
     }
 
+    @Override
     public List<ProductCategoryEntity> getAll() {
         return productCategoryCrudRepository.findAll();
     }

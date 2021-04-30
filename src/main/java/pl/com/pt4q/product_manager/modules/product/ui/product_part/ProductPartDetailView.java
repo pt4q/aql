@@ -2,8 +2,13 @@ package pl.com.pt4q.product_manager.modules.product.ui.product_part;
 
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.annotation.AccessType;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
+import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartAttributeEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
+import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartAttributeCrudService;
+import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 import java.util.List;
@@ -18,16 +23,24 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
     public static final String QUERY_PARAM_ID_NAME = "productPartId";
 
     private PartFormDiv partFormDiv;
+    private PartAttributesGridDiv partAttributesGridDiv;
     private SaveProductPartOrBackButtonsDiv saveProductPartOrBackButtonsDiv;
+
+    private ProductSeriesCrudService productSeriesCrudService;
+    private ProductPartAttributeCrudService productPartAttributeCrudService;
 
     private ProductEntity product;
     private ProductPartEntity productPart;
 
-    public ProductPartDetailView() {
+    @Autowired
+    public ProductPartDetailView(ProductSeriesCrudService productSeriesCrudService) {
+        this.productSeriesCrudService = productSeriesCrudService;
+
         this.product = getProductFromContext();
         this.productPart = initEmptyProductPart();
 
-        this.partFormDiv = new PartFormDiv(productPart);
+        this.partFormDiv = new PartFormDiv(productPart, productSeriesCrudService);
+        this.partAttributesGridDiv = new PartAttributesGridDiv();
         this.saveProductPartOrBackButtonsDiv = new SaveProductPartOrBackButtonsDiv(productPart);
 
         setSizeFull();
