@@ -22,9 +22,10 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
     public static final String ROUTE = "product-part-detail";
     public static final String QUERY_PARAM_ID_NAME = "productPartId";
 
+    private SaveProductPartOrBackButtonsDiv saveProductPartOrBackButtonsDiv;
     private PartFormDiv partFormDiv;
     private PartAttributesGridDiv partAttributesGridDiv;
-    private SaveProductPartOrBackButtonsDiv saveProductPartOrBackButtonsDiv;
+    private AddNewPartAttributeToGridDiv addNewPartAttributeToGridDiv;
 
     private ProductSeriesCrudService productSeriesCrudService;
     private ProductPartAttributeCrudService productPartAttributeCrudService;
@@ -39,17 +40,20 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
         this.product = getProductFromContext();
         this.productPart = initEmptyProductPart();
 
+        this.saveProductPartOrBackButtonsDiv = new SaveProductPartOrBackButtonsDiv(productPart);
         this.partFormDiv = new PartFormDiv(productPart, productSeriesCrudService);
         this.partAttributesGridDiv = new PartAttributesGridDiv();
-        this.saveProductPartOrBackButtonsDiv = new SaveProductPartOrBackButtonsDiv(productPart);
+        this.addNewPartAttributeToGridDiv = new AddNewPartAttributeToGridDiv(productPart, partAttributesGridDiv.getPartAttributesGrid());
 
         setSizeFull();
         setAlignItems(Alignment.CENTER);
         setHorizontalComponentAlignment(Alignment.CENTER);
 
         add(
+                saveProductPartOrBackButtonsDiv,
                 partFormDiv,
-                saveProductPartOrBackButtonsDiv
+                partAttributesGridDiv,
+                addNewPartAttributeToGridDiv
         );
     }
 
