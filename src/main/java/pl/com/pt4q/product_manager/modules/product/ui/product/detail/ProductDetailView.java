@@ -52,28 +52,37 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
         this.productFinderService = productFinderService;
         this.addNewOrUpdateExistingProductService = addNewOrUpdateExistingProductService;
 
-        this.productEntity = getProductFromContext();
+        this.productEntity = getProductFromContextOrCreateNewEmptyInstance();
 
-        saveProductOrBackButtonsDiv = new SaveProductOrBackButtonsDiv(this.productDetailFormDiv, this.addNewOrUpdateExistingProductService);
-        productDetailFormDiv = new ProductDetailFormDiv(productCategoryCrudService, manufacturerCrudService);
+        saveProductOrBackButtonsDiv = new SaveProductOrBackButtonsDiv(this.productEntity, this.addNewOrUpdateExistingProductService);
+        productDetailFormDiv = new ProductDetailFormDiv(this.productEntity, productCategoryCrudService, manufacturerCrudService);
         productPartsGridDiv = new ProductPartsGridDiv();
         addNewProductPartToGridDiv = new AddNewProductPartToGridDiv(this.productEntity, this.productPartsGridDiv.getProductPartsGrid());
 
-        HorizontalLayout productInfoHorizontalLayout = new HorizontalLayout(this.productDetailFormDiv);
+        populateProductForm();
 
         VerticalLayout pageLayout = new VerticalLayout(
                 saveProductOrBackButtonsDiv,
-                productInfoHorizontalLayout,
+                productDetailFormDiv,
                 productPartsGridDiv,
                 addNewProductPartToGridDiv
         );
         pageLayout.setAlignItems(FlexComponent.Alignment.CENTER);
-
         add(pageLayout);
     }
 
-    private ProductEntity getProductFromContext() {
-        return ComponentUtil.getData(UI.getCurrent(), ProductEntity.class);
+    private ProductEntity getProductFromContextOrCreateNewEmptyInstance() {
+        ProductEntity product = ComponentUtil.getData(UI.getCurrent(), ProductEntity.class);
+        return product != null ? product : new ProductEntity();
+    }
+
+    private void saveProductToContext(ProductEntity productEntity) {
+        ComponentUtil.setData(UI.getCurrent(), ProductEntity.class, productEntity);
+    }
+
+    private void populateProductForm() {
+        if (productEntity.getProductSku() != null)
+            this.productDetailFormDiv.populateForm(this.productEntity);
     }
 
     @Override
@@ -92,9 +101,5 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
                 Notification.show(e.getMessage());
             }
         }
-    }
-
-    private void saveProductToContext(ProductEntity productEntity){
-        ComponentUtil.setData(UI.getCurrent(),ProductEntity.class, productEntity);
     }
 }

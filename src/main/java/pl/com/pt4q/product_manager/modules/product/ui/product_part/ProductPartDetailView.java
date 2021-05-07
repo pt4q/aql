@@ -3,9 +3,7 @@ package pl.com.pt4q.product_manager.modules.product.ui.product_part;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.AccessType;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
-import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartAttributeEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartAttributeCrudService;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
@@ -24,8 +22,7 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
 
     private SaveProductPartOrBackButtonsDiv saveProductPartOrBackButtonsDiv;
     private PartFormDiv partFormDiv;
-    private PartAttributesGridDiv partAttributesGridDiv;
-    private AddNewPartAttributeToGridDiv addNewPartAttributeToGridDiv;
+    private PartAttributesDiv partAttributesGridDiv;
 
     private ProductSeriesCrudService productSeriesCrudService;
     private ProductPartAttributeCrudService productPartAttributeCrudService;
@@ -42,8 +39,7 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
 
         this.saveProductPartOrBackButtonsDiv = new SaveProductPartOrBackButtonsDiv(productPart);
         this.partFormDiv = new PartFormDiv(productPart, productSeriesCrudService);
-        this.partAttributesGridDiv = new PartAttributesGridDiv();
-        this.addNewPartAttributeToGridDiv = new AddNewPartAttributeToGridDiv(productPart, partAttributesGridDiv.getPartAttributesGrid());
+        this.partAttributesGridDiv = new PartAttributesDiv(productPart);
 
         setSizeFull();
         setAlignItems(Alignment.CENTER);
@@ -52,8 +48,7 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
         add(
                 saveProductPartOrBackButtonsDiv,
                 partFormDiv,
-                partAttributesGridDiv,
-                addNewPartAttributeToGridDiv
+                partAttributesGridDiv
         );
     }
 

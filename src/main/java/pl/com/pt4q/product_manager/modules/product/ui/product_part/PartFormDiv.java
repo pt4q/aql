@@ -41,10 +41,10 @@ class PartFormDiv extends Div {
     }
 
     private void initFormLayout() {
-        formLayout.add(productSeriesComboBox);
 //        formLayout.add(partManufacturerComboBox);
         formLayout.add(partModelTextField);
         formLayout.add(partDescriptionTextField);
+        formLayout.add(productSeriesComboBox);
         formLayout.add(validFromDateDatePicker);
 
         formLayout.setWidthFull();
