@@ -1,6 +1,11 @@
 package pl.com.pt4q.product_manager.modules.product.ui.product.detail;
 
 
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Anchor;
@@ -9,18 +14,23 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import lombok.Data;
+import pl.com.pt4q.product_manager.modules.product.ui.product_part.ProductPartDetailView;
 
 import java.time.format.DateTimeFormatter;
 
 @Data
-class ProductPartsGridDiv extends Div {
+class ProductPartsDiv extends Div {
 
     private Grid<ProductPartEntity> productPartsGrid = new Grid<>();
+    private Button addNewTestCardPartButton = new Button(new Icon(VaadinIcon.PLUS_CIRCLE_O));
 
-    public ProductPartsGridDiv() {
+    private ProductEntity productEntity;
+
+    public ProductPartsDiv() {
         initGrid();
+        initAddProductPartButton();
 
-        VerticalLayout gridLayout = new VerticalLayout(this.productPartsGrid);
+        VerticalLayout gridLayout = new VerticalLayout(this.productPartsGrid, this.addNewTestCardPartButton);
         gridLayout.setAlignItems(FlexComponent.Alignment.CENTER);
 
         setSizeFull();
@@ -78,4 +88,11 @@ class ProductPartsGridDiv extends Div {
 //        this.productEntityGrid.select(null);
 //        this.productEntityGrid.setItems(testCards);
 //    }
+
+    private void initAddProductPartButton() {
+        this.addNewTestCardPartButton.getElement().setProperty("title", "add new part to the product");
+        this.addNewTestCardPartButton.addClickListener(e -> {
+            UI.getCurrent().navigate(ProductPartDetailView.ROUTE);
+        });
+    }
 }

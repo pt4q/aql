@@ -15,8 +15,7 @@ import lombok.Getter;
 import lombok.Setter;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartAttributeEntity;
 
-
-class AttributeEditorDiv extends Div {
+class PartAttributesEditorDiv extends Div {
 
     private TextField newAttributeNameTextField = new TextField("New attribute name");
     private TextField newAttributeValueTextField = new TextField("New attribute value");
@@ -31,7 +30,7 @@ class AttributeEditorDiv extends Div {
     @Getter
     private ProductPartAttributeEntity attributeEntity;
 
-    public AttributeEditorDiv() {
+    public PartAttributesEditorDiv() {
         setId("editor-layout");
 
         initAttributeBinder();

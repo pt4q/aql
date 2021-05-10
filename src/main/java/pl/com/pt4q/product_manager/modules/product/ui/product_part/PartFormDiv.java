@@ -15,14 +15,12 @@ class PartFormDiv extends Div {
 
     private VerticalLayout formLayout = new VerticalLayout();
     private Binder<ProductPartEntity> partEntityBinder = new Binder<>(ProductPartEntity.class);
-    private ComboBox<String> productSeriesComboBox = new ComboBox<>("Product series");
 
     //    private ComboBox<String> partManufacturerComboBox = new ComboBox<>("Part Manufacturer");
     private TextField partModelTextField = new TextField("Part model");
-    private TextField partDescriptionTextField = new TextField("Part description");
+    private ComboBox<String> productSeriesComboBox = new ComboBox<>("Product series");
     private DatePicker validFromDateDatePicker = new DatePicker("Valid from date");
-
-
+    private TextField partDescriptionTextField = new TextField("Part description");
 
     private ProductSeriesInMemoryManager productSeriesInMemoryManager;
     private ProductSeriesCrudService productSeriesCrudService;

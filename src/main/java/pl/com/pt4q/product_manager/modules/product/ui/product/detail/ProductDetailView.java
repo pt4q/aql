@@ -5,7 +5,6 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +29,8 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
 
     private SaveProductOrBackButtonsDiv saveProductOrBackButtonsDiv;
     private ProductDetailFormDiv productDetailFormDiv;
-    private ProductPartsGridDiv productPartsGridDiv;
-    private AddNewProductPartToGridDiv addNewProductPartToGridDiv;
+    private ProductPartsDiv productPartsDiv;
+//    private AddNewProductPartToGridDiv addNewProductPartToGridDiv;
 
     private ProductCategoryCrudService productCategoryCrudService;
     private ManufacturerCrudService manufacturerCrudService;
@@ -56,16 +55,15 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
 
         saveProductOrBackButtonsDiv = new SaveProductOrBackButtonsDiv(this.productEntity, this.addNewOrUpdateExistingProductService);
         productDetailFormDiv = new ProductDetailFormDiv(this.productEntity, productCategoryCrudService, manufacturerCrudService);
-        productPartsGridDiv = new ProductPartsGridDiv();
-        addNewProductPartToGridDiv = new AddNewProductPartToGridDiv(this.productEntity, this.productPartsGridDiv.getProductPartsGrid());
+        productPartsDiv = new ProductPartsDiv();
+//        addNewProductPartToGridDiv = new AddNewProductPartToGridDiv(this.productEntity, this.productPartsGridDiv.getProductPartsGrid());
 
         populateProductForm();
 
         VerticalLayout pageLayout = new VerticalLayout(
                 saveProductOrBackButtonsDiv,
                 productDetailFormDiv,
-                productPartsGridDiv,
-                addNewProductPartToGridDiv
+                productPartsDiv
         );
         pageLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         add(pageLayout);
