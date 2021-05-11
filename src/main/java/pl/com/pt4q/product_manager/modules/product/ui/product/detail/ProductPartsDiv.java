@@ -5,6 +5,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
 import com.vaadin.flow.component.grid.Grid;
@@ -14,9 +15,13 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import lombok.Data;
+import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.ProductNotFoundException;
+import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartFinderService;
 import pl.com.pt4q.product_manager.modules.product.ui.product_part.ProductPartDetailView;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.List;
 
 @Data
 class ProductPartsDiv extends Div {
@@ -24,10 +29,9 @@ class ProductPartsDiv extends Div {
     private Grid<ProductPartEntity> productPartsGrid = new Grid<>();
     private Button addNewTestCardPartButton = new Button(new Icon(VaadinIcon.PLUS_CIRCLE_O));
 
-    private ProductEntity productEntity;
-
     public ProductPartsDiv() {
         initGrid();
+
         initAddProductPartButton();
 
         VerticalLayout gridLayout = new VerticalLayout(this.productPartsGrid, this.addNewTestCardPartButton);
@@ -77,17 +81,18 @@ class ProductPartsDiv extends Div {
 
         this.productPartsGrid.setWidthFull();
         this.productPartsGrid.setHeightByRows(true);
-//        this.refreshGrid(testCardFinder.getAll());
+
+//        refreshGrid();
     }
 
     private String createLinkWithParam(String url, String paramName, Long id) {
         return url + "?" + paramName + "=" + id.toString();
     }
 
-//    public void refreshGrid(List<TestCardEntity> testCards) {
-//        this.productEntityGrid.select(null);
-//        this.productEntityGrid.setItems(testCards);
-//    }
+    public void refreshGrid(List <ProductPartEntity> parts) {
+        this.productPartsGrid.select(null);
+        this.productPartsGrid.setItems(parts);
+    }
 
     private void initAddProductPartButton() {
         this.addNewTestCardPartButton.getElement().setProperty("title", "add new part to the product");

@@ -14,6 +14,7 @@ import pl.com.pt4q.product_manager.modules.product.services.product.AddNewOrUpda
 import pl.com.pt4q.product_manager.modules.product.services.product.ProductFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.ProductNotFoundException;
 import pl.com.pt4q.product_manager.modules.product.services.product_category.ProductCategoryCrudService;
+import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartFinderService;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 import java.util.List;
@@ -30,11 +31,11 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
     private SaveProductOrBackButtonsDiv saveProductOrBackButtonsDiv;
     private ProductDetailFormDiv productDetailFormDiv;
     private ProductPartsDiv productPartsDiv;
-//    private AddNewProductPartToGridDiv addNewProductPartToGridDiv;
 
     private ProductCategoryCrudService productCategoryCrudService;
     private ManufacturerCrudService manufacturerCrudService;
     private ProductFinderService productFinderService;
+    private ProductPartFinderService productPartFinderService;
     private AddNewOrUpdateExistingProductService addNewOrUpdateExistingProductService;
 
     private ProductEntity productEntity;
@@ -44,11 +45,13 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
             ProductCategoryCrudService productCategoryCrudService,
             ManufacturerCrudService manufacturerCrudService,
             ProductFinderService productFinderService,
+            ProductPartFinderService productPartFinderService,
             AddNewOrUpdateExistingProductService addNewOrUpdateExistingProductService) {
 
         this.productCategoryCrudService = productCategoryCrudService;
         this.manufacturerCrudService = manufacturerCrudService;
         this.productFinderService = productFinderService;
+        this.productPartFinderService = productPartFinderService;
         this.addNewOrUpdateExistingProductService = addNewOrUpdateExistingProductService;
 
         this.productEntity = getProductFromContextOrCreateNewEmptyInstance();
@@ -56,7 +59,6 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
         saveProductOrBackButtonsDiv = new SaveProductOrBackButtonsDiv(this.productEntity, this.addNewOrUpdateExistingProductService);
         productDetailFormDiv = new ProductDetailFormDiv(this.productEntity, productCategoryCrudService, manufacturerCrudService);
         productPartsDiv = new ProductPartsDiv();
-//        addNewProductPartToGridDiv = new AddNewProductPartToGridDiv(this.productEntity, this.productPartsGridDiv.getProductPartsGrid());
 
         populateProductForm();
 
@@ -95,6 +97,7 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
                 this.productEntity = productFinderService.findByIdOrThrowException(id);
                 saveProductToContext(productEntity);
                 this.productDetailFormDiv.populateForm(this.productEntity);
+                this.productPartsDiv.refreshGrid(productPartFinderService.findAllProductParts(productEntity));
             } catch (ProductNotFoundException e) {
                 Notification.show(e.getMessage());
             }
