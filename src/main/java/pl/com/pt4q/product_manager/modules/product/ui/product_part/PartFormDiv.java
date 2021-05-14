@@ -18,17 +18,12 @@ class PartFormDiv extends Div {
 
     //    private ComboBox<String> partManufacturerComboBox = new ComboBox<>("Part Manufacturer");
     private TextField partModelTextField = new TextField("Part model");
-    private ComboBox<String> productSeriesComboBox = new ComboBox<>("Product series");
-    private DatePicker validFromDateDatePicker = new DatePicker("Valid from date");
     private TextField partDescriptionTextField = new TextField("Part description");
 
-    private ProductSeriesInMemoryManager productSeriesInMemoryManager;
-    private ProductSeriesCrudService productSeriesCrudService;
     private ProductPartEntity productPart;
 
-    public PartFormDiv(ProductPartEntity productPart, ProductSeriesCrudService productSeriesCrudService) {
+    public PartFormDiv(ProductPartEntity productPart) {
         this.productPart = productPart;
-        this.productSeriesInMemoryManager = new ProductSeriesInMemoryManager(productSeriesCrudService.getAll());
 
         initPartBinder();
         initFormComponentsSize();
@@ -42,8 +37,8 @@ class PartFormDiv extends Div {
 //        formLayout.add(partManufacturerComboBox);
         formLayout.add(partModelTextField);
         formLayout.add(partDescriptionTextField);
-        formLayout.add(productSeriesComboBox);
-        formLayout.add(validFromDateDatePicker);
+//        formLayout.add(productSeriesComboBox);
+//        formLayout.add(validFromDateDatePicker);
 
         formLayout.setWidthFull();
         formLayout.setAlignItems(FlexComponent.Alignment.CENTER);
@@ -52,24 +47,18 @@ class PartFormDiv extends Div {
     private void initFormComponentsSize() {
         String minWidth = "20%";
         String maxWidth = "60%";
-        productSeriesComboBox.setMinWidth(minWidth);
-        productSeriesComboBox.setMaxWidth(maxWidth);
+
 //        partManufacturerComboBox.setMinWidth(minWidth);
 //        partManufacturerComboBox.setMaxWidth(maxWidth);
         partModelTextField.setMinWidth(minWidth);
         partModelTextField.setMaxWidth(maxWidth);
         partDescriptionTextField.setMinWidth(minWidth);
         partDescriptionTextField.setMaxWidth(maxWidth);
-        validFromDateDatePicker.setMinWidth(minWidth);
-        validFromDateDatePicker.setMaxWidth(maxWidth);
+
     }
 
     private void initPartBinder() {
-        partEntityBinder
-                .forField(productSeriesComboBox)
-                .asRequired("Product series can't be empty")
-                .bind(productPartEntity -> productPartEntity.getProductSeries().getSeries(),
-                        (productPartEntity, s) -> productPartEntity.setProductSeries(productSeriesInMemoryManager.getByName(s).get()));
+//
 //        partEntityBinder
 //                .forField(partManufacturerComboBox)
 //                .asRequired("Part manufacturer can't be empty");
@@ -80,9 +69,11 @@ class PartFormDiv extends Div {
         partEntityBinder
                 .forField(partDescriptionTextField)
                 .bind(ProductPartEntity::getPartDescription, ProductPartEntity::setPartDescription);
-        partEntityBinder
-                .forField(validFromDateDatePicker)
-                .asRequired("Part model can't be empty")
-                .bind(ProductPartEntity::getValidFromDate, ProductPartEntity::setValidFromDate);
+
+    }
+
+    public void populateForm(ProductPartEntity productPart){
+        this.productPart = productPart;
+        partEntityBinder.readBean(productPart);
     }
 }

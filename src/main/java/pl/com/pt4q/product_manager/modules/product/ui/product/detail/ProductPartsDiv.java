@@ -1,11 +1,11 @@
 package pl.com.pt4q.product_manager.modules.product.ui.product.detail;
 
 
+import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
 import com.vaadin.flow.component.grid.Grid;
@@ -15,26 +15,22 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import lombok.Data;
-import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.ProductNotFoundException;
-import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartFinderService;
 import pl.com.pt4q.product_manager.modules.product.ui.product_part.ProductPartDetailView;
 
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.List;
 
 @Data
 class ProductPartsDiv extends Div {
 
     private Grid<ProductPartEntity> productPartsGrid = new Grid<>();
-    private Button addNewTestCardPartButton = new Button(new Icon(VaadinIcon.PLUS_CIRCLE_O));
+    private Button addNewPartButton = new Button(new Icon(VaadinIcon.PLUS_CIRCLE_O));
 
     public ProductPartsDiv() {
         initGrid();
+        initAddNewPartButton();
 
-        initAddProductPartButton();
-
-        VerticalLayout gridLayout = new VerticalLayout(this.productPartsGrid, this.addNewTestCardPartButton);
+        VerticalLayout gridLayout = new VerticalLayout(this.productPartsGrid, this.addNewPartButton);
         gridLayout.setAlignItems(FlexComponent.Alignment.CENTER);
 
         setSizeFull();
@@ -59,20 +55,8 @@ class ProductPartsDiv extends Div {
 //                                : "")
 //                .setHeader("Part manufacturer")
 //                .setSortable(true);
-        this.productPartsGrid
-                .addColumn(productPartEntity ->
-                        productPartEntity.getProductSeries() != null ?
-                                productPartEntity.getProductSeries().getSeries()
-                                : "")
-                .setHeader("Version")
-                .setSortable(true);
-        this.productPartsGrid
-                .addColumn(productPartEntity ->
-                        productPartEntity.getValidFromDate() != null ?
-                        productPartEntity.getValidFromDate()
-                        : "")
-                .setHeader("Valid from time")
-                .setSortable(true);
+
+
         this.productPartsGrid
                 .addColumn(productEntity ->
                         productEntity.getModificationTime() != null ? productEntity.getModificationTime().format(DateTimeFormatter.ofPattern(dateTimeFormat)) : null)
@@ -89,15 +73,23 @@ class ProductPartsDiv extends Div {
         return url + "?" + paramName + "=" + id.toString();
     }
 
-    public void refreshGrid(List <ProductPartEntity> parts) {
+    public void refreshGrid(List<ProductPartEntity> parts) {
         this.productPartsGrid.select(null);
         this.productPartsGrid.setItems(parts);
     }
 
-    private void initAddProductPartButton() {
-        this.addNewTestCardPartButton.getElement().setProperty("title", "add new part to the product");
-        this.addNewTestCardPartButton.addClickListener(e -> {
-            UI.getCurrent().navigate(ProductPartDetailView.ROUTE);
+    private void initAddNewPartButton() {
+        this.addNewPartButton.getElement().setProperty("title", "add new part to the product");
+        this.addNewPartButton.addClickListener(e -> {
+            UI ui = UI.getCurrent();
+
+            ProductEntity productFromContext = ComponentUtil.getData(ui, ProductEntity.class);
+            ProductPartEntity newPart = ProductPartEntity.builder()
+                    .product(productFromContext)
+                    .build();
+
+            ComponentUtil.setData(ui, ProductPartEntity.class, newPart);
+            ui.navigate(ProductPartDetailView.ROUTE);
         });
     }
 }

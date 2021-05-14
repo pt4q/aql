@@ -4,7 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.com.pt4q.product_manager.modules.product.data.product_series.ProductSeriesEntity;
+
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -18,9 +21,14 @@ public class ProductPartAttributeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    @ManyToMany(mappedBy = "partAttributes")
-    private Set<ProductPartEntity> partEntity;
+    @ManyToOne
+    private ProductPartEntity part;
 
     private String attributeName;
     private String attributeValue;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private ProductSeriesEntity productSeries;
+    private LocalDate validFromDate;
+
+    private boolean actualAttribute;
 }

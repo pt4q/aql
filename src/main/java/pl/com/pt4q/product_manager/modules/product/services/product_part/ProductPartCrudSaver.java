@@ -18,7 +18,7 @@ class ProductPartCrudSaver {
                 String.format("Created new part %s (id:%d) with series no: %s for %s product (id:%d)",
                         part.getPartModelOrPartName(),
                         part.getId(),
-                        part.getProductSeries().getSeries(),
+
                         part.getProduct().getProductSku(),
                         part.getProduct().getId()
                 )
@@ -31,7 +31,6 @@ class ProductPartCrudSaver {
                 String.format("Updated part %s (id:%d) with series no: %s for %s product (id:%d)",
                         part.getPartModelOrPartName(),
                         part.getId(),
-                        part.getProductSeries().getSeries(),
                         part.getProduct().getProductSku(),
                         part.getProduct().getId()
                 )

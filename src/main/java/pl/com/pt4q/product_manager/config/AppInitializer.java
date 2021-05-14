@@ -8,14 +8,22 @@ import org.springframework.stereotype.Component;
 import pl.com.pt4q.product_manager.modules.product.data.manufacturer.ManufacturerEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_category.ProductCategoryEntity;
+import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartAttributeEntity;
+import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
+import pl.com.pt4q.product_manager.modules.product.data.product_series.ProductSeriesEntity;
 import pl.com.pt4q.product_manager.modules.product.services.manufacturer.ManufacturerCrudService;
 import pl.com.pt4q.product_manager.modules.product.services.product.AddNewOrUpdateExistingProductService;
 import pl.com.pt4q.product_manager.modules.product.services.product_category.ProductCategoryCrudService;
+import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
+import pl.com.pt4q.product_manager.modules.product.services.product_series.exceptions.ProductSeriesAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.test_card.data.test_card.TestCardEntity;
 import pl.com.pt4q.product_manager.modules.test_card.services.test_card.TestCardForProductCategoryCreator;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Component
@@ -26,6 +34,8 @@ public class AppInitializer implements CommandLineRunner {
     @Autowired
     private ManufacturerCrudService manufacturerCrudService;
     @Autowired
+    private ProductSeriesCrudService productSeriesCrudService;
+    @Autowired
     private AddNewOrUpdateExistingProductService addNewOrUpdateExistingProductService;
     @Autowired
     private TestCardForProductCategoryCreator cardForProductCreator;
@@ -33,19 +43,34 @@ public class AppInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         List<ProductCategoryEntity> categories = initCategories();
-        categories.forEach(category -> logToConsoleWhatWasCreated("category", category.getCategoryName(), category.getId()));
+        categories
+                .forEach(category -> logToConsoleWhatWasCreated("category", category.getCategoryName(), category.getId()));
 
         List<ManufacturerEntity> manufacturers = initManufacturers();
-        manufacturers.forEach(manufacturer -> logToConsoleWhatWasCreated("manufacturer", manufacturer.getManufacturerName(), manufacturer.getId()));
+        manufacturers
+                .forEach(manufacturer -> logToConsoleWhatWasCreated("manufacturer", manufacturer.getManufacturerName(), manufacturer.getId()));
 
-        List<ProductEntity> products = initProducts(categories,manufacturers);
-        products.forEach(product -> logToConsoleWhatWasCreated("product", product.getProductSku(), product.getId()));
+        List<ProductSeriesEntity> seriesList = initSeries();
+        seriesList
+                .forEach(series -> logToConsoleWhatWasCreated("series", series.getSeries(), series.getId()));
+
+        List<ProductEntity> products = initProducts(categories, manufacturers);
+        products
+                .forEach(product -> logToConsoleWhatWasCreated("product", product.getProductSku(), product.getId()));
+
+        List<ProductPartEntity> firstProductParts = initProductParts(products.get(0), seriesList);
+        firstProductParts
+                .forEach(part -> logToConsoleWhatWasCreated("part", String.format("%s part for %s product (id:%d)", part.getPartModelOrPartName(), part.getProduct().getProductSku(), part.getProduct().getId()), part.getId()));
+
+//        List<ProductPartAttributeEntity> firstProductPartAttributes = initAttributesForPart(firstProductParts.get(0));
+//        firstProductPartAttributes
+//                .forEach(attribute -> logToConsoleWhatWasCreated("part attribute", String.format("%s for %s part (id:%d) for %s product (id:%d)", attribute.getAttributeName(), attribute.getPart(), attribute.getPart()), attribute.getId()));
 
 //        List <TestCardEntity> testCards = initTestCards(categories);
 //        testCards.forEach(testCard -> logToConsoleWhatWasCreated("test card", testCard.getTestCardName(), testCard.getId()));
     }
 
-    private List<ProductCategoryEntity> initCategories(){
+    private List<ProductCategoryEntity> initCategories() {
         ProductCategoryEntity productCategoryEntity = productCategoryCrudService
                 .create(ProductCategoryEntity.builder()
                         .categoryName("Wkrętarki TEST")
@@ -54,20 +79,39 @@ public class AppInitializer implements CommandLineRunner {
                 .create(ProductCategoryEntity.builder()
                         .categoryName("Młotowiertarki TEST")
                         .build());
-        return new LinkedList<>(){{
+        return new LinkedList<>() {{
             add(productCategoryEntity);
             add(productCategoryEntity2);
         }};
     }
 
-    private List<ManufacturerEntity> initManufacturers(){
+    private List<ManufacturerEntity> initManufacturers() {
         ManufacturerEntity manufacturerEntity1 = manufacturerCrudService.create(ManufacturerEntity.builder()
                 .manufacturerName("Ping Pong")
                 .description("ping ..... pong ..... ping ..... pong")
                 .build());
-        return new LinkedList<>(){{
+        return new LinkedList<>() {{
             add(manufacturerEntity1);
         }};
+    }
+
+    private List<ProductSeriesEntity> initSeries() {
+        List<String> series = new ArrayList<>();
+        series.add("12345678");
+        series.add("87654321");
+
+        return series.stream()
+                .map(s -> {
+                    try {
+                        return productSeriesCrudService.create(ProductSeriesEntity.builder()
+                                .series(s)
+                                .build());
+                    } catch (ProductSeriesAlreadyExistsException e) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     @SneakyThrows
@@ -77,18 +121,47 @@ public class AppInitializer implements CommandLineRunner {
                 .productCategory(categories.get(0))
                 .manufacturer(manufacturers.get(0))
                 .build());
-        return new LinkedList<>(){{
+        return new LinkedList<>() {{
             add(productEntity1);
         }};
     }
 
-    private List<TestCardEntity> initTestCards(List<ProductCategoryEntity> categories){
+    private List<ProductPartEntity> initProductParts(ProductEntity product, List<ProductSeriesEntity> seriesList) {
+        List<String> partNames = new ArrayList<>();
+        partNames.add("wirnik");
+
+        int maxSeries = seriesList.stream()
+                .mapToInt(series -> Integer.parseInt(series.getSeries()))
+                .max()
+                .getAsInt();
+
+        List<ProductPartEntity> productParts = new ArrayList<>();
+
+        int seriesSize = seriesList.size();
+        int partNamesSize = partNames.size();
+
+        for (int i = 0; i < partNamesSize; i++) {
+            for (int j = 0; j < seriesSize; j++) {
+                productParts.add(ProductPartEntity.builder()
+                        .product(product)
+                        .partModelOrPartName(partNames.get(i))
+                        .build());
+            }
+        }
+        return productParts;
+    }
+
+//    private List<ProductPartAttributeEntity> initAttributesForPart(ProductPartEntity part) {
+//
+//    }
+
+    private List<TestCardEntity> initTestCards(List<ProductCategoryEntity> categories) {
         TestCardEntity testCardEntity = cardForProductCreator
                 .createEmptyTestCardForProduct(TestCardEntity.builder()
                         .productCategory(categories.get(0))
                         .testCardName("Karta testowa wygenerowana podczas rozruchu aplikacji")
                         .build());
-        return new LinkedList<>(){{
+        return new LinkedList<>() {{
             add(testCardEntity);
         }};
     }

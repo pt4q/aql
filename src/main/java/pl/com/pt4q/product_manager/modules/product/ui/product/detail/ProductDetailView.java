@@ -60,7 +60,7 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
         productDetailFormDiv = new ProductDetailFormDiv(this.productEntity, productCategoryCrudService, manufacturerCrudService);
         productPartsDiv = new ProductPartsDiv();
 
-        populateProductForm();
+        populateProductForm(productEntity);
 
         VerticalLayout pageLayout = new VerticalLayout(
                 saveProductOrBackButtonsDiv,
@@ -80,9 +80,13 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
         ComponentUtil.setData(UI.getCurrent(), ProductEntity.class, productEntity);
     }
 
-    private void populateProductForm() {
-        if (productEntity.getProductSku() != null)
-            this.productDetailFormDiv.populateForm(this.productEntity);
+    private void populateProductForm(ProductEntity product) {
+        if (product.getProductSku() != null)
+            this.productDetailFormDiv.populateForm(product);
+    }
+
+    private void refreshPartsGrid(ProductEntity product) throws ProductNotFoundException {
+        this.productPartsDiv.refreshGrid(productPartFinderService.findAllProductParts(product));
     }
 
     @Override
@@ -92,12 +96,12 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
         Map<String, List<String>> parametersMap = queryParameters.getParameters();
 
         if (parametersMap.containsKey(QUERY_PARAM_ID_NAME)) {
+            Long id = Long.valueOf(parametersMap.get(QUERY_PARAM_ID_NAME).get(0));
             try {
-                Long id = Long.valueOf(parametersMap.get(QUERY_PARAM_ID_NAME).get(0));
                 this.productEntity = productFinderService.findByIdOrThrowException(id);
-                saveProductToContext(productEntity);
-                this.productDetailFormDiv.populateForm(this.productEntity);
-                this.productPartsDiv.refreshGrid(productPartFinderService.findAllProductParts(productEntity));
+                saveProductToContext(this.productEntity);
+                populateProductForm(this.productEntity);
+                refreshPartsGrid(this.productEntity);
             } catch (ProductNotFoundException e) {
                 Notification.show(e.getMessage());
             }

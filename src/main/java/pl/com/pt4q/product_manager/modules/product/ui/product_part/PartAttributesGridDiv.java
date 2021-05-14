@@ -4,6 +4,8 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartAttributeEntity;
 
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Set;
 
 class PartAttributesGridDiv extends Div {
@@ -20,7 +22,7 @@ class PartAttributesGridDiv extends Div {
     }
 
     private void initPartAttributesGrid() {
-        String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+        String dateTimeFormat = "yyyy-MM-dd";
 
         this.partAttributesGrid
                 .addColumn(ProductPartAttributeEntity::getAttributeName)
@@ -29,6 +31,14 @@ class PartAttributesGridDiv extends Div {
         this.partAttributesGrid
                 .addColumn(ProductPartAttributeEntity::getAttributeValue)
                 .setHeader("Attribute value");
+        this.partAttributesGrid
+                .addColumn(attribute -> attribute.getProductSeries() != null ? attribute.getProductSeries().getSeries() : "")
+                .setHeader("Product series")
+                .setSortable(true);
+        this.partAttributesGrid
+                .addColumn(attribute -> attribute.getValidFromDate() != null ? attribute.getValidFromDate().format(DateTimeFormatter.ofPattern(dateTimeFormat)) : "")
+                .setHeader("Valid from time")
+                .setSortable(true);
 
         this.partAttributesGrid.setWidthFull();
         this.partAttributesGrid.setHeightByRows(true);
@@ -39,9 +49,8 @@ class PartAttributesGridDiv extends Div {
         return url + "?" + paramName + "=" + id.toString();
     }
 
-    //    public void refreshGrid(List<TestCardEntity> testCards) {
-//        this.productEntityGrid.select(null);
-//        this.productEntityGrid.setItems(testCards);
-//    }
-
+    public void refreshGrid(List<ProductPartAttributeEntity> partAttributes) {
+        this.partAttributesGrid.select(null);
+        this.partAttributesGrid.setItems(partAttributes);
+    }
 }

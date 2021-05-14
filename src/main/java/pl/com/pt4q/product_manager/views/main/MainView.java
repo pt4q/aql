@@ -105,8 +105,16 @@ public class MainView extends AppLayout {
     @Override
     protected void afterNavigation() {
         super.afterNavigation();
-        getTabForComponent(getContent()).ifPresent(menu::setSelectedTab);
+        getTabForComponent(getContent()).ifPresent(tab -> {
+            menu.setSelectedTab(tab);
+            resetObjectsInTheContext();
+        });
         viewTitle.setText(getCurrentPageTitle());
+    }
+
+    //// TODO: 12.05.2021 Remove all objects from the memory after select the other tab
+    private void resetObjectsInTheContext() {
+
     }
 
     private Optional<Tab> getTabForComponent(Component component) {

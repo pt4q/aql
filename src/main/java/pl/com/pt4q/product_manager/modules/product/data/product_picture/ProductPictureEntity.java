@@ -18,6 +18,8 @@ public class ProductPictureEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
+    private String title;
+    private String description;
     @Lob
 //    @Basic(fetch = FetchType.LAZY)
     private byte[] partPicture;
