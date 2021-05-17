@@ -7,6 +7,7 @@ import lombok.Getter;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartAttributeEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartAttributeFinderService;
+import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartAttributesInMemoryManager;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartCrudSaver;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartNotFoundException;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
@@ -21,6 +22,8 @@ class PartAttributesDiv extends Div {
     private ProductPartCrudSaver productPartCrudSaver;
     private ProductPartAttributeFinderService productPartAttributeFinderService;
 
+    private ProductPartAttributesInMemoryManager productPartAttributesInMemoryManager;
+
     private ProductPartEntity productPart;
 
     public PartAttributesDiv(ProductPartEntity productPart,
@@ -33,10 +36,11 @@ class PartAttributesDiv extends Div {
         this.productPartCrudSaver = productPartCrudSaver;
         this.productPartAttributeFinderService = productPartAttributeFinderService;
 
-        this.attributesGridDiv = new PartAttributesGridDiv(this.productPartAttributeFinderService);
-        this.attributeEditorDiv = new PartAttributesEditorDiv(this.productSeriesCrudService, this.productPartCrudSaver);
+        this.attributesGridDiv = new PartAttributesGridDiv();
+        this.attributeEditorDiv = new PartAttributesEditorDiv();
 
         initPopulateAttributeFormAfterSelectAttributeOnGrid();
+        initCreateNewOrUpdateAttributeAfterClickSaveButton();
 
         SplitLayout splitLayout = new SplitLayout();
         splitLayout.setOrientation(SplitLayout.Orientation.VERTICAL);
@@ -63,5 +67,17 @@ class PartAttributesDiv extends Div {
         } catch (ProductPartNotFoundException e) {
             Notification.show(e.getMessage());
         }
+    }
+
+    private void initCreateNewOrUpdateAttributeAfterClickSaveButton(){
+        this.attributeEditorDiv.getSaveButton().addClickListener(buttonClickEvent -> {
+
+        });
+    }
+
+    private void initDeleteAttributeAfterClickDeleteButton(){
+        this.attributeEditorDiv.getDeleteButton().addClickListener(buttonClickEvent -> {
+
+        });
     }
 }

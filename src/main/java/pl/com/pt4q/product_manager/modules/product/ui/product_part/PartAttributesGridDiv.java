@@ -16,11 +16,7 @@ class PartAttributesGridDiv extends Div {
     @Getter
     private Grid<ProductPartAttributeEntity> partAttributesGrid = new Grid<>();
 
-    private ProductPartAttributeFinderService productPartAttributeFinderService;
-
-    public PartAttributesGridDiv(ProductPartAttributeFinderService productPartAttributeFinderService) {
-        this.productPartAttributeFinderService = productPartAttributeFinderService;
-
+    public PartAttributesGridDiv() {
         initPartAttributesGrid();
         setId("grid-wrapper");
         setWidthFull();
