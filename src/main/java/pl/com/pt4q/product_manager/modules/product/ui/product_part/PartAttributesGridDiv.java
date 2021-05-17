@@ -2,7 +2,10 @@ package pl.com.pt4q.product_manager.modules.product.ui.product_part;
 
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import lombok.Getter;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartAttributeEntity;
+import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartAttributeFinderService;
+import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartFinderService;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -10,11 +13,14 @@ import java.util.Set;
 
 class PartAttributesGridDiv extends Div {
 
+    @Getter
     private Grid<ProductPartAttributeEntity> partAttributesGrid = new Grid<>();
 
-    private Set<ProductPartAttributeEntity> partAttributes;
+    private ProductPartAttributeFinderService productPartAttributeFinderService;
 
-    public PartAttributesGridDiv() {
+    public PartAttributesGridDiv(ProductPartAttributeFinderService productPartAttributeFinderService) {
+        this.productPartAttributeFinderService = productPartAttributeFinderService;
+
         initPartAttributesGrid();
         setId("grid-wrapper");
         setWidthFull();

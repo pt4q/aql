@@ -72,7 +72,7 @@ class PartFormDiv extends Div {
 
     }
 
-    public void populateForm(ProductPartEntity productPart){
+    public void populatePartForm(ProductPartEntity productPart){
         this.productPart = productPart;
         partEntityBinder.readBean(productPart);
     }

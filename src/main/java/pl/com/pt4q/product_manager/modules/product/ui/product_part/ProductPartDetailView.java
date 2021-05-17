@@ -2,13 +2,13 @@ package pl.com.pt4q.product_manager.modules.product.ui.product_part;
 
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.router.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
+import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartAttributeFinderService;
+import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartCrudSaver;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartNotFoundException;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
@@ -28,27 +28,32 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
 
     private SaveProductPartOrBackButtonsDiv saveProductPartOrBackButtonsDiv;
     private PartFormDiv partFormDiv;
-
-    private PartAttributesGridDiv attributesGridDiv;
-    private PartAttributesEditorDiv attributeEditorDiv;
+    private PartAttributesDiv partAttributesDiv;
 
     private ProductSeriesCrudService productSeriesCrudService;
-    //    private ProductPartAttributeCrudService productPartAttributeCrudService;
+    private ProductPartCrudSaver productPartCrudSaver;
     private ProductPartFinderService productPartFinderService;
+    private ProductPartAttributeFinderService productPartAttributeFinderService;
 
     private ProductPartEntity productPart;
 
     @Autowired
-    public ProductPartDetailView(ProductSeriesCrudService productSeriesCrudService) {
+    public ProductPartDetailView(ProductSeriesCrudService productSeriesCrudService,
+                                 ProductPartCrudSaver productPartCrudSaver,
+                                 ProductPartAttributeFinderService productPartAttributeFinderService) {
+
         this.productSeriesCrudService = productSeriesCrudService;
+        this.productPartCrudSaver = productPartCrudSaver;
+        this.productSeriesCrudService = productSeriesCrudService;
+        this.productPartAttributeFinderService = productPartAttributeFinderService;
 
         this.productPart = getProductPartFromContext();
 //        ifPartIsNullThenRedirectToProductDetailView(productPart);
 
-        this.saveProductPartOrBackButtonsDiv = new SaveProductPartOrBackButtonsDiv(productPart);
+        this.saveProductPartOrBackButtonsDiv = new SaveProductPartOrBackButtonsDiv(productPart, productPartCrudSaver);
         this.partFormDiv = new PartFormDiv(productPart);
 
-        Div partAttributesDiv = initAttributesAndCreateDivWithLayout(productPart, productSeriesCrudService);
+        PartAttributesDiv partAttributesDiv = new PartAttributesDiv(productPart, productSeriesCrudService, productPartCrudSaver, productPartAttributeFinderService);
 
         setSizeFull();
         setAlignItems(Alignment.CENTER);
@@ -75,32 +80,9 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
         ComponentUtil.setData(UI.getCurrent(), ProductPartEntity.class, productPart);
     }
 
-    private Div initAttributesAndCreateDivWithLayout(ProductPartEntity productPart, ProductSeriesCrudService productSeriesCrudService){
-        this.attributesGridDiv = new PartAttributesGridDiv();
-        this.attributeEditorDiv = new PartAttributesEditorDiv(productSeriesCrudService);
-
-        SplitLayout splitLayout = new SplitLayout();
-        splitLayout.setOrientation(SplitLayout.Orientation.VERTICAL);
-        splitLayout.setHeightFull();
-
-        splitLayout.addToPrimary(attributesGridDiv);
-        splitLayout.addToSecondary(attributeEditorDiv);
-
-        Div partAttributesGridDiv = new Div(splitLayout);
-        partAttributesGridDiv.setSizeFull();
-
-        populateProductPartForm(productPart);
-        return partAttributesGridDiv;
-    }
-
     private void populateProductPartForm(ProductPartEntity part) {
         if (part.getPartModelOrPartName() != null)
-            this.partFormDiv.populateForm(part);
-    }
-
-    private void refreshPartAttributes(ProductPartEntity part) {
-        this.attributesGridDiv
-                .refreshGrid(productPartFinderService.findAllProductPartAttributes(part));
+            this.partFormDiv.populatePartForm(part);
     }
 
     @Override
@@ -115,10 +97,14 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
                 this.productPart = productPartFinderService.findByIdOrThrowException(id);
                 saveProductPartToContext(this.productPart);
                 populateProductPartForm(this.productPart);
-                refreshPartAttributes(this.productPart);
+                refreshPartAttributesGrid(this.productPart);
             } catch (ProductPartNotFoundException e) {
                 Notification.show(e.getMessage());
             }
         }
+    }
+
+    private void refreshPartAttributesGrid(ProductPartEntity part) {
+        this.partAttributesDiv.refreshAttributesGrid(part);
     }
 }

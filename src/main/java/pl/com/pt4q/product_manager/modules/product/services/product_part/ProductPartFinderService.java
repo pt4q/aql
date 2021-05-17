@@ -1,5 +1,6 @@
 package pl.com.pt4q.product_manager.modules.product.services.product_part;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
@@ -15,15 +16,12 @@ import java.util.Set;
 @Service
 public class ProductPartFinderService {
 
+    @Autowired
     private ProductPartCrudRepository productPartRepository;
-    private ProductPartAttributeCrudRepository productPartAttributeCrudRepository;
 
     @Autowired
-    public ProductPartFinderService(ProductPartCrudRepository productPartRepository,
-                                    ProductPartAttributeCrudRepository productPartAttributeCrudRepository) {
-        this.productPartRepository = productPartRepository;
-        this.productPartAttributeCrudRepository = productPartAttributeCrudRepository;
-    }
+    @Getter
+    private ProductPartAttributeFinderService productPartAttributeFinderService;
 
     public ProductPartEntity findByIdOrThrowException(Long id) throws ProductPartNotFoundException {
         String errorMessage = "Part id:%d";
@@ -45,7 +43,7 @@ public class ProductPartFinderService {
         throw new ProductNotFoundException("Product is null or have null id");
     }
 
-    public List<ProductPartAttributeEntity> findAllProductPartAttributes(ProductPartEntity productPart){
-        return productPartAttributeCrudRepository.findAllByPart(productPart);
-    }
+//    public List<ProductPartAttributeEntity> findAllProductPartAttributes(ProductPartEntity productPart){
+//        return productPartAttributeCrudRepository.findAllByPart(productPart);
+//    }
 }

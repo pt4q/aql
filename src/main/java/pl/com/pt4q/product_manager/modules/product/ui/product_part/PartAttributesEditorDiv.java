@@ -16,6 +16,7 @@ import com.vaadin.flow.data.binder.Binder;
 import lombok.Getter;
 import lombok.Setter;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartAttributeEntity;
+import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartCrudSaver;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesInMemoryManager;
 
@@ -33,14 +34,20 @@ class PartAttributesEditorDiv extends Div {
     private Binder<ProductPartAttributeEntity> partAttributeEntityBinder = new Binder<>(ProductPartAttributeEntity.class);
 
     private ProductSeriesCrudService productSeriesCrudService;
+    private ProductPartCrudSaver productPartCrudSaver;
+
     private ProductSeriesInMemoryManager productSeriesInMemoryManager;
 
     @Setter
     @Getter
     private ProductPartAttributeEntity attributeEntity;
 
-    public PartAttributesEditorDiv(ProductSeriesCrudService productSeriesCrudService) {
+    public PartAttributesEditorDiv(ProductSeriesCrudService productSeriesCrudService,
+                                   ProductPartCrudSaver productPartCrudSaver) {
+
         this.productSeriesCrudService = productSeriesCrudService;
+        this.productPartCrudSaver = productPartCrudSaver;
+
         this.productSeriesInMemoryManager = new ProductSeriesInMemoryManager(productSeriesCrudService.getAll());
 
         setId("editor-layout");
@@ -123,10 +130,10 @@ class PartAttributesEditorDiv extends Div {
     }
 
     private void clearForm() {
-        populateForm(null);
+        populateAttributeForm(null);
     }
 
-    public void populateForm(ProductPartAttributeEntity value) {
+    public void populateAttributeForm(ProductPartAttributeEntity value) {
         this.attributeEntity = value;
         partAttributeEntityBinder.readBean(this.attributeEntity);
     }
