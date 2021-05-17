@@ -2,16 +2,16 @@ package pl.com.pt4q.product_manager.modules.product.ui.product_part;
 
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.router.*;
-import com.vaadin.flow.server.VaadinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartNotFoundException;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
-import pl.com.pt4q.product_manager.modules.product.ui.product.detail.ProductDetailView;
 import pl.com.pt4q.product_manager.modules.product.ui.product.general.ProductsGeneralView;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
@@ -28,7 +28,9 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
 
     private SaveProductPartOrBackButtonsDiv saveProductPartOrBackButtonsDiv;
     private PartFormDiv partFormDiv;
-    private PartAttributesDiv partAttributesGridDiv;
+
+    private PartAttributesGridDiv attributesGridDiv;
+    private PartAttributesEditorDiv attributeEditorDiv;
 
     private ProductSeriesCrudService productSeriesCrudService;
     //    private ProductPartAttributeCrudService productPartAttributeCrudService;
@@ -45,9 +47,8 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
 
         this.saveProductPartOrBackButtonsDiv = new SaveProductPartOrBackButtonsDiv(productPart);
         this.partFormDiv = new PartFormDiv(productPart);
-        this.partAttributesGridDiv = new PartAttributesDiv(productPart, productSeriesCrudService);
 
-        populateProductPartForm(productPart);
+        Div partAttributesDiv = initAttributesAndCreateDivWithLayout(productPart, productSeriesCrudService);
 
         setSizeFull();
         setAlignItems(Alignment.CENTER);
@@ -56,7 +57,7 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
         add(
                 saveProductPartOrBackButtonsDiv,
                 partFormDiv,
-                partAttributesGridDiv
+                partAttributesDiv
         );
     }
 
@@ -74,14 +75,31 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
         ComponentUtil.setData(UI.getCurrent(), ProductPartEntity.class, productPart);
     }
 
+    private Div initAttributesAndCreateDivWithLayout(ProductPartEntity productPart, ProductSeriesCrudService productSeriesCrudService){
+        this.attributesGridDiv = new PartAttributesGridDiv();
+        this.attributeEditorDiv = new PartAttributesEditorDiv(productSeriesCrudService);
+
+        SplitLayout splitLayout = new SplitLayout();
+        splitLayout.setOrientation(SplitLayout.Orientation.VERTICAL);
+        splitLayout.setHeightFull();
+
+        splitLayout.addToPrimary(attributesGridDiv);
+        splitLayout.addToSecondary(attributeEditorDiv);
+
+        Div partAttributesGridDiv = new Div(splitLayout);
+        partAttributesGridDiv.setSizeFull();
+
+        populateProductPartForm(productPart);
+        return partAttributesGridDiv;
+    }
+
     private void populateProductPartForm(ProductPartEntity part) {
         if (part.getPartModelOrPartName() != null)
             this.partFormDiv.populateForm(part);
     }
 
     private void refreshPartAttributes(ProductPartEntity part) {
-        this.partAttributesGridDiv
-                .getAttributesGridDiv()
+        this.attributesGridDiv
                 .refreshGrid(productPartFinderService.findAllProductPartAttributes(part));
     }
 
@@ -101,7 +119,6 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
             } catch (ProductPartNotFoundException e) {
                 Notification.show(e.getMessage());
             }
-
         }
     }
 }
