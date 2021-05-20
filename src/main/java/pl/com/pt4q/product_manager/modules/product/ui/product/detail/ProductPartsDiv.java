@@ -40,23 +40,14 @@ class ProductPartsDiv extends Div {
     private void initGrid() {
         String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
         this.productPartsGrid
-                .addColumn(new ComponentRenderer<>(ppe ->
-                        new Anchor(createLinkWithParam(ProductDetailView.ROUTE, ProductDetailView.QUERY_PARAM_ID_NAME, ppe.getId()), ppe.getPartModelOrPartName())))
+                .addColumn(new ComponentRenderer<>(partEntity ->
+                        new Anchor(createLinkWithParam(ProductPartDetailView.ROUTE, ProductPartDetailView.QUERY_PARAM_ID_NAME, partEntity.getId()), partEntity.getPartModelOrPartName())))
                 .setHeader("Part model")
                 .setSortable(true);
         this.productPartsGrid
                 .addColumn(ProductPartEntity::getPartDescription)
                 .setHeader("Part description")
                 .setSortable(true);
-//        this.productPartsGrid
-//                .addColumn(productPartEntity ->
-//                        productPartEntity.getPartManufacturer() != null ?
-//                                productPartEntity.getPartManufacturer()
-//                                : "")
-//                .setHeader("Part manufacturer")
-//                .setSortable(true);
-
-
         this.productPartsGrid
                 .addColumn(productEntity ->
                         productEntity.getModificationTime() != null ? productEntity.getModificationTime().format(DateTimeFormatter.ofPattern(dateTimeFormat)) : null)

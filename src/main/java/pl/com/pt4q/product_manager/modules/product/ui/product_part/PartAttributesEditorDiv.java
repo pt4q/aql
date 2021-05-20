@@ -122,4 +122,8 @@ class PartAttributesEditorDiv extends Div {
     public void populateAttributeForm(ProductPartAttributeEntity value) {
         partAttributeEntityBinder.readBean(value);
     }
+
+    public ProductPartAttributeEntity getAttributeEntity(){
+        return partAttributeEntityBinder.getBean();
+    }
 }

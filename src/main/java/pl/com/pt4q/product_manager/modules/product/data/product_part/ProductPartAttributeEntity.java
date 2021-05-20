@@ -30,5 +30,7 @@ public class ProductPartAttributeEntity {
     private ProductSeriesEntity productSeries;
     private LocalDate validFromDate;
 
+    @OneToOne
+    private ProductPartAttributeEntity previousAttribute;
     private boolean actualAttribute;
 }

@@ -23,7 +23,7 @@ public class ProductPartCrudSaver {
         } catch (ProductPartNotFoundException e) {
             return saveInDatabase(
                     part,
-                    String.format("Created new part %s (id:%d) with series no: %s for %s product (id:%d)",
+                    String.format("Created new part %s (id:%d) for %s product (id:%d)",
                             part.getPartModelOrPartName(),
                             part.getId(),
                             part.getProduct().getProductSku(),
@@ -38,7 +38,7 @@ public class ProductPartCrudSaver {
         productPartFinderService.findByIdOrThrowException(part.getId());
         return saveInDatabase(
                 part,
-                String.format("Updated part %s (id:%d) with series no: %s for %s product (id:%d)",
+                String.format("Updated part %s (id:%d) for %s product (id:%d)",
                         part.getPartModelOrPartName(),
                         part.getId(),
                         part.getProduct().getProductSku(),

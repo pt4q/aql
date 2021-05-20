@@ -7,6 +7,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import lombok.Getter;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesInMemoryManager;
@@ -58,10 +59,6 @@ class PartFormDiv extends Div {
     }
 
     private void initPartBinder() {
-//
-//        partEntityBinder
-//                .forField(partManufacturerComboBox)
-//                .asRequired("Part manufacturer can't be empty");
         partEntityBinder
                 .forField(partModelTextField)
                 .asRequired("Part model can't be empty")
@@ -69,11 +66,14 @@ class PartFormDiv extends Div {
         partEntityBinder
                 .forField(partDescriptionTextField)
                 .bind(ProductPartEntity::getPartDescription, ProductPartEntity::setPartDescription);
-
+        partEntityBinder.setBean(this.productPart);
     }
 
     public void populatePartForm(ProductPartEntity productPart){
-        this.productPart = productPart;
         partEntityBinder.readBean(productPart);
+    }
+
+    public ProductPartEntity getPartFromForm(){
+        return partEntityBinder.getBean();
     }
 }

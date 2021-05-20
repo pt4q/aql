@@ -17,6 +17,7 @@ import pl.com.pt4q.product_manager.modules.product.services.product_category.Pro
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartFinderService;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -60,7 +61,9 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
         productDetailFormDiv = new ProductDetailFormDiv(this.productEntity, productCategoryCrudService, manufacturerCrudService);
         productPartsDiv = new ProductPartsDiv();
 
+        initSaveButtonActionListener();
         populateProductForm(productEntity);
+        refreshPartsGrid(productEntity);
 
         VerticalLayout pageLayout = new VerticalLayout(
                 saveProductOrBackButtonsDiv,
@@ -85,8 +88,12 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
             this.productDetailFormDiv.populateForm(product);
     }
 
-    private void refreshPartsGrid(ProductEntity product) throws ProductNotFoundException {
-        this.productPartsDiv.refreshGrid(productPartFinderService.findAllProductParts(product));
+    private void refreshPartsGrid(ProductEntity product) {
+        try {
+            this.productPartsDiv.refreshGrid(productPartFinderService.findAllProductPartsByProduct(product));
+        } catch (ProductNotFoundException e) {
+            this.productPartsDiv.refreshGrid(Collections.emptyList());
+        }
     }
 
     @Override
@@ -106,5 +113,11 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
                 Notification.show(e.getMessage());
             }
         }
+    }
+
+    private void initSaveButtonActionListener() {
+        this.saveProductOrBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
+            System.out.println(productEntity.toString());
+        });
     }
 }

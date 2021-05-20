@@ -12,6 +12,10 @@ import pl.com.pt4q.product_manager.modules.product.services.product_part.Product
 import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartNotFoundException;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 class PartAttributesDiv extends Div {
     @Getter
     private PartAttributesGridDiv attributesGridDiv;
@@ -39,8 +43,10 @@ class PartAttributesDiv extends Div {
         this.attributesGridDiv = new PartAttributesGridDiv();
         this.attributeEditorDiv = new PartAttributesEditorDiv();
 
+        initProductPartAttributesInMemoryManager();
+
         initPopulateAttributeFormAfterSelectAttributeOnGrid();
-        initCreateNewOrUpdateAttributeAfterClickSaveButton();
+        initSaveOrUpdateAttributeAction();
 
         SplitLayout splitLayout = new SplitLayout();
         splitLayout.setOrientation(SplitLayout.Orientation.VERTICAL);
@@ -61,22 +67,37 @@ class PartAttributesDiv extends Div {
                 });
     }
 
-    public void refreshAttributesGrid(ProductPartEntity productPart){
+    public void refreshAttributesGrid(ProductPartEntity productPart) {
         try {
             attributesGridDiv.refreshGrid(productPartAttributeFinderService.findAllProductPartsAttributesByProductPart(productPart));
         } catch (ProductPartNotFoundException e) {
-            Notification.show(e.getMessage());
+            attributesGridDiv.refreshGrid(Collections.emptyList());
         }
     }
 
-    private void initCreateNewOrUpdateAttributeAfterClickSaveButton(){
-        this.attributeEditorDiv.getSaveButton().addClickListener(buttonClickEvent -> {
+    private void initProductPartAttributesInMemoryManager() {
+        List<ProductPartAttributeEntity> attributes = new ArrayList<>();
+        try {
+            attributes = productPartAttributeFinderService.findAllProductPartsAttributesByProductPart(productPart);
+        } catch (ProductPartNotFoundException e) {
+            Notification.show(e.getMessage());
+        }
+        this.productPartAttributesInMemoryManager = new ProductPartAttributesInMemoryManager(attributes);
+    }
 
+    private void initSaveOrUpdateAttributeAction() {
+        this.attributeEditorDiv.getSaveButton().addClickListener(buttonClickEvent -> {
+            ProductPartAttributeEntity attribute = attributeEditorDiv.getAttributeEntity();
+            this.productPart
+                    .setPartAttributes(
+                            productPartAttributesInMemoryManager.addToList(attribute)
+                    );
         });
     }
 
-    private void initDeleteAttributeAfterClickDeleteButton(){
+    private void initDeleteAttributeAction() {
         this.attributeEditorDiv.getDeleteButton().addClickListener(buttonClickEvent -> {
+            ProductPartAttributeEntity attribute = attributeEditorDiv.getAttributeEntity();
 
         });
     }

@@ -6,12 +6,15 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartAttributeFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartCrudSaver;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartFinderService;
+import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartNotFoundException;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
+import pl.com.pt4q.product_manager.modules.product.ui.product.detail.ProductDetailView;
 import pl.com.pt4q.product_manager.modules.product.ui.product.general.ProductsGeneralView;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
@@ -40,20 +43,25 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
     @Autowired
     public ProductPartDetailView(ProductSeriesCrudService productSeriesCrudService,
                                  ProductPartCrudSaver productPartCrudSaver,
+                                 ProductPartFinderService productPartFinderService,
                                  ProductPartAttributeFinderService productPartAttributeFinderService) {
 
         this.productSeriesCrudService = productSeriesCrudService;
         this.productPartCrudSaver = productPartCrudSaver;
-        this.productSeriesCrudService = productSeriesCrudService;
+        this.productPartFinderService = productPartFinderService;
         this.productPartAttributeFinderService = productPartAttributeFinderService;
 
         this.productPart = getProductPartFromContext();
 //        ifPartIsNullThenRedirectToProductDetailView(productPart);
 
-        this.saveProductPartOrBackButtonsDiv = new SaveProductPartOrBackButtonsDiv(productPart, productPartCrudSaver);
-        this.partFormDiv = new PartFormDiv(productPart);
+        this.saveProductPartOrBackButtonsDiv = new SaveProductPartOrBackButtonsDiv(this.productPart);
+        this.partFormDiv = new PartFormDiv(this.productPart);
+        this.partAttributesDiv = new PartAttributesDiv(this.productPart, productSeriesCrudService, productPartCrudSaver, productPartAttributeFinderService);
 
-        PartAttributesDiv partAttributesDiv = new PartAttributesDiv(productPart, productSeriesCrudService, productPartCrudSaver, productPartAttributeFinderService);
+        initSaveButtonAction();
+        initBackButtonAction();
+        populateProductPartForm(productPart);
+        refreshPartAttributesGrid(productPart);
 
         setSizeFull();
         setAlignItems(Alignment.CENTER);
@@ -85,6 +93,10 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
             this.partFormDiv.populatePartForm(part);
     }
 
+    private void refreshPartAttributesGrid(ProductPartEntity part) {
+        this.partAttributesDiv.refreshAttributesGrid(part);
+    }
+
     @Override
     public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String urlQuery) {
         Location location = beforeEvent.getLocation();
@@ -104,7 +116,33 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
         }
     }
 
-    private void refreshPartAttributesGrid(ProductPartEntity part) {
-        this.partAttributesDiv.refreshAttributesGrid(part);
+    private void initSaveButtonAction() {
+        this.saveProductPartOrBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
+            try {
+                ProductPartEntity partFromForm = this.partFormDiv.getPartFromForm();
+
+                productPart.setPartModelOrPartName(partFromForm.getPartModelOrPartName());
+                productPart.setPartDescription(partFromForm.getPartDescription());
+
+                this.productPart = productPartCrudSaver.save(productPart);
+            } catch (ProductPartAlreadyExistsException e) {
+                try {
+                    this.productPart = productPartCrudSaver.update(productPart);
+                } catch (ProductPartNotFoundException ex) {
+                    Notification.show(String.format("Can't save part because: %s", ex.getMessage()));
+                }
+            }
+        });
+    }
+
+    private void initBackButtonAction() {
+        this.saveProductPartOrBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
+            UI ui = UI.getCurrent();
+            if (productPart != null) {
+                ProductEntity product = productPart.getProduct();
+                ComponentUtil.setData(ui, ProductEntity.class, product);
+            }
+            ui.navigate(ProductDetailView.ROUTE);
+        });
     }
 }
