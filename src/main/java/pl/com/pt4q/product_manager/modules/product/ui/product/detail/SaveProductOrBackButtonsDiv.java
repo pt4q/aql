@@ -27,8 +27,8 @@ class SaveProductOrBackButtonsDiv extends Div {
     private AddNewOrUpdateExistingProductService addNewOrUpdateExistingProductService;
     private ProductEntity product;
 
-    public SaveProductOrBackButtonsDiv(ProductDetailFormDiv productDetailFormDiv, AddNewOrUpdateExistingProductService addNewOrUpdateExistingProductService) {
-        this.productDetailFormDiv = productDetailFormDiv;
+    public SaveProductOrBackButtonsDiv(ProductEntity product, AddNewOrUpdateExistingProductService addNewOrUpdateExistingProductService) {
+        this.product = product;
         this.addNewOrUpdateExistingProductService = addNewOrUpdateExistingProductService;
 
         configBackButton();
@@ -61,7 +61,7 @@ class SaveProductOrBackButtonsDiv extends Div {
         this.product = addNewOrUpdateExistingProductService.add(product);
         if (product.getId() != null && product.getProductSku() != null) {
             Notification.show(String.format("Product %s has been created", product.getProductSku()));
-            saveDataToContext(product);
+            saveProductToContext(product);
         } else
             Notification.show("After check the product is null");
     }
@@ -70,7 +70,7 @@ class SaveProductOrBackButtonsDiv extends Div {
         try {
             this.product = addNewOrUpdateExistingProductService.updateExisting(productEntity);
             Notification.show(String.format("Product %s has been updated", product.getProductSku()));
-            saveDataToContext(product);
+            saveProductToContext(product);
         } catch (ProductValidatorException ex) {
             Notification.show(ex.getMessage());
         }
@@ -79,7 +79,7 @@ class SaveProductOrBackButtonsDiv extends Div {
     private void configBackButton() {
         this.backButton.getElement().getStyle().set("margin-right", "auto");
         this.backButton.addClickListener(buttonClickEvent -> {
-            saveDataToContext(null);
+            removeProductFromContext();
             UI.getCurrent().navigate(ProductsGeneralView.ROUTE);
         });
     }
@@ -88,7 +88,11 @@ class SaveProductOrBackButtonsDiv extends Div {
         return ComponentUtil.getData(UI.getCurrent(), ProductEntity.class);
     }
 
-    private void saveDataToContext(ProductEntity product) {
+    private void removeProductFromContext(){
+        saveProductToContext(null);
+    }
+
+    private void saveProductToContext(ProductEntity product) {
         ComponentUtil.setData(UI.getCurrent(), ProductEntity.class, product);
     }
 }

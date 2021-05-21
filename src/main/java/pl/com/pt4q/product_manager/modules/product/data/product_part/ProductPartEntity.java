@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -27,22 +28,21 @@ public class ProductPartEntity {
 
     @ManyToOne
     private ProductEntity product;
-    @ManyToOne(fetch = FetchType.EAGER)
-    private ProductSeriesEntity productSeries;
-    @ManyToOne
-    private ManufacturerEntity partManufacturer;
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    private ProductSeriesEntity productSeries;
+//    @ManyToOne
+//    private ManufacturerEntity partManufacturer;
 
     private String partModelOrPartName;
     private String partDescription;
-    private LocalDate validFromDate;
+//    private LocalDate validFromDate;
 
-    private Boolean activePart;
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<ProductPartAttributeEntity> partAttributes;
 
-    @ManyToMany
-    private Set<ProductPartAttributeEntity> partAttributes;
-
-    private LocalDateTime modificationTime;
-
+    //// TODO: 13.05.2021 Add multiple pictures to the part
     @OneToOne(fetch = FetchType.LAZY)
     private ProductPictureEntity partPicture;
+
+    private LocalDateTime modificationTime;
 }
