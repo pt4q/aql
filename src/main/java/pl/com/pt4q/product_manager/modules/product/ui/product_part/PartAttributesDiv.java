@@ -9,6 +9,7 @@ import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPart
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartAttributeFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartAttributesInMemoryManager;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartCrudSaver;
+import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartAttributeNotFoundException;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartNotFoundException;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
 
@@ -70,7 +71,7 @@ class PartAttributesDiv extends Div {
     public void refreshAttributesGrid(ProductPartEntity productPart) {
         try {
             attributesGridDiv.refreshGrid(productPartAttributeFinderService.findAllProductPartsAttributesByProductPart(productPart));
-        } catch (ProductPartNotFoundException e) {
+        } catch (ProductPartAttributeNotFoundException e) {
             attributesGridDiv.refreshGrid(Collections.emptyList());
         }
     }
@@ -79,8 +80,8 @@ class PartAttributesDiv extends Div {
         List<ProductPartAttributeEntity> attributes = new ArrayList<>();
         try {
             attributes = productPartAttributeFinderService.findAllProductPartsAttributesByProductPart(productPart);
-        } catch (ProductPartNotFoundException e) {
-            Notification.show(e.getMessage());
+        } catch (ProductPartAttributeNotFoundException e) {
+            attributes = Collections.emptyList();
         }
         this.productPartAttributesInMemoryManager = new ProductPartAttributesInMemoryManager(attributes);
     }

@@ -71,16 +71,5 @@ class ProductPartsDiv extends Div {
 
     private void initAddNewPartButton() {
         this.addNewPartButton.getElement().setProperty("title", "add new part to the product");
-        this.addNewPartButton.addClickListener(e -> {
-            UI ui = UI.getCurrent();
-
-            ProductEntity productFromContext = ComponentUtil.getData(ui, ProductEntity.class);
-            ProductPartEntity newPart = ProductPartEntity.builder()
-                    .product(productFromContext)
-                    .build();
-
-            ComponentUtil.setData(ui, ProductPartEntity.class, newPart);
-            ui.navigate(ProductPartDetailView.ROUTE);
-        });
     }
 }

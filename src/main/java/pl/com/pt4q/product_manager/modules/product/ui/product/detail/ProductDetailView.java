@@ -9,12 +9,15 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
+import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
 import pl.com.pt4q.product_manager.modules.product.services.manufacturer.ManufacturerCrudService;
 import pl.com.pt4q.product_manager.modules.product.services.product.AddNewOrUpdateExistingProductService;
 import pl.com.pt4q.product_manager.modules.product.services.product.ProductFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.ProductNotFoundException;
 import pl.com.pt4q.product_manager.modules.product.services.product_category.ProductCategoryCrudService;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartFinderService;
+import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartNotFoundException;
+import pl.com.pt4q.product_manager.modules.product.ui.product_part.ProductPartDetailView;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 import java.util.Collections;
@@ -62,6 +65,8 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
         productPartsDiv = new ProductPartsDiv();
 
         initSaveButtonActionListener();
+        initAddNewAttributeAction();
+
         populateProductForm(productEntity);
         refreshPartsGrid(productEntity);
 
@@ -91,7 +96,7 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
     private void refreshPartsGrid(ProductEntity product) {
         try {
             this.productPartsDiv.refreshGrid(productPartFinderService.findAllProductPartsByProduct(product));
-        } catch (ProductNotFoundException e) {
+        } catch (ProductPartNotFoundException e) {
             this.productPartsDiv.refreshGrid(Collections.emptyList());
         }
     }
@@ -118,6 +123,20 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
     private void initSaveButtonActionListener() {
         this.saveProductOrBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
             System.out.println(productEntity.toString());
+        });
+    }
+
+    private void initAddNewAttributeAction(){
+        this.productPartsDiv.getAddNewPartButton().addClickListener(buttonClickEvent -> {
+            UI ui = UI.getCurrent();
+
+            ProductEntity productFromContext = ComponentUtil.getData(ui, ProductEntity.class);
+            ProductPartEntity newPart = ProductPartEntity.builder()
+                    .product(productFromContext)
+                    .build();
+
+            ComponentUtil.setData(ui, ProductPartEntity.class, newPart);
+            ui.navigate(ProductPartDetailView.ROUTE);
         });
     }
 }

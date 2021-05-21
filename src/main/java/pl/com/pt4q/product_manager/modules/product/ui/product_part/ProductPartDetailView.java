@@ -54,7 +54,7 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
         this.productPart = getProductPartFromContext();
 //        ifPartIsNullThenRedirectToProductDetailView(productPart);
 
-        this.saveProductPartOrBackButtonsDiv = new SaveProductPartOrBackButtonsDiv(this.productPart);
+        this.saveProductPartOrBackButtonsDiv = new SaveProductPartOrBackButtonsDiv();
         this.partFormDiv = new PartFormDiv(this.productPart);
         this.partAttributesDiv = new PartAttributesDiv(this.productPart, productSeriesCrudService, productPartCrudSaver, productPartAttributeFinderService);
 
@@ -89,7 +89,7 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
     }
 
     private void populateProductPartForm(ProductPartEntity part) {
-        if (part.getPartModelOrPartName() != null)
+        if (part != null)
             this.partFormDiv.populatePartForm(part);
     }
 
@@ -120,14 +120,16 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
         this.saveProductPartOrBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
             try {
                 ProductPartEntity partFromForm = this.partFormDiv.getPartFromForm();
-
                 productPart.setPartModelOrPartName(partFromForm.getPartModelOrPartName());
                 productPart.setPartDescription(partFromForm.getPartDescription());
-
                 this.productPart = productPartCrudSaver.save(productPart);
+
+                Notification.show(String.format("The part %s has been saved in the product %s", productPart.getPartModelOrPartName(), productPart.getProduct().getProductSku()));
             } catch (ProductPartAlreadyExistsException e) {
                 try {
                     this.productPart = productPartCrudSaver.update(productPart);
+
+                    Notification.show(String.format("The part %s has been updated in the product %s", productPart.getPartModelOrPartName(), productPart.getProduct().getProductSku()));
                 } catch (ProductPartNotFoundException ex) {
                     Notification.show(String.format("Can't save part because: %s", ex.getMessage()));
                 }

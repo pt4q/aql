@@ -34,11 +34,11 @@ public class ProductPartFinderService {
             throw new ProductPartNotFoundException(String.format(errorMessage, id));
     }
 
-    public List<ProductPartEntity> findAllProductPartsByProduct(ProductEntity product) throws ProductNotFoundException {
+    public List<ProductPartEntity> findAllProductPartsByProduct(ProductEntity product) throws ProductPartNotFoundException {
         if (product != null)
             if (product.getId() != null)
                 return productPartRepository.findAllByProduct(product);
 
-        throw new ProductNotFoundException("Product part is null or have null id");
+        throw new ProductPartNotFoundException("Product part is null or have null id");
     }
 }

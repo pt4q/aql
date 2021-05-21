@@ -24,7 +24,7 @@ class SaveProductPartOrBackButtonsDiv extends Div {
     private ProductPartCrudSaver productPartCrudSaver;
     private ProductPartEntity productPart;
 
-    public SaveProductPartOrBackButtonsDiv(ProductPartEntity productPart) {
+    public SaveProductPartOrBackButtonsDiv() {
         initBackButton();
 //        saveButtonListenerConfig();
 
@@ -34,20 +34,6 @@ class SaveProductPartOrBackButtonsDiv extends Div {
 
         add(buttonLayout);
     }
-
-//    private void saveButtonListenerConfig() {
-//        saveButton.addClickListener(buttonClickEvent -> {
-//            try {
-//                productPart = productPartCrudSaver.save(productPart);
-//            } catch (ProductPartAlreadyExistsException e) {
-//                try {
-//                    productPart = productPartCrudSaver.update(productPart);
-//                } catch (ProductPartNotFoundException ex) {
-//                    Notification.show(String.format("Can't save part because: %s", ex.getMessage()));
-//                }
-//            }
-//        });
-//    }
 
     private void initBackButton() {
         backButton.getElement().getStyle().set("margin-right", "auto");
