@@ -79,11 +79,10 @@ class PartAttributesDiv extends Div {
     private void initProductPartAttributesInMemoryManager() {
         List<ProductPartAttributeEntity> attributes = new ArrayList<>();
         try {
-            attributes = productPartAttributeFinderService.findAllProductPartsAttributesByProductPart(productPart);
+            this.productPartAttributesInMemoryManager = new ProductPartAttributesInMemoryManager(productPartAttributeFinderService.findAllProductPartsAttributesByProductPart(productPart));
         } catch (ProductPartAttributeNotFoundException e) {
-            attributes = Collections.emptyList();
+            this.productPartAttributesInMemoryManager = new ProductPartAttributesInMemoryManager(Collections.emptyList());
         }
-        this.productPartAttributesInMemoryManager = new ProductPartAttributesInMemoryManager(attributes);
     }
 
     private void initSaveOrUpdateAttributeAction() {

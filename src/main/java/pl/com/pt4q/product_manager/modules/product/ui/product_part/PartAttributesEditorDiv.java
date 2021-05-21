@@ -56,23 +56,23 @@ class PartAttributesEditorDiv extends Div {
     }
 
     private void initAttributeBinder() {
-        partAttributeEntityBinder
-                .forField(newAttributeNameTextField)
-                .asRequired("Type attribute name")
-                .bind(ProductPartAttributeEntity::getAttributeName, ProductPartAttributeEntity::setAttributeName);
-        partAttributeEntityBinder
-                .forField(newAttributeValueTextField)
-                .asRequired("Type attribute value")
-                .bind(ProductPartAttributeEntity::getAttributeValue, ProductPartAttributeEntity::setAttributeValue);
-        partAttributeEntityBinder
-                .forField(productSeriesComboBox)
-                .asRequired("Product series can't be empty")
-                .bind(attribute -> attribute.getProductSeries().getSeries(),
-                        (productPartEntity, s) -> productPartEntity.setProductSeries(null));
-        partAttributeEntityBinder
-                .forField(validFromDateDatePicker)
-                .asRequired("Part model can't be empty")
-                .bind(ProductPartAttributeEntity::getValidFromDate, ProductPartAttributeEntity::setValidFromDate);
+//        partAttributeEntityBinder
+//                .forField(newAttributeNameTextField)
+//                .asRequired("Type attribute name")
+//                .bind(ProductPartAttributeEntity::getAttributeName, ProductPartAttributeEntity::setAttributeName);
+//        partAttributeEntityBinder
+//                .forField(newAttributeValueTextField)
+//                .asRequired("Type attribute value")
+//                .bind(ProductPartAttributeEntity::getAttributeValue, ProductPartAttributeEntity::setAttributeValue);
+//        partAttributeEntityBinder
+//                .forField(productSeriesComboBox)
+//                .asRequired("Product series can't be empty")
+//                .bind(attribute -> attribute.getProductSeries().getSeries(),
+//                        (productPartEntity, s) -> productPartEntity.setProductSeries(null));
+//        partAttributeEntityBinder
+//                .forField(validFromDateDatePicker)
+//                .asRequired("Part model can't be empty")
+//                .bind(ProductPartAttributeEntity::getValidFromDate, ProductPartAttributeEntity::setValidFromDate);
     }
 
     private HorizontalLayout initNewAttributeForm() {

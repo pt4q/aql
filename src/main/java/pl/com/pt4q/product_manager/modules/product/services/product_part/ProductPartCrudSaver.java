@@ -21,35 +21,26 @@ public class ProductPartCrudSaver {
         try {
             productPartFinderService.findByIdOrThrowException(part.getId());
         } catch (ProductPartNotFoundException e) {
-            return saveInDatabase(
-                    part,
-                    String.format("Created new part %s (id:%d) for %s product (id:%d)",
-                            part.getPartModelOrPartName(),
-                            part.getId(),
-                            part.getProduct().getProductSku(),
-                            part.getProduct().getId()
-                    )
-            );
+            part = productCrudRepository.save(part);
+            log.info(String.format("Created new part %s (id:%d) for %s product (id:%d)",
+                    part.getPartModelOrPartName(),
+                    part.getId(),
+                    part.getProduct().getProductSku(),
+                    part.getProduct().getId()
+            ));
         }
         throw new ProductPartAlreadyExistsException("Product part already exists");
     }
 
     public ProductPartEntity update(ProductPartEntity part) throws ProductPartNotFoundException {
         productPartFinderService.findByIdOrThrowException(part.getId());
-        return saveInDatabase(
-                part,
-                String.format("Updated part %s (id:%d) for %s product (id:%d)",
-                        part.getPartModelOrPartName(),
-                        part.getId(),
-                        part.getProduct().getProductSku(),
-                        part.getProduct().getId()
-                )
-        );
-    }
-
-    private ProductPartEntity saveInDatabase(ProductPartEntity part, String message) {
         part = productCrudRepository.save(part);
-        log.info(message);
+        log.info(String.format("Updated part %s (id:%d) for %s product (id:%d)",
+                part.getPartModelOrPartName(),
+                part.getId(),
+                part.getProduct().getProductSku(),
+                part.getProduct().getId()
+        ));
         return part;
     }
 }

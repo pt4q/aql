@@ -31,14 +31,14 @@ class PartAttributesGridDiv extends Div {
                 .setHeader("Attribute name")
                 .setSortable(true);
         this.partAttributesGrid
-                .addColumn(ProductPartAttributeEntity::getAttributeValue)
+                .addColumn(attribute -> attribute.getActualValueVersion().getAttributeValue())
                 .setHeader("Attribute value");
         this.partAttributesGrid
-                .addColumn(attribute -> attribute.getProductSeries() != null ? attribute.getProductSeries().getSeries() : "")
+                .addColumn(attribute -> attribute.getActualValueVersion().getProductSeries() != null ? attribute.getActualValueVersion().getProductSeries().getSeries() : "")
                 .setHeader("Product series")
                 .setSortable(true);
         this.partAttributesGrid
-                .addColumn(attribute -> attribute.getValidFromDate() != null ? attribute.getValidFromDate().format(DateTimeFormatter.ofPattern(dateTimeFormat)) : "")
+                .addColumn(attribute -> attribute.getActualValueVersion().getValidFromDate() != null ? attribute.getActualValueVersion().getValidFromDate().format(DateTimeFormatter.ofPattern(dateTimeFormat)) : "")
                 .setHeader("Valid from time")
                 .setSortable(true);
 

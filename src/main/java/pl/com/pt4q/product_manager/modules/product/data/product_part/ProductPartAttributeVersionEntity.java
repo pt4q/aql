@@ -8,23 +8,24 @@ import pl.com.pt4q.product_manager.modules.product.data.product_series.ProductSe
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
 @Entity
-public class ProductPartAttributeEntity {
+public class ProductPartAttributeVersionEntity {
 
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    @ManyToOne
-    private ProductPartEntity part;
+    private String attributeValue;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private ProductSeriesEntity productSeries;
+    private LocalDate validFromDate;
 
-    private String attributeName;
     @OneToOne
-    private ProductPartAttributeVersionEntity actualValueVersion;
+    private ProductPartAttributeVersionEntity previousAttribute;
+    private boolean actualAttribute;
 }
