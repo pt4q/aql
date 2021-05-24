@@ -14,18 +14,23 @@ import java.time.LocalDate;
 @Builder
 @Data
 @Entity
-public class ProductPartAttributeVersionEntity {
+public class ProductPartAttributeValueVersionEntity {
 
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
+    @OneToOne
+    private ProductPartAttributeEntity partAttribute;
+
     private String attributeValue;
+
     @ManyToOne(fetch = FetchType.EAGER)
     private ProductSeriesEntity productSeries;
+
     private LocalDate validFromDate;
 
     @OneToOne
-    private ProductPartAttributeVersionEntity previousAttribute;
+    private ProductPartAttributeValueVersionEntity previousAttribute;
     private boolean actualAttribute;
 }

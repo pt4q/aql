@@ -4,11 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.com.pt4q.product_manager.modules.product.data.product_series.ProductSeriesEntity;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,5 +23,5 @@ public class ProductPartAttributeEntity {
 
     private String attributeName;
     @OneToOne
-    private ProductPartAttributeVersionEntity actualValueVersion;
+    private ProductPartAttributeValueVersionEntity actualValueVersion;
 }
