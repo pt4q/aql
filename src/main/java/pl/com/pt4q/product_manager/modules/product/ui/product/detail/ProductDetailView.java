@@ -97,7 +97,7 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
         try {
             this.productPartsDiv.refreshGrid(productPartFinderService.findAllProductPartsByProduct(product));
         } catch (ProductPartNotFoundException e) {
-            this.productPartsDiv.refreshGrid(Collections.emptyList());
+            Notification.show(e.getMessage());
         }
     }
 

@@ -9,22 +9,22 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
-@Route(value = PartAttributeDetailView.ROUTE, layout = MainView.class)
-@PageTitle(PartAttributeDetailView.PAGE_TITLE)
-public class PartAttributeDetailView extends Div implements HasUrlParameter<String> {
+@Route(value = ProductPartAttributeDetailView.ROUTE, layout = MainView.class)
+@PageTitle(ProductPartAttributeDetailView.PAGE_TITLE)
+public class ProductPartAttributeDetailView extends Div implements HasUrlParameter<String> {
 
     public static final String PAGE_TITLE = "Product part attributes";
     public static final String ROUTE = "product-part-attributes";
     public static final String QUERY_PARAM_ID_NAME = "productPartId";
 
-    private AttributeEditorDiv attributesEditorDiv;
-    private AttributeVersionsGridDiv attributeVersionsGridDiv;
+    private ProductPartAttributeEditorDiv attributesEditorDiv;
+    private ProductPartAttributeValueVersionsDiv productPartAttributeValueVersionsDiv;
 
-    public PartAttributeDetailView() {
-        this.attributesEditorDiv = new AttributeEditorDiv();
-        this.attributeVersionsGridDiv = new AttributeVersionsGridDiv();
+    public ProductPartAttributeDetailView() {
+        this.attributesEditorDiv = new ProductPartAttributeEditorDiv();
+        this.productPartAttributeValueVersionsDiv = new ProductPartAttributeValueVersionsDiv();
 
-        VerticalLayout layout = new VerticalLayout(attributesEditorDiv, attributeVersionsGridDiv);
+        VerticalLayout layout = new VerticalLayout(attributesEditorDiv, productPartAttributeValueVersionsDiv);
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
         layout.setWidthFull();
 

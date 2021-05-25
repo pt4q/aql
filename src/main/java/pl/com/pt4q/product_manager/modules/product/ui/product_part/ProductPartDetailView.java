@@ -8,7 +8,7 @@ import com.vaadin.flow.router.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
-import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartAttributeFinderService;
+import pl.com.pt4q.product_manager.modules.product.services.product_part_attribute.ProductPartAttributeFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartCrudSaver;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartAlreadyExistsException;
@@ -32,8 +32,8 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
     public static final String QUERY_PARAM_ID_NAME = "productPartId";
 
     private SaveProductPartOrBackButtonsDiv saveProductPartOrBackButtonsDiv;
-    private PartFormDiv partFormDiv;
-    private PartAttributesDiv partAttributesDiv;
+    private ProductPartFormDiv productPartFormDiv;
+    private ProductPartAttributesDiv productPartAttributesDiv;
 
     private ProductSeriesCrudService productSeriesCrudService;
     private ProductPartCrudSaver productPartCrudSaver;
@@ -57,8 +57,8 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
 //        ifPartIsNullThenRedirectToProductDetailView(productPart);
 
         this.saveProductPartOrBackButtonsDiv = new SaveProductPartOrBackButtonsDiv();
-        this.partFormDiv = new PartFormDiv(this.productPart);
-        this.partAttributesDiv = new PartAttributesDiv(this.productPart, productSeriesCrudService, productPartCrudSaver, productPartAttributeFinderService);
+        this.productPartFormDiv = new ProductPartFormDiv(this.productPart);
+        this.productPartAttributesDiv = new ProductPartAttributesDiv(this.productPart, productSeriesCrudService, productPartCrudSaver, productPartAttributeFinderService);
 
         initSaveButtonAction();
         initBackButtonAction();
@@ -71,8 +71,8 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
 
         add(
                 saveProductPartOrBackButtonsDiv,
-                partFormDiv,
-                partAttributesDiv
+                productPartFormDiv,
+                productPartAttributesDiv
         );
     }
 
@@ -92,15 +92,15 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
 
     private void populateProductPartForm(ProductPartEntity part) {
         if (part != null)
-            this.partFormDiv.populatePartForm(part);
+            this.productPartFormDiv.populatePartForm(part);
     }
 
     private void refreshPartAttributesGrid(ProductPartEntity part) {
 //        this.partAttributesDiv.refreshAttributesGrid(part);
         try {
-            this.partAttributesDiv.refreshGrid(productPartAttributeFinderService.findAllProductPartsAttributesByProductPart(part));
+            this.productPartAttributesDiv.refreshGrid(productPartAttributeFinderService.findAllProductPartsAttributesByProductPart(part));
         } catch (ProductPartAttributeNotFoundException e) {
-            this.partAttributesDiv.refreshGrid(Collections.emptyList());
+            this.productPartAttributesDiv.refreshGrid(Collections.emptyList());
         }
     }
 
@@ -126,7 +126,7 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
     private void initSaveButtonAction() {
         this.saveProductPartOrBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
             try {
-                ProductPartEntity partFromForm = this.partFormDiv.getPartFromForm();
+                ProductPartEntity partFromForm = this.productPartFormDiv.getPartFromForm();
                 productPart.setPartModelOrPartName(partFromForm.getPartModelOrPartName());
                 productPart.setPartDescription(partFromForm.getPartDescription());
                 this.productPart = productPartCrudSaver.save(productPart);

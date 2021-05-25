@@ -12,21 +12,21 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import lombok.Getter;
-import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartAttributeEntity;
+import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute.ProductPartAttributeEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
-import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartAttributeFinderService;
-import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartAttributesInMemoryManager;
+import pl.com.pt4q.product_manager.modules.product.services.product_part_attribute.ProductPartAttributeFinderService;
+import pl.com.pt4q.product_manager.modules.product.services.product_part_attribute.ProductPartAttributesInMemoryManager;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartCrudSaver;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartAttributeNotFoundException;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
-import pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute.PartAttributeDetailView;
+import pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute.ProductPartAttributeDetailView;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-class PartAttributesDiv extends Div {
+class ProductPartAttributesDiv extends Div {
 
     private Grid<ProductPartAttributeEntity> partAttributesGrid = new Grid<>();
     @Getter
@@ -40,10 +40,10 @@ class PartAttributesDiv extends Div {
 
     private ProductPartEntity productPart;
 
-    public PartAttributesDiv(ProductPartEntity productPart,
-                             ProductSeriesCrudService productSeriesCrudService,
-                             ProductPartCrudSaver productPartCrudSaver,
-                             ProductPartAttributeFinderService productPartAttributeFinderService) {
+    public ProductPartAttributesDiv(ProductPartEntity productPart,
+                                    ProductSeriesCrudService productSeriesCrudService,
+                                    ProductPartCrudSaver productPartCrudSaver,
+                                    ProductPartAttributeFinderService productPartAttributeFinderService) {
 
         this.productPart = productPart;
         this.productSeriesCrudService = productSeriesCrudService;
@@ -74,7 +74,7 @@ class PartAttributesDiv extends Div {
         String dateTimeFormat = "yyyy-MM-dd";
 
         this.partAttributesGrid
-                .addColumn(new ComponentRenderer<>(attr ->  new Anchor(createLinkWithParam(PartAttributeDetailView.ROUTE, PartAttributeDetailView.QUERY_PARAM_ID_NAME, attr.getId()), attr.getAttributeName())))
+                .addColumn(new ComponentRenderer<>(attr ->  new Anchor(createLinkWithParam(ProductPartAttributeDetailView.ROUTE, ProductPartAttributeDetailView.QUERY_PARAM_ID_NAME, attr.getId()), attr.getAttributeName())))
                 .setHeader("Attribute name")
                 .setSortable(true);
         this.partAttributesGrid
@@ -117,6 +117,7 @@ class PartAttributesDiv extends Div {
         this.addNewAttributeButton.addClickListener(buttonClickEvent -> {
             UI ui = UI.getCurrent();
             ComponentUtil.setData(ui, ProductPartEntity.class, productPart);
+            ui.navigate(ProductPartAttributeDetailView.ROUTE);
         });
     }
 }

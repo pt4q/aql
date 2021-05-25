@@ -5,10 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
-import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.ProductNotFoundException;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartNotFoundException;
+import pl.com.pt4q.product_manager.modules.product.services.product_part_attribute.ProductPartAttributeFinderService;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 

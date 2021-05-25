@@ -12,7 +12,7 @@ import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPart
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesInMemoryManager;
 
-class PartFormDiv extends Div {
+class ProductPartFormDiv extends Div {
 
     private VerticalLayout formLayout = new VerticalLayout();
     private Binder<ProductPartEntity> partEntityBinder = new Binder<>(ProductPartEntity.class);
@@ -23,7 +23,7 @@ class PartFormDiv extends Div {
 
     private ProductPartEntity productPart;
 
-    public PartFormDiv(ProductPartEntity productPart) {
+    public ProductPartFormDiv(ProductPartEntity productPart) {
         this.productPart = productPart;
 
         initPartBinder();

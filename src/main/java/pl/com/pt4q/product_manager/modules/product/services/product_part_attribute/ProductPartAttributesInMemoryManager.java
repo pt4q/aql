@@ -1,7 +1,7 @@
-package pl.com.pt4q.product_manager.modules.product.services.product_part;
+package pl.com.pt4q.product_manager.modules.product.services.product_part_attribute;
 
 import lombok.Getter;
-import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartAttributeEntity;
+import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute.ProductPartAttributeEntity;
 
 import java.util.List;
 import java.util.stream.Collectors;
