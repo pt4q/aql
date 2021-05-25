@@ -1,22 +1,19 @@
-package pl.com.pt4q.product_manager.modules.product.ui.product_part;
+package pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute;
 
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import lombok.Getter;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartAttributeEntity;
-import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartAttributeFinderService;
-import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartFinderService;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Set;
 
-class PartAttributesGridDiv extends Div {
+class AttributeVersionsGridDiv extends Div {
 
     @Getter
     private Grid<ProductPartAttributeEntity> partAttributesGrid = new Grid<>();
 
-    public PartAttributesGridDiv() {
+    public AttributeVersionsGridDiv() {
         initPartAttributesGrid();
         setId("grid-wrapper");
         setWidthFull();

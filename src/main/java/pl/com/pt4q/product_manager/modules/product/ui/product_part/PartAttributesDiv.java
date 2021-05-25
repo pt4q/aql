@@ -1,8 +1,16 @@
 package pl.com.pt4q.product_manager.modules.product.ui.product_part;
 
+import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.splitlayout.SplitLayout;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import lombok.Getter;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartAttributeEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
@@ -10,18 +18,19 @@ import pl.com.pt4q.product_manager.modules.product.services.product_part.Product
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartAttributesInMemoryManager;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartCrudSaver;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartAttributeNotFoundException;
-import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartNotFoundException;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
+import pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute.PartAttributeDetailView;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 class PartAttributesDiv extends Div {
+
+    private Grid<ProductPartAttributeEntity> partAttributesGrid = new Grid<>();
     @Getter
-    private PartAttributesGridDiv attributesGridDiv;
-    @Getter
-    private PartAttributesEditorDiv attributeEditorDiv;
+    private Button addNewAttributeButton = new Button(new Icon(VaadinIcon.PLUS_CIRCLE_O));
 
     private ProductSeriesCrudService productSeriesCrudService;
     private ProductPartCrudSaver productPartCrudSaver;
@@ -41,39 +50,57 @@ class PartAttributesDiv extends Div {
         this.productPartCrudSaver = productPartCrudSaver;
         this.productPartAttributeFinderService = productPartAttributeFinderService;
 
-        this.attributesGridDiv = new PartAttributesGridDiv();
-        this.attributeEditorDiv = new PartAttributesEditorDiv();
-
+        Div attributesGridDiv = initAttributesDiv();
+        initAddNewAttributeButton();
         initProductPartAttributesInMemoryManager();
 
-        initPopulateAttributeFormAfterSelectAttributeOnGrid();
-        initSaveOrUpdateAttributeAction();
-
-        SplitLayout splitLayout = new SplitLayout();
-        splitLayout.setOrientation(SplitLayout.Orientation.VERTICAL);
-        splitLayout.setHeightFull();
-
-        splitLayout.addToPrimary(attributesGridDiv);
-        splitLayout.addToSecondary(attributeEditorDiv);
+        VerticalLayout vl = new VerticalLayout(attributesGridDiv, addNewAttributeButton);
+        vl.setAlignItems(FlexComponent.Alignment.CENTER);
+        vl.setWidthFull();
 
         setSizeFull();
-        add(splitLayout);
+        add(vl);
     }
 
-    private void initPopulateAttributeFormAfterSelectAttributeOnGrid() {
-        this.attributesGridDiv.getPartAttributesGrid()
-                .addItemClickListener(event -> {
-                    ProductPartAttributeEntity attribute = event.getItem();
-                    this.attributeEditorDiv.populateAttributeForm(attribute);
-                });
+    private Div initAttributesDiv(){
+        initPartAttributesGrid();
+        Div attributesDiv = new Div(partAttributesGrid);
+        attributesDiv.setId("grid-wrapper");
+        attributesDiv.setWidthFull();
+        return attributesDiv;
     }
 
-    public void refreshAttributesGrid(ProductPartEntity productPart) {
-        try {
-            attributesGridDiv.refreshGrid(productPartAttributeFinderService.findAllProductPartsAttributesByProductPart(productPart));
-        } catch (ProductPartAttributeNotFoundException e) {
-            attributesGridDiv.refreshGrid(Collections.emptyList());
-        }
+    private void initPartAttributesGrid() {
+        String dateTimeFormat = "yyyy-MM-dd";
+
+        this.partAttributesGrid
+                .addColumn(new ComponentRenderer<>(attr ->  new Anchor(createLinkWithParam(PartAttributeDetailView.ROUTE, PartAttributeDetailView.QUERY_PARAM_ID_NAME, attr.getId()), attr.getAttributeName())))
+                .setHeader("Attribute name")
+                .setSortable(true);
+        this.partAttributesGrid
+                .addColumn(attribute -> attribute.getActualValueVersion().getAttributeValue())
+                .setHeader("Attribute actual value");
+        this.partAttributesGrid
+                .addColumn(attribute -> attribute.getActualValueVersion().getProductSeries() != null ? attribute.getActualValueVersion().getProductSeries().getSeries() : "")
+                .setHeader("Actual product series")
+                .setSortable(true);
+        this.partAttributesGrid
+                .addColumn(attribute -> attribute.getActualValueVersion().getValidFromDate() != null ? attribute.getActualValueVersion().getValidFromDate().format(DateTimeFormatter.ofPattern(dateTimeFormat)) : "")
+                .setHeader("Valid from time")
+                .setSortable(true);
+
+        this.partAttributesGrid.setWidthFull();
+        this.partAttributesGrid.setHeightByRows(true);
+//        this.refreshGrid(testCardFinder.getAll());
+    }
+
+    private String createLinkWithParam(String url, String paramName, Long id) {
+        return url + "?" + paramName + "=" + id.toString();
+    }
+
+    public void refreshGrid(List<ProductPartAttributeEntity> partAttributes) {
+        this.partAttributesGrid.select(null);
+        this.partAttributesGrid.setItems(partAttributes);
     }
 
     private void initProductPartAttributesInMemoryManager() {
@@ -85,20 +112,11 @@ class PartAttributesDiv extends Div {
         }
     }
 
-    private void initSaveOrUpdateAttributeAction() {
-        this.attributeEditorDiv.getSaveButton().addClickListener(buttonClickEvent -> {
-            ProductPartAttributeEntity attribute = attributeEditorDiv.getAttributeEntity();
-            this.productPart
-                    .setPartAttributes(
-                            productPartAttributesInMemoryManager.addToList(attribute)
-                    );
-        });
-    }
-
-    private void initDeleteAttributeAction() {
-        this.attributeEditorDiv.getDeleteButton().addClickListener(buttonClickEvent -> {
-            ProductPartAttributeEntity attribute = attributeEditorDiv.getAttributeEntity();
-
+    private void initAddNewAttributeButton() {
+        this.addNewAttributeButton.getElement().setProperty("title", "add new attribute to the part");
+        this.addNewAttributeButton.addClickListener(buttonClickEvent -> {
+            UI ui = UI.getCurrent();
+            ComponentUtil.setData(ui, ProductPartEntity.class, productPart);
         });
     }
 }

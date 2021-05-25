@@ -1,4 +1,4 @@
-package pl.com.pt4q.product_manager.modules.product.ui.product_part.attribute.attribute_value;
+package pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute_value;
 
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.BeforeEvent;
@@ -14,8 +14,6 @@ public class PartAttributeValuesDetailView extends Div implements HasUrlParamete
     public static final String PAGE_TITLE = "Product part attribute versions";
     public static final String ROUTE = "product-part-attributes-versions";
     public static final String QUERY_PARAM_ID_NAME = "partAttributeId";
-
-
 
     @Override
     public void setParameter(BeforeEvent beforeEvent, String s) {

@@ -12,12 +12,14 @@ import pl.com.pt4q.product_manager.modules.product.services.product_part.Product
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartCrudSaver;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartAlreadyExistsException;
+import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartAttributeNotFoundException;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartNotFoundException;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
 import pl.com.pt4q.product_manager.modules.product.ui.product.detail.ProductDetailView;
 import pl.com.pt4q.product_manager.modules.product.ui.product.general.ProductsGeneralView;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -94,7 +96,12 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
     }
 
     private void refreshPartAttributesGrid(ProductPartEntity part) {
-        this.partAttributesDiv.refreshAttributesGrid(part);
+//        this.partAttributesDiv.refreshAttributesGrid(part);
+        try {
+            this.partAttributesDiv.refreshGrid(productPartAttributeFinderService.findAllProductPartsAttributesByProductPart(part));
+        } catch (ProductPartAttributeNotFoundException e) {
+            this.partAttributesDiv.refreshGrid(Collections.emptyList());
+        }
     }
 
     @Override

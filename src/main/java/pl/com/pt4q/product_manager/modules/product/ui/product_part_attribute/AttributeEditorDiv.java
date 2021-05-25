@@ -1,4 +1,4 @@
-package pl.com.pt4q.product_manager.modules.product.ui.product_part;
+package pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasStyle;
@@ -14,15 +14,9 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import lombok.Getter;
-import lombok.Setter;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartAttributeEntity;
-import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartCrudSaver;
-import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
-import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesInMemoryManager;
 
-import java.util.List;
-
-class PartAttributesEditorDiv extends Div {
+class AttributeEditorDiv extends Div {
 
     private TextField newAttributeNameTextField = new TextField("New attribute name");
     private TextField newAttributeValueTextField = new TextField("New attribute value");
@@ -37,7 +31,7 @@ class PartAttributesEditorDiv extends Div {
 
     private Binder<ProductPartAttributeEntity> partAttributeEntityBinder = new Binder<>(ProductPartAttributeEntity.class);
 
-    public PartAttributesEditorDiv() {
+    public AttributeEditorDiv() {
         setId("editor-layout");
 
         initAttributeBinder();
