@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Log4j2
 @Component
 public class AppInitializer implements CommandLineRunner {
 
@@ -166,6 +165,6 @@ public class AppInitializer implements CommandLineRunner {
     }
 
     private void logToConsoleWhatWasCreated(String createdObjectType, String createdObjectName, Long objectId) {
-        log.info(String.format("TEST INIT: Created %s: %s (id:%d)", createdObjectType, createdObjectName, objectId));
+        System.out.println(String.format("TEST INIT: Created %s: %s (id:%d)", createdObjectType, createdObjectName, objectId));
     }
 }

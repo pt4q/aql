@@ -1,6 +1,5 @@
 package pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute;
 
-import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -10,11 +9,9 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import lombok.Getter;
-import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute.ProductPartAttributeEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute_value_version.ProductPartAttributeValueVersionEntity;
-import pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute_value_version.PartAttributeValueVersionsDetailView;
+import pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute_value_version.ProductPartAttributeValueVersionsDetailView;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 class ProductPartAttributeValueVersionsDiv extends Div {
@@ -73,7 +70,7 @@ class ProductPartAttributeValueVersionsDiv extends Div {
         this.attributeValueVersionsGrid.addItemClickListener(event ->{
             UI ui = UI.getCurrent();
 //            ComponentUtil.setData();
-            ui.navigate(PartAttributeValueVersionsDetailView.ROUTE);
+            ui.navigate(ProductPartAttributeValueVersionsDetailView.ROUTE);
         });
     }
 }

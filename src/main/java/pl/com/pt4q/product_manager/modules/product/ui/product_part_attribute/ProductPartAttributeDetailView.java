@@ -3,28 +3,35 @@ package pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.BeforeEvent;
-import com.vaadin.flow.router.HasUrlParameter;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
+import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 @Route(value = ProductPartAttributeDetailView.ROUTE, layout = MainView.class)
 @PageTitle(ProductPartAttributeDetailView.PAGE_TITLE)
 public class ProductPartAttributeDetailView extends Div implements HasUrlParameter<String> {
 
-    public static final String PAGE_TITLE = "Product part attributes";
-    public static final String ROUTE = "product-part-attributes";
+    public static final String PAGE_TITLE = "Product part attribute detail";
+    public static final String ROUTE = "product-part-attribute-detail";
     public static final String QUERY_PARAM_ID_NAME = "productPartId";
 
-    private ProductPartAttributeEditorDiv attributesEditorDiv;
+    private SaveObjectAndBackButtonsDiv saveObjectAndBackButtonsDiv;
+    private ProductPartAttributeEditorDiv productPartAttributeEditorDiv;
     private ProductPartAttributeValueVersionsDiv productPartAttributeValueVersionsDiv;
 
     public ProductPartAttributeDetailView() {
-        this.attributesEditorDiv = new ProductPartAttributeEditorDiv();
+        this.saveObjectAndBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save attribute");
+        this.productPartAttributeEditorDiv = new ProductPartAttributeEditorDiv();
         this.productPartAttributeValueVersionsDiv = new ProductPartAttributeValueVersionsDiv();
 
-        VerticalLayout layout = new VerticalLayout(attributesEditorDiv, productPartAttributeValueVersionsDiv);
+        initSaveButtonListener();
+        initBackButtonListener();
+
+        VerticalLayout layout = new VerticalLayout(
+                saveObjectAndBackButtonsDiv,
+                productPartAttributeEditorDiv,
+                productPartAttributeValueVersionsDiv
+        );
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
         layout.setWidthFull();
 
@@ -33,7 +40,15 @@ public class ProductPartAttributeDetailView extends Div implements HasUrlParamet
     }
 
     @Override
-    public void setParameter(BeforeEvent beforeEvent, String s) {
+    public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String s) {
+
+    }
+
+    private void initSaveButtonListener(){
+
+    }
+
+    private void initBackButtonListener(){
 
     }
 }

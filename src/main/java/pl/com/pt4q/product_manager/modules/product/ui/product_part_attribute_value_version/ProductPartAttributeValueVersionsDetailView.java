@@ -7,20 +7,17 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.router.BeforeEvent;
-import com.vaadin.flow.router.HasUrlParameter;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute.ProductPartAttributeEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute_value_version.ProductPartAttributeValueVersionEntity;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
-@Route(value = PartAttributeValueVersionsDetailView.ROUTE, layout = MainView.class)
-@PageTitle(PartAttributeValueVersionsDetailView.PAGE_TITLE)
-public class PartAttributeValueVersionsDetailView extends Div implements HasUrlParameter<String> {
+@Route(value = ProductPartAttributeValueVersionsDetailView.ROUTE, layout = MainView.class)
+@PageTitle(ProductPartAttributeValueVersionsDetailView.PAGE_TITLE)
+public class ProductPartAttributeValueVersionsDetailView extends Div implements HasUrlParameter<String> {
 
     public static final String PAGE_TITLE = "Product part attribute versions";
-    public static final String ROUTE = "product-part-attributes-versions";
+    public static final String ROUTE = "product-part-attribute-versions";
     public static final String QUERY_PARAM_ID_NAME = "partAttributeId";
 
     private TextField attributeValueTextField = new TextField("Attribute value");
@@ -32,7 +29,7 @@ public class PartAttributeValueVersionsDetailView extends Div implements HasUrlP
 
     private ProductPartAttributeEntity partAttributeEntity;
 
-    public PartAttributeValueVersionsDetailView() {
+    public ProductPartAttributeValueVersionsDetailView() {
         VerticalLayout layout = new VerticalLayout(
                 attributeValueTextField,
                 productSeriesComboBox,
@@ -47,7 +44,7 @@ public class PartAttributeValueVersionsDetailView extends Div implements HasUrlP
     }
 
     @Override
-    public void setParameter(BeforeEvent beforeEvent, String s) {
+    public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String s) {
 
     }
 }

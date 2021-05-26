@@ -38,6 +38,6 @@ public class ProductPartFinderService {
             if (product.getId() != null)
                 return productPartRepository.findAllByProduct(product);
 
-        throw new ProductPartNotFoundException("Product part is null or have null id");
+        throw new ProductPartNotFoundException("Product is null or have null id");
     }
 }

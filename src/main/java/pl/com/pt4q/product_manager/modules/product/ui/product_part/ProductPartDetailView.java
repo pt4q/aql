@@ -17,6 +17,7 @@ import pl.com.pt4q.product_manager.modules.product.services.product_part.excepti
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
 import pl.com.pt4q.product_manager.modules.product.ui.product.detail.ProductDetailView;
 import pl.com.pt4q.product_manager.modules.product.ui.product.general.ProductsGeneralView;
+import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 import java.util.Collections;
@@ -31,7 +32,7 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
     public static final String ROUTE = "product-part-detail";
     public static final String QUERY_PARAM_ID_NAME = "productPartId";
 
-    private SaveProductPartOrBackButtonsDiv saveProductPartOrBackButtonsDiv;
+    private SaveObjectAndBackButtonsDiv saveProductPartOrBackButtonsDiv;
     private ProductPartFormDiv productPartFormDiv;
     private ProductPartAttributesDiv productPartAttributesDiv;
 
@@ -56,12 +57,12 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
         this.productPart = getProductPartFromContext();
 //        ifPartIsNullThenRedirectToProductDetailView(productPart);
 
-        this.saveProductPartOrBackButtonsDiv = new SaveProductPartOrBackButtonsDiv();
+        this.saveProductPartOrBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save part");
         this.productPartFormDiv = new ProductPartFormDiv(this.productPart);
         this.productPartAttributesDiv = new ProductPartAttributesDiv(this.productPart, productSeriesCrudService, productPartCrudSaver, productPartAttributeFinderService);
 
         initSaveButtonAction();
-        initBackButtonAction();
+//        initBackButtonAction();
         populateProductPartForm(productPart);
         refreshPartAttributesGrid(productPart);
 
@@ -144,14 +145,14 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
         });
     }
 
-    private void initBackButtonAction() {
-        this.saveProductPartOrBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
-            UI ui = UI.getCurrent();
-            if (productPart != null) {
-                ProductEntity product = productPart.getProduct();
-                ComponentUtil.setData(ui, ProductEntity.class, product);
-            }
-            ui.navigate(ProductDetailView.ROUTE);
-        });
-    }
+//    private void initBackButtonAction() {
+//        this.saveProductPartOrBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
+//            UI ui = UI.getCurrent();
+//            if (productPart != null) {
+//                ProductEntity product = productPart.getProduct();
+//                ComponentUtil.setData(ui, ProductEntity.class, product);
+//            }
+//            ui.navigate(ProductDetailView.ROUTE);
+//        });
+//    }
 }
