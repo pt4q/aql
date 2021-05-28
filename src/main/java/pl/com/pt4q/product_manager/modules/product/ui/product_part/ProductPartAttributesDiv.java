@@ -116,7 +116,7 @@ class ProductPartAttributesDiv extends Div {
         this.addNewAttributeButton.getElement().setProperty("title", "add new attribute to the part");
         this.addNewAttributeButton.addClickListener(buttonClickEvent -> {
             UI ui = UI.getCurrent();
-            ComponentUtil.setData(ui, ProductPartEntity.class, productPart);
+            ComponentUtil.setData(ui, ProductPartAttributeEntity.class, ProductPartAttributeEntity.builder().part(productPart).build());
             ui.navigate(ProductPartAttributeDetailView.ROUTE);
         });
     }

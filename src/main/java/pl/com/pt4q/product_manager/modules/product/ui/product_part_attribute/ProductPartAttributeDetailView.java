@@ -1,9 +1,14 @@
 package pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute;
 
+import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
+import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
+import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute.ProductPartAttributeEntity;
+import pl.com.pt4q.product_manager.modules.product.ui.product_part.ProductPartDetailView;
 import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
@@ -19,10 +24,14 @@ public class ProductPartAttributeDetailView extends Div implements HasUrlParamet
     private ProductPartAttributeEditorDiv productPartAttributeEditorDiv;
     private ProductPartAttributeValueVersionsDiv productPartAttributeValueVersionsDiv;
 
+    private ProductPartAttributeEntity productPartAttribute;
+
     public ProductPartAttributeDetailView() {
+        this.productPartAttribute = getProductPartAttributeFromContext();
+
         this.saveObjectAndBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save attribute");
-        this.productPartAttributeEditorDiv = new ProductPartAttributeEditorDiv();
-        this.productPartAttributeValueVersionsDiv = new ProductPartAttributeValueVersionsDiv();
+        this.productPartAttributeEditorDiv = new ProductPartAttributeEditorDiv(this.productPartAttribute);
+        this.productPartAttributeValueVersionsDiv = new ProductPartAttributeValueVersionsDiv(this.productPartAttribute);
 
         initSaveButtonListener();
         initBackButtonListener();
@@ -39,16 +48,23 @@ public class ProductPartAttributeDetailView extends Div implements HasUrlParamet
         add(layout);
     }
 
+    private ProductPartAttributeEntity getProductPartAttributeFromContext() {
+        return ComponentUtil.getData(UI.getCurrent(), ProductPartAttributeEntity.class);
+    }
+
     @Override
     public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String s) {
 
     }
 
-    private void initSaveButtonListener(){
+    private void initSaveButtonListener() {
+        this.saveObjectAndBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
 
+        });
     }
 
-    private void initBackButtonListener(){
-
+    private void initBackButtonListener() {
+        ProductPartEntity productPart = this.productPartAttribute.getPart();
+        this.saveObjectAndBackButtonsDiv.createBackButtonClickListenerWithSaveObjectFromContext(ProductPartDetailView.ROUTE, ProductPartEntity.class, productPart);
     }
 }

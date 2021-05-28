@@ -6,7 +6,6 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
-import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute.ProductPartAttributeEntity;
 
 class ProductPartAttributeEditorDiv extends Div {
@@ -16,9 +15,13 @@ class ProductPartAttributeEditorDiv extends Div {
 
     private Binder<ProductPartAttributeEntity> productPartAttributeEntityBinder = new Binder<>();
 
-    private ProductPartEntity productPart;
+    private ProductPartAttributeEntity productPartAttribute;
 
-    public ProductPartAttributeEditorDiv() {
+    public ProductPartAttributeEditorDiv(ProductPartAttributeEntity productPartAttribute) {
+        this.productPartAttribute = productPartAttribute;
+
+        initFormFieldSizes();
+
         VerticalLayout layout = new VerticalLayout(attributeNameTextField, attributeValueVersionComboBox);
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
         layout.setWidthFull();

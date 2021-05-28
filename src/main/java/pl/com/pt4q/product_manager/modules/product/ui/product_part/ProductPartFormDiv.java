@@ -1,58 +1,46 @@
 package pl.com.pt4q.product_manager.modules.product.ui.product_part;
 
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
-import lombok.Getter;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
-import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
-import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesInMemoryManager;
 
 class ProductPartFormDiv extends Div {
 
-    private VerticalLayout formLayout = new VerticalLayout();
+
     private Binder<ProductPartEntity> partEntityBinder = new Binder<>(ProductPartEntity.class);
 
     //    private ComboBox<String> partManufacturerComboBox = new ComboBox<>("Part Manufacturer");
     private TextField partModelTextField = new TextField("Part model");
     private TextField partDescriptionTextField = new TextField("Part description");
 
-    private ProductPartEntity productPart;
+    private ProductPartEntity partEntity;
 
-    public ProductPartFormDiv(ProductPartEntity productPart) {
-        this.productPart = productPart;
+    public ProductPartFormDiv(ProductPartEntity partEntity) {
+        this.partEntity = partEntity;
 
         initPartBinder();
-        initFormComponentsSize();
-        initFormLayout();
+        initFormComponents();
+
+        VerticalLayout formLayout = new VerticalLayout(partModelTextField, partDescriptionTextField);
+        formLayout.setWidthFull();
+        formLayout.setAlignItems(FlexComponent.Alignment.CENTER);
 
         setWidthFull();
         add(formLayout);
     }
 
-    private void initFormLayout() {
-//        formLayout.add(partManufacturerComboBox);
-        formLayout.add(partModelTextField);
-        formLayout.add(partDescriptionTextField);
-//        formLayout.add(productSeriesComboBox);
-//        formLayout.add(validFromDateDatePicker);
-
-        formLayout.setWidthFull();
-        formLayout.setAlignItems(FlexComponent.Alignment.CENTER);
-    }
-
-    private void initFormComponentsSize() {
+    private void initFormComponents() {
         String minWidth = "20%";
         String maxWidth = "60%";
 
-//        partManufacturerComboBox.setMinWidth(minWidth);
-//        partManufacturerComboBox.setMaxWidth(maxWidth);
         partModelTextField.setMinWidth(minWidth);
         partModelTextField.setMaxWidth(maxWidth);
+        if (partModelTextField.getValue().isEmpty())
+            partModelTextField.setAutofocus(true);
+
         partDescriptionTextField.setMinWidth(minWidth);
         partDescriptionTextField.setMaxWidth(maxWidth);
 
@@ -66,14 +54,14 @@ class ProductPartFormDiv extends Div {
         partEntityBinder
                 .forField(partDescriptionTextField)
                 .bind(ProductPartEntity::getPartDescription, ProductPartEntity::setPartDescription);
-        partEntityBinder.setBean(this.productPart);
+        partEntityBinder.setBean(this.partEntity);
     }
 
-    public void populatePartForm(ProductPartEntity productPart){
+    public void populatePartForm(ProductPartEntity productPart) {
         partEntityBinder.readBean(productPart);
     }
 
-    public ProductPartEntity getPartFromForm(){
+    public ProductPartEntity getPartFromForm() {
         return partEntityBinder.getBean();
     }
 }

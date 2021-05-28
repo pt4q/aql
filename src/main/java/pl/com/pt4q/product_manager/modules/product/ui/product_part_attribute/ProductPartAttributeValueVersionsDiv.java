@@ -9,6 +9,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import lombok.Getter;
+import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute.ProductPartAttributeEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute_value_version.ProductPartAttributeValueVersionEntity;
 import pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute_value_version.ProductPartAttributeValueVersionsDetailView;
 
@@ -20,7 +21,11 @@ class ProductPartAttributeValueVersionsDiv extends Div {
     private Grid<ProductPartAttributeValueVersionEntity> attributeValueVersionsGrid = new Grid<>();
     private Button addNewValueVersionButton = new Button(new Icon(VaadinIcon.PLUS_CIRCLE_O));
 
-    public ProductPartAttributeValueVersionsDiv() {
+    private ProductPartAttributeEntity productPartAttribute;
+
+    public ProductPartAttributeValueVersionsDiv(ProductPartAttributeEntity productPartAttribute) {
+        this.productPartAttribute = productPartAttribute;
+
         initPartAttributesGrid();
         setId("grid-wrapper");
 

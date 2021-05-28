@@ -144,7 +144,7 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
     }
 
     private void initBackButtonActionListener(){
-        this.saveProductOrBackButtonsDiv.createBackButtonClickListenerWithRemoveObjectFromContext(ProductEntity.class, ProductsGeneralView.ROUTE);
+        this.saveProductOrBackButtonsDiv.createBackButtonClickListenerWithRemoveObjectFromContext(ProductsGeneralView.ROUTE, ProductEntity.class);
     }
 
     private void initAddNewAttributeAction(){

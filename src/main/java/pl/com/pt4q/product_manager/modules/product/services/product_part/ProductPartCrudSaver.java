@@ -28,6 +28,7 @@ public class ProductPartCrudSaver {
                     part.getProduct().getProductSku(),
                     part.getProduct().getId()
             ));
+            return part;
         }
         throw new ProductPartAlreadyExistsException("Product part already exists");
     }

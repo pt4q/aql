@@ -41,24 +41,19 @@ public class AppInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         List<ProductCategoryEntity> categories = initCategories();
-        categories
-                .forEach(category -> logToConsoleWhatWasCreated("category", category.getCategoryName(), category.getId()));
+        categories.forEach(category -> logToConsoleWhatWasCreated("category", category.getCategoryName(), category.getId()));
 
         List<ManufacturerEntity> manufacturers = initManufacturers();
-        manufacturers
-                .forEach(manufacturer -> logToConsoleWhatWasCreated("manufacturer", manufacturer.getManufacturerName(), manufacturer.getId()));
+        manufacturers.forEach(manufacturer -> logToConsoleWhatWasCreated("manufacturer", manufacturer.getManufacturerName(), manufacturer.getId()));
 
         List<ProductSeriesEntity> seriesList = initSeries();
-        seriesList
-                .forEach(series -> logToConsoleWhatWasCreated("series", series.getSeries(), series.getId()));
+        seriesList.forEach(series -> logToConsoleWhatWasCreated("series", series.getSeries(), series.getId()));
 
         List<ProductEntity> products = initProducts(categories, manufacturers);
-        products
-                .forEach(product -> logToConsoleWhatWasCreated("product", product.getProductSku(), product.getId()));
+        products.forEach(product -> logToConsoleWhatWasCreated("product", product.getProductSku(), product.getId()));
 
-        List<ProductPartEntity> firstProductParts = initProductParts(products.get(0), seriesList);
-        firstProductParts
-                .forEach(part -> logToConsoleWhatWasCreated("part", String.format("%s part for %s product (id:%d)", part.getPartModelOrPartName(), part.getProduct().getProductSku(), part.getProduct().getId()), part.getId()));
+//        List<ProductPartEntity> firstProductParts = initProductParts(products.get(0), seriesList);
+//        firstProductParts.forEach(part -> logToConsoleWhatWasCreated("part", String.format("%s part for %s product (id:%d)", part.getPartModelOrPartName(), part.getProduct().getProductSku(), part.getProduct().getId()), part.getId()));
 
 //        List<ProductPartAttributeEntity> firstProductPartAttributes = initAttributesForPart(firstProductParts.get(0));
 //        firstProductPartAttributes

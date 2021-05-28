@@ -62,7 +62,7 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
         this.productPartAttributesDiv = new ProductPartAttributesDiv(this.productPart, productSeriesCrudService, productPartCrudSaver, productPartAttributeFinderService);
 
         initSaveButtonAction();
-//        initBackButtonAction();
+        initBackButtonAction();
         populateProductPartForm(productPart);
         refreshPartAttributesGrid(productPart);
 
@@ -128,9 +128,7 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
         this.saveProductPartOrBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
             try {
                 ProductPartEntity partFromForm = this.productPartFormDiv.getPartFromForm();
-                productPart.setPartModelOrPartName(partFromForm.getPartModelOrPartName());
-                productPart.setPartDescription(partFromForm.getPartDescription());
-                this.productPart = productPartCrudSaver.save(productPart);
+                this.productPart = productPartCrudSaver.save(partFromForm);
 
                 Notification.show(String.format("The part %s has been saved in the product %s", productPart.getPartModelOrPartName(), productPart.getProduct().getProductSku()));
             } catch (ProductPartAlreadyExistsException e) {
@@ -145,14 +143,14 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
         });
     }
 
-//    private void initBackButtonAction() {
-//        this.saveProductPartOrBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
-//            UI ui = UI.getCurrent();
-//            if (productPart != null) {
-//                ProductEntity product = productPart.getProduct();
-//                ComponentUtil.setData(ui, ProductEntity.class, product);
-//            }
-//            ui.navigate(ProductDetailView.ROUTE);
-//        });
-//    }
+    private void initBackButtonAction() {
+        this.saveProductPartOrBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
+            UI ui = UI.getCurrent();
+            if (productPart != null) {
+                ProductEntity product = productPart.getProduct();
+                ComponentUtil.setData(ui, ProductEntity.class, product);
+            }
+            ui.navigate(ProductDetailView.ROUTE);
+        });
+    }
 }
