@@ -119,7 +119,7 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
                 populateProductPartForm(this.productPart);
                 refreshPartAttributesGrid(this.productPart);
             } catch (ProductPartNotFoundException e) {
-                Notification.show(e.getMessage());
+//                Notification.show(e.getMessage());
             }
         }
     }
