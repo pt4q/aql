@@ -14,9 +14,9 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import lombok.Getter;
 import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute.ProductPartAttributeEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
+import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartCreatorService;
 import pl.com.pt4q.product_manager.modules.product.services.product_part_attribute.ProductPartAttributeFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.product_part_attribute.ProductPartAttributesInMemoryManager;
-import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartCrudSaver;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartAttributeNotFoundException;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
 import pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute.ProductPartAttributeDetailView;
@@ -33,7 +33,7 @@ class ProductPartAttributesDiv extends Div {
     private Button addNewAttributeButton = new Button(new Icon(VaadinIcon.PLUS_CIRCLE_O));
 
     private ProductSeriesCrudService productSeriesCrudService;
-    private ProductPartCrudSaver productPartCrudSaver;
+    private ProductPartCreatorService productPartCreatorService;
     private ProductPartAttributeFinderService productPartAttributeFinderService;
 
     private ProductPartAttributesInMemoryManager productPartAttributesInMemoryManager;
@@ -42,12 +42,12 @@ class ProductPartAttributesDiv extends Div {
 
     public ProductPartAttributesDiv(ProductPartEntity productPart,
                                     ProductSeriesCrudService productSeriesCrudService,
-                                    ProductPartCrudSaver productPartCrudSaver,
+                                    ProductPartCreatorService productPartCreatorService,
                                     ProductPartAttributeFinderService productPartAttributeFinderService) {
 
         this.productPart = productPart;
         this.productSeriesCrudService = productSeriesCrudService;
-        this.productPartCrudSaver = productPartCrudSaver;
+        this.productPartCreatorService = productPartCreatorService;
         this.productPartAttributeFinderService = productPartAttributeFinderService;
 
         Div attributesGridDiv = initAttributesDiv();
@@ -78,14 +78,14 @@ class ProductPartAttributesDiv extends Div {
                 .setHeader("Attribute name")
                 .setSortable(true);
         this.partAttributesGrid
-                .addColumn(attribute -> attribute.getActualValueVersion().getAttributeValue())
+                .addColumn(attribute -> attribute.getActualValueVersion() != null ? attribute.getActualValueVersion().getAttributeValue() : "")
                 .setHeader("Attribute actual value");
         this.partAttributesGrid
-                .addColumn(attribute -> attribute.getActualValueVersion().getProductSeries() != null ? attribute.getActualValueVersion().getProductSeries().getSeries() : "")
+                .addColumn(attribute -> attribute.getActualValueVersion() != null ? attribute.getActualValueVersion().getProductSeries().getSeries() : "")
                 .setHeader("Actual product series")
                 .setSortable(true);
         this.partAttributesGrid
-                .addColumn(attribute -> attribute.getActualValueVersion().getValidFromDate() != null ? attribute.getActualValueVersion().getValidFromDate().format(DateTimeFormatter.ofPattern(dateTimeFormat)) : "")
+                .addColumn(attribute -> attribute.getActualValueVersion() != null ? attribute.getActualValueVersion().getValidFromDate().format(DateTimeFormatter.ofPattern(dateTimeFormat)) : "")
                 .setHeader("Valid from time")
                 .setSortable(true);
 

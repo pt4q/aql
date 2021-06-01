@@ -12,9 +12,9 @@ import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute.P
 import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute_value_version.ProductPartAttributeValueVersionEntity;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
-@Route(value = ProductPartAttributeValueVersionsDetailView.ROUTE, layout = MainView.class)
-@PageTitle(ProductPartAttributeValueVersionsDetailView.PAGE_TITLE)
-public class ProductPartAttributeValueVersionsDetailView extends Div implements HasUrlParameter<String> {
+@Route(value = ProductPartAttributeValueVersionDetailView.ROUTE, layout = MainView.class)
+@PageTitle(ProductPartAttributeValueVersionDetailView.PAGE_TITLE)
+public class ProductPartAttributeValueVersionDetailView extends Div implements HasUrlParameter<String> {
 
     public static final String PAGE_TITLE = "Product part attribute versions";
     public static final String ROUTE = "product-part-attribute-versions";
@@ -29,7 +29,7 @@ public class ProductPartAttributeValueVersionsDetailView extends Div implements 
 
     private ProductPartAttributeEntity partAttributeEntity;
 
-    public ProductPartAttributeValueVersionsDetailView() {
+    public ProductPartAttributeValueVersionDetailView() {
         VerticalLayout layout = new VerticalLayout(
                 attributeValueTextField,
                 productSeriesComboBox,

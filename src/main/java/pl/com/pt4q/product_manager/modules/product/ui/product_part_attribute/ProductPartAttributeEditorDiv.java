@@ -5,6 +5,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import lombok.Getter;
 import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute.ProductPartAttributeEntity;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
 
@@ -12,6 +13,7 @@ class ProductPartAttributeEditorDiv extends Div {
 
     private TextField attributeNameTextField = new TextField("Attribute name");
 
+    @Getter
     private Binder<ProductPartAttributeEntity> productPartAttributeEntityBinder = new Binder<>();
 
     private ProductPartAttributeEntity productPartAttribute;
@@ -41,6 +43,7 @@ class ProductPartAttributeEditorDiv extends Div {
     private void initProductPartAttributeEntityBinder() {
         this.productPartAttributeEntityBinder
                 .forField(attributeNameTextField)
+                .asRequired("Part attribute can't be empty")
                 .bind(ProductPartAttributeEntity::getAttributeName, ProductPartAttributeEntity::setAttributeName);
         this.productPartAttributeEntityBinder.setBean(this.productPartAttribute);
     }

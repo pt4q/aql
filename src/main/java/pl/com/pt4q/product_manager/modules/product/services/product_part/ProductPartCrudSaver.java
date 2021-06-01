@@ -9,7 +9,7 @@ import pl.com.pt4q.product_manager.modules.product.services.product_part.excepti
 
 @Log4j2
 @Service
-public class ProductPartCrudSaver {
+class ProductPartCrudSaver {
 
     @Autowired
     private ProductPartCrudRepository productCrudRepository;

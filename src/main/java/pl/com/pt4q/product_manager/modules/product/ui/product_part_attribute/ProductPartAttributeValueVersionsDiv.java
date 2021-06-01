@@ -11,7 +11,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import lombok.Getter;
 import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute.ProductPartAttributeEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute_value_version.ProductPartAttributeValueVersionEntity;
-import pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute_value_version.ProductPartAttributeValueVersionsDetailView;
+import pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute_value_version.ProductPartAttributeValueVersionDetailView;
 
 import java.util.List;
 
@@ -19,6 +19,7 @@ class ProductPartAttributeValueVersionsDiv extends Div {
 
     @Getter
     private Grid<ProductPartAttributeValueVersionEntity> attributeValueVersionsGrid = new Grid<>();
+    @Getter
     private Button addNewValueVersionButton = new Button(new Icon(VaadinIcon.PLUS_CIRCLE_O));
 
     private ProductPartAttributeEntity productPartAttribute;
@@ -75,7 +76,7 @@ class ProductPartAttributeValueVersionsDiv extends Div {
         this.attributeValueVersionsGrid.addItemClickListener(event ->{
             UI ui = UI.getCurrent();
 //            ComponentUtil.setData();
-            ui.navigate(ProductPartAttributeValueVersionsDetailView.ROUTE);
+            ui.navigate(ProductPartAttributeValueVersionDetailView.ROUTE);
         });
     }
 }

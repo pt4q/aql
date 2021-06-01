@@ -1,7 +1,6 @@
 package pl.com.pt4q.product_manager.config;
 
 import lombok.SneakyThrows;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -11,7 +10,7 @@ import pl.com.pt4q.product_manager.modules.product.data.product_category.Product
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_series.ProductSeriesEntity;
 import pl.com.pt4q.product_manager.modules.product.services.manufacturer.ManufacturerCrudService;
-import pl.com.pt4q.product_manager.modules.product.services.product.AddNewOrUpdateExistingProductService;
+import pl.com.pt4q.product_manager.modules.product.services.product.ProductCreatorAndUpdaterService;
 import pl.com.pt4q.product_manager.modules.product.services.product_category.ProductCategoryCrudService;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.exceptions.ProductSeriesAlreadyExistsException;
@@ -34,7 +33,7 @@ public class AppInitializer implements CommandLineRunner {
     @Autowired
     private ProductSeriesCrudService productSeriesCrudService;
     @Autowired
-    private AddNewOrUpdateExistingProductService addNewOrUpdateExistingProductService;
+    private ProductCreatorAndUpdaterService productCreatorAndUpdaterService;
     @Autowired
     private TestCardForProductCategoryCreator cardForProductCreator;
 
@@ -109,7 +108,7 @@ public class AppInitializer implements CommandLineRunner {
 
     @SneakyThrows
     private List<ProductEntity> initProducts(List<ProductCategoryEntity> categories, List<ManufacturerEntity> manufacturers) {
-        ProductEntity productEntity1 = addNewOrUpdateExistingProductService.add(ProductEntity.builder()
+        ProductEntity productEntity1 = productCreatorAndUpdaterService.add(ProductEntity.builder()
                 .productSku("DED1234")
                 .productCategory(categories.get(0))
                 .manufacturer(manufacturers.get(0))

@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
 import pl.com.pt4q.product_manager.modules.product.services.manufacturer.ManufacturerCrudService;
-import pl.com.pt4q.product_manager.modules.product.services.product.AddNewOrUpdateExistingProductService;
+import pl.com.pt4q.product_manager.modules.product.services.product.ProductCreatorAndUpdaterService;
 import pl.com.pt4q.product_manager.modules.product.services.product.ProductFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.ProductAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.ProductNotFoundException;
@@ -45,7 +45,7 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
     private ManufacturerCrudService manufacturerCrudService;
     private ProductFinderService productFinderService;
     private ProductPartFinderService productPartFinderService;
-    private AddNewOrUpdateExistingProductService addNewOrUpdateExistingProductService;
+    private ProductCreatorAndUpdaterService productCreatorAndUpdaterService;
 
     private ProductEntity product;
 
@@ -55,13 +55,13 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
             ManufacturerCrudService manufacturerCrudService,
             ProductFinderService productFinderService,
             ProductPartFinderService productPartFinderService,
-            AddNewOrUpdateExistingProductService addNewOrUpdateExistingProductService) {
+            ProductCreatorAndUpdaterService productCreatorAndUpdaterService) {
 
         this.productCategoryCrudService = productCategoryCrudService;
         this.manufacturerCrudService = manufacturerCrudService;
         this.productFinderService = productFinderService;
         this.productPartFinderService = productPartFinderService;
-        this.addNewOrUpdateExistingProductService = addNewOrUpdateExistingProductService;
+        this.productCreatorAndUpdaterService = productCreatorAndUpdaterService;
 
         this.product = getProductFromContextOrCreateNewEmptyInstance();
 
@@ -128,12 +128,12 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
     private void initSaveButtonActionListener() {
         this.saveProductOrBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
             try {
-                this.product = addNewOrUpdateExistingProductService.add(product);
+                this.product = productCreatorAndUpdaterService.add(product);
                 saveProductToContext(this.product);
                 showNotification(String.format("The product %s has been created", product.getProductSku()));
             } catch (ProductValidatorException | ProductAlreadyExistsException e) {
                 try {
-                    this.product = addNewOrUpdateExistingProductService.updateExisting(product);
+                    this.product = productCreatorAndUpdaterService.updateExisting(product);
                     saveProductToContext(this.product);
                     showNotification(String.format("The product %s has been updated", product.getProductSku()));
                 } catch (ProductValidatorException ex) {

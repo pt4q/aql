@@ -8,8 +8,9 @@ import com.vaadin.flow.router.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
+import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartCreatorService;
+import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartUpdaterService;
 import pl.com.pt4q.product_manager.modules.product.services.product_part_attribute.ProductPartAttributeFinderService;
-import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartCrudSaver;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartAttributeNotFoundException;
@@ -37,7 +38,8 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
     private ProductPartAttributesDiv productPartAttributesDiv;
 
     private ProductSeriesCrudService productSeriesCrudService;
-    private ProductPartCrudSaver productPartCrudSaver;
+    private ProductPartCreatorService productPartCreatorService;
+    private ProductPartUpdaterService productPartUpdaterService;
     private ProductPartFinderService productPartFinderService;
     private ProductPartAttributeFinderService productPartAttributeFinderService;
 
@@ -45,13 +47,15 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
 
     @Autowired
     public ProductPartDetailView(ProductSeriesCrudService productSeriesCrudService,
-                                 ProductPartCrudSaver productPartCrudSaver,
                                  ProductPartFinderService productPartFinderService,
+                                 ProductPartCreatorService productPartCreatorService,
+                                 ProductPartUpdaterService productPartUpdaterService,
                                  ProductPartAttributeFinderService productPartAttributeFinderService) {
 
         this.productSeriesCrudService = productSeriesCrudService;
-        this.productPartCrudSaver = productPartCrudSaver;
         this.productPartFinderService = productPartFinderService;
+        this.productPartCreatorService = productPartCreatorService;
+        this.productPartUpdaterService = productPartUpdaterService;
         this.productPartAttributeFinderService = productPartAttributeFinderService;
 
         this.productPart = getProductPartFromContext();
@@ -59,7 +63,7 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
 
         this.saveProductPartOrBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save part");
         this.productPartFormDiv = new ProductPartFormDiv(this.productPart);
-        this.productPartAttributesDiv = new ProductPartAttributesDiv(this.productPart, productSeriesCrudService, productPartCrudSaver, productPartAttributeFinderService);
+        this.productPartAttributesDiv = new ProductPartAttributesDiv(this.productPart, productSeriesCrudService, productPartCreatorService, productPartAttributeFinderService);
 
         initSaveButtonAction();
         initBackButtonAction();
@@ -128,12 +132,12 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
         this.saveProductPartOrBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
             try {
                 ProductPartEntity partFromForm = this.productPartFormDiv.getPartFromForm();
-                this.productPart = productPartCrudSaver.save(partFromForm);
+                this.productPart = productPartCreatorService.create(partFromForm);
 
                 Notification.show(String.format("The part %s has been saved in the product %s", productPart.getPartModelOrPartName(), productPart.getProduct().getProductSku()));
             } catch (ProductPartAlreadyExistsException e) {
                 try {
-                    this.productPart = productPartCrudSaver.update(productPart);
+                    this.productPart = productPartUpdaterService.update(productPart);
 
                     Notification.show(String.format("The part %s has been updated in the product %s", productPart.getPartModelOrPartName(), productPart.getProduct().getProductSku()));
                 } catch (ProductPartNotFoundException ex) {

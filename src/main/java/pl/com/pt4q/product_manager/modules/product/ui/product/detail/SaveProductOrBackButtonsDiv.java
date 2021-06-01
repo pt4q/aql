@@ -11,7 +11,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import lombok.Data;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
-import pl.com.pt4q.product_manager.modules.product.services.product.AddNewOrUpdateExistingProductService;
+import pl.com.pt4q.product_manager.modules.product.services.product.ProductCreatorAndUpdaterService;
 import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.ProductAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.ProductValidatorException;
 import pl.com.pt4q.product_manager.modules.product.ui.product.general.ProductsGeneralView;
@@ -24,12 +24,12 @@ class SaveProductOrBackButtonsDiv extends Div {
 
     private ProductDetailFormDiv productDetailFormDiv;
 
-    private AddNewOrUpdateExistingProductService addNewOrUpdateExistingProductService;
+    private ProductCreatorAndUpdaterService productCreatorAndUpdaterService;
     private ProductEntity product;
 
-    public SaveProductOrBackButtonsDiv(ProductEntity product, AddNewOrUpdateExistingProductService addNewOrUpdateExistingProductService) {
+    public SaveProductOrBackButtonsDiv(ProductEntity product, ProductCreatorAndUpdaterService productCreatorAndUpdaterService) {
         this.product = product;
-        this.addNewOrUpdateExistingProductService = addNewOrUpdateExistingProductService;
+        this.productCreatorAndUpdaterService = productCreatorAndUpdaterService;
 
         configBackButton();
         configSaveButton();
@@ -58,7 +58,7 @@ class SaveProductOrBackButtonsDiv extends Div {
     }
 
     private void createIfProductIsNewScenario() throws ProductAlreadyExistsException, ProductValidatorException {
-        this.product = addNewOrUpdateExistingProductService.add(product);
+        this.product = productCreatorAndUpdaterService.add(product);
         if (product.getId() != null && product.getProductSku() != null) {
             Notification.show(String.format("Product %s has been created", product.getProductSku()));
             saveProductToContext(product);
@@ -68,7 +68,7 @@ class SaveProductOrBackButtonsDiv extends Div {
 
     private void updateIfProductExistsScenario(ProductEntity productEntity) {
         try {
-            this.product = addNewOrUpdateExistingProductService.updateExisting(productEntity);
+            this.product = productCreatorAndUpdaterService.updateExisting(productEntity);
             Notification.show(String.format("Product %s has been updated", product.getProductSku()));
             saveProductToContext(product);
         } catch (ProductValidatorException ex) {

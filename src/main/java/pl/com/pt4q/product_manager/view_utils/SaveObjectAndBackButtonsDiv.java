@@ -9,7 +9,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import lombok.Getter;
-import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartCrudSaver;
 
 public class SaveObjectAndBackButtonsDiv<T> extends Div {
 
@@ -17,8 +16,6 @@ public class SaveObjectAndBackButtonsDiv<T> extends Div {
     private Button saveButton;
     @Getter
     private Button backButton = new Button(new Icon(VaadinIcon.ARROW_BACKWARD));
-
-    private ProductPartCrudSaver productPartCrudSaver;
 
     public SaveObjectAndBackButtonsDiv(String saveButtonLabel) {
         initSaveButton(saveButtonLabel);
