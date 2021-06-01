@@ -1,43 +1,40 @@
-package pl.com.pt4q.product_manager.modules.product.services.product_part;
+package pl.com.pt4q.product_manager.modules.product.services.product_part_attribute;
 
-import lombok.Builder;
 import lombok.Getter;
-import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartAttributeEntity;
+import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute.ProductPartAttributeEntity;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Getter
 public class ProductPartAttributesInMemoryManager {
 
-    private List<ProductPartAttributeEntity> activeAttributesToAdd;
+    private List<ProductPartAttributeEntity> attributes;
     private List<ProductPartAttributeEntity> activeAttributesToRemove;
 
-    public ProductPartAttributesInMemoryManager(List<ProductPartAttributeEntity> activeAttributesToAdd) {
-        this.activeAttributesToAdd = activeAttributesToAdd;
+    public ProductPartAttributesInMemoryManager(List<ProductPartAttributeEntity> attributes) {
+        this.attributes = attributes;
     }
 
     public List<ProductPartAttributeEntity> getAttributesByName(String name) {
-        return activeAttributesToAdd.stream()
+        return attributes.stream()
                 .filter(attribute -> attribute.getAttributeName().equals(name))
                 .collect(Collectors.toList());
     }
 
     public List<ProductPartAttributeEntity> addToList(ProductPartAttributeEntity attribute) {
-        activeAttributesToAdd.add(attribute);
-        return activeAttributesToAdd;
+        attributes.add(attribute);
+        return attributes;
     }
 
     public List<ProductPartAttributeEntity> removeFromList(ProductPartAttributeEntity attribute){
 
 
-        return activeAttributesToAdd;
+        return attributes;
     }
 
     public List<ProductPartAttributeEntity> getElementsToSaveInDatabase() {
-        return activeAttributesToAdd.stream()
+        return attributes.stream()
                 .filter(attribute -> attribute.getId() == null)
                 .collect(Collectors.toList());
     }
@@ -49,7 +46,7 @@ public class ProductPartAttributesInMemoryManager {
     }
 
     public List<String> getManufacturersNames() {
-        return getActiveAttributesToAdd().stream()
+        return getAttributes().stream()
                 .map(ProductPartAttributeEntity::getAttributeName)
                 .collect(Collectors.toList());
     }

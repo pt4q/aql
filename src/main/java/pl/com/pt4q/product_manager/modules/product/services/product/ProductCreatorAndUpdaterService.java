@@ -10,7 +10,7 @@ import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.P
 
 @Log4j2
 @Service
-public class AddNewOrUpdateExistingProductService {
+public class ProductCreatorAndUpdaterService {
 
     @Autowired
     private ProductFinderService productFinderService;

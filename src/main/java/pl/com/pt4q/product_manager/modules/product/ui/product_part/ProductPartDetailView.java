@@ -8,16 +8,20 @@ import com.vaadin.flow.router.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
-import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartAttributeFinderService;
-import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartCrudSaver;
+import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartCreatorService;
+import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartUpdaterService;
+import pl.com.pt4q.product_manager.modules.product.services.product_part_attribute.ProductPartAttributeFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartAlreadyExistsException;
+import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartAttributeNotFoundException;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartNotFoundException;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
 import pl.com.pt4q.product_manager.modules.product.ui.product.detail.ProductDetailView;
 import pl.com.pt4q.product_manager.modules.product.ui.product.general.ProductsGeneralView;
+import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -29,12 +33,13 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
     public static final String ROUTE = "product-part-detail";
     public static final String QUERY_PARAM_ID_NAME = "productPartId";
 
-    private SaveProductPartOrBackButtonsDiv saveProductPartOrBackButtonsDiv;
-    private PartFormDiv partFormDiv;
-    private PartAttributesDiv partAttributesDiv;
+    private SaveObjectAndBackButtonsDiv saveProductPartOrBackButtonsDiv;
+    private ProductPartFormDiv productPartFormDiv;
+    private ProductPartAttributesDiv productPartAttributesDiv;
 
     private ProductSeriesCrudService productSeriesCrudService;
-    private ProductPartCrudSaver productPartCrudSaver;
+    private ProductPartCreatorService productPartCreatorService;
+    private ProductPartUpdaterService productPartUpdaterService;
     private ProductPartFinderService productPartFinderService;
     private ProductPartAttributeFinderService productPartAttributeFinderService;
 
@@ -42,21 +47,23 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
 
     @Autowired
     public ProductPartDetailView(ProductSeriesCrudService productSeriesCrudService,
-                                 ProductPartCrudSaver productPartCrudSaver,
                                  ProductPartFinderService productPartFinderService,
+                                 ProductPartCreatorService productPartCreatorService,
+                                 ProductPartUpdaterService productPartUpdaterService,
                                  ProductPartAttributeFinderService productPartAttributeFinderService) {
 
         this.productSeriesCrudService = productSeriesCrudService;
-        this.productPartCrudSaver = productPartCrudSaver;
         this.productPartFinderService = productPartFinderService;
+        this.productPartCreatorService = productPartCreatorService;
+        this.productPartUpdaterService = productPartUpdaterService;
         this.productPartAttributeFinderService = productPartAttributeFinderService;
 
         this.productPart = getProductPartFromContext();
 //        ifPartIsNullThenRedirectToProductDetailView(productPart);
 
-        this.saveProductPartOrBackButtonsDiv = new SaveProductPartOrBackButtonsDiv();
-        this.partFormDiv = new PartFormDiv(this.productPart);
-        this.partAttributesDiv = new PartAttributesDiv(this.productPart, productSeriesCrudService, productPartCrudSaver, productPartAttributeFinderService);
+        this.saveProductPartOrBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save part");
+        this.productPartFormDiv = new ProductPartFormDiv(this.productPart);
+        this.productPartAttributesDiv = new ProductPartAttributesDiv(this.productPart, productSeriesCrudService, productPartCreatorService, productPartAttributeFinderService);
 
         initSaveButtonAction();
         initBackButtonAction();
@@ -69,8 +76,8 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
 
         add(
                 saveProductPartOrBackButtonsDiv,
-                partFormDiv,
-                partAttributesDiv
+                productPartFormDiv,
+                productPartAttributesDiv
         );
     }
 
@@ -90,11 +97,16 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
 
     private void populateProductPartForm(ProductPartEntity part) {
         if (part != null)
-            this.partFormDiv.populatePartForm(part);
+            this.productPartFormDiv.populatePartForm(part);
     }
 
     private void refreshPartAttributesGrid(ProductPartEntity part) {
-        this.partAttributesDiv.refreshAttributesGrid(part);
+//        this.partAttributesDiv.refreshAttributesGrid(part);
+        try {
+            this.productPartAttributesDiv.refreshGrid(productPartAttributeFinderService.findAllProductPartsAttributesByProductPart(part));
+        } catch (ProductPartAttributeNotFoundException e) {
+            this.productPartAttributesDiv.refreshGrid(Collections.emptyList());
+        }
     }
 
     @Override
@@ -111,7 +123,7 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
                 populateProductPartForm(this.productPart);
                 refreshPartAttributesGrid(this.productPart);
             } catch (ProductPartNotFoundException e) {
-                Notification.show(e.getMessage());
+//                Notification.show(e.getMessage());
             }
         }
     }
@@ -119,15 +131,13 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
     private void initSaveButtonAction() {
         this.saveProductPartOrBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
             try {
-                ProductPartEntity partFromForm = this.partFormDiv.getPartFromForm();
-                productPart.setPartModelOrPartName(partFromForm.getPartModelOrPartName());
-                productPart.setPartDescription(partFromForm.getPartDescription());
-                this.productPart = productPartCrudSaver.save(productPart);
+                ProductPartEntity partFromForm = this.productPartFormDiv.getPartFromForm();
+                this.productPart = productPartCreatorService.create(partFromForm);
 
                 Notification.show(String.format("The part %s has been saved in the product %s", productPart.getPartModelOrPartName(), productPart.getProduct().getProductSku()));
             } catch (ProductPartAlreadyExistsException e) {
                 try {
-                    this.productPart = productPartCrudSaver.update(productPart);
+                    this.productPart = productPartUpdaterService.update(productPart);
 
                     Notification.show(String.format("The part %s has been updated in the product %s", productPart.getPartModelOrPartName(), productPart.getProduct().getProductSku()));
                 } catch (ProductPartNotFoundException ex) {

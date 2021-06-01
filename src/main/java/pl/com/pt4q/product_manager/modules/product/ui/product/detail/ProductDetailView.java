@@ -7,23 +7,28 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
 import pl.com.pt4q.product_manager.modules.product.services.manufacturer.ManufacturerCrudService;
-import pl.com.pt4q.product_manager.modules.product.services.product.AddNewOrUpdateExistingProductService;
+import pl.com.pt4q.product_manager.modules.product.services.product.ProductCreatorAndUpdaterService;
 import pl.com.pt4q.product_manager.modules.product.services.product.ProductFinderService;
+import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.ProductAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.ProductNotFoundException;
+import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.ProductValidatorException;
 import pl.com.pt4q.product_manager.modules.product.services.product_category.ProductCategoryCrudService;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartNotFoundException;
+import pl.com.pt4q.product_manager.modules.product.ui.product.general.ProductsGeneralView;
 import pl.com.pt4q.product_manager.modules.product.ui.product_part.ProductPartDetailView;
+import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+@Log4j2
 @Route(value = ProductDetailView.ROUTE, layout = MainView.class)
 @PageTitle(ProductDetailView.PAGE_TITLE)
 public class ProductDetailView extends Div implements HasUrlParameter<String> {
@@ -32,7 +37,7 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
     public static final String ROUTE = "product-detail";
     public static final String QUERY_PARAM_ID_NAME = "productId";
 
-    private SaveProductOrBackButtonsDiv saveProductOrBackButtonsDiv;
+    private SaveObjectAndBackButtonsDiv saveProductOrBackButtonsDiv;
     private ProductDetailFormDiv productDetailFormDiv;
     private ProductPartsDiv productPartsDiv;
 
@@ -40,9 +45,9 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
     private ManufacturerCrudService manufacturerCrudService;
     private ProductFinderService productFinderService;
     private ProductPartFinderService productPartFinderService;
-    private AddNewOrUpdateExistingProductService addNewOrUpdateExistingProductService;
+    private ProductCreatorAndUpdaterService productCreatorAndUpdaterService;
 
-    private ProductEntity productEntity;
+    private ProductEntity product;
 
     @Autowired
     public ProductDetailView(
@@ -50,25 +55,26 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
             ManufacturerCrudService manufacturerCrudService,
             ProductFinderService productFinderService,
             ProductPartFinderService productPartFinderService,
-            AddNewOrUpdateExistingProductService addNewOrUpdateExistingProductService) {
+            ProductCreatorAndUpdaterService productCreatorAndUpdaterService) {
 
         this.productCategoryCrudService = productCategoryCrudService;
         this.manufacturerCrudService = manufacturerCrudService;
         this.productFinderService = productFinderService;
         this.productPartFinderService = productPartFinderService;
-        this.addNewOrUpdateExistingProductService = addNewOrUpdateExistingProductService;
+        this.productCreatorAndUpdaterService = productCreatorAndUpdaterService;
 
-        this.productEntity = getProductFromContextOrCreateNewEmptyInstance();
+        this.product = getProductFromContextOrCreateNewEmptyInstance();
 
-        saveProductOrBackButtonsDiv = new SaveProductOrBackButtonsDiv(this.productEntity, this.addNewOrUpdateExistingProductService);
-        productDetailFormDiv = new ProductDetailFormDiv(this.productEntity, productCategoryCrudService, manufacturerCrudService);
+        saveProductOrBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save product");
+        productDetailFormDiv = new ProductDetailFormDiv(this.product, productCategoryCrudService, manufacturerCrudService);
         productPartsDiv = new ProductPartsDiv();
 
         initSaveButtonActionListener();
+        initBackButtonActionListener();
         initAddNewAttributeAction();
 
-        populateProductForm(productEntity);
-        refreshPartsGrid(productEntity);
+        populateProductForm(product);
+        refreshPartsGrid(product);
 
         VerticalLayout pageLayout = new VerticalLayout(
                 saveProductOrBackButtonsDiv,
@@ -97,7 +103,6 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
         try {
             this.productPartsDiv.refreshGrid(productPartFinderService.findAllProductPartsByProduct(product));
         } catch (ProductPartNotFoundException e) {
-            this.productPartsDiv.refreshGrid(Collections.emptyList());
         }
     }
 
@@ -110,20 +115,36 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
         if (parametersMap.containsKey(QUERY_PARAM_ID_NAME)) {
             Long id = Long.valueOf(parametersMap.get(QUERY_PARAM_ID_NAME).get(0));
             try {
-                this.productEntity = productFinderService.findByIdOrThrowException(id);
-                saveProductToContext(this.productEntity);
-                populateProductForm(this.productEntity);
-                refreshPartsGrid(this.productEntity);
+                this.product = productFinderService.findByIdOrThrowException(id);
+                saveProductToContext(this.product);
+                populateProductForm(this.product);
+                refreshPartsGrid(this.product);
             } catch (ProductNotFoundException e) {
-                Notification.show(e.getMessage());
+                log.warn(showNotification(e.getMessage()));
             }
         }
     }
 
     private void initSaveButtonActionListener() {
         this.saveProductOrBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
-            System.out.println(productEntity.toString());
+            try {
+                this.product = productCreatorAndUpdaterService.add(product);
+                saveProductToContext(this.product);
+                showNotification(String.format("The product %s has been created", product.getProductSku()));
+            } catch (ProductValidatorException | ProductAlreadyExistsException e) {
+                try {
+                    this.product = productCreatorAndUpdaterService.updateExisting(product);
+                    saveProductToContext(this.product);
+                    showNotification(String.format("The product %s has been updated", product.getProductSku()));
+                } catch (ProductValidatorException ex) {
+                    log.error(showNotification(ex.getMessage()));
+                }
+            }
         });
+    }
+
+    private void initBackButtonActionListener(){
+        this.saveProductOrBackButtonsDiv.createBackButtonClickListenerWithRemoveObjectFromContext(ProductsGeneralView.ROUTE, ProductEntity.class);
     }
 
     private void initAddNewAttributeAction(){
@@ -138,5 +159,11 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
             ComponentUtil.setData(ui, ProductPartEntity.class, newPart);
             ui.navigate(ProductPartDetailView.ROUTE);
         });
+    }
+
+    private String showNotification(String message){
+        String theWholeMessage = String.format("%s: %s", ProductDetailView.PAGE_TITLE, message);
+        Notification.show(theWholeMessage);
+        return theWholeMessage;
     }
 }

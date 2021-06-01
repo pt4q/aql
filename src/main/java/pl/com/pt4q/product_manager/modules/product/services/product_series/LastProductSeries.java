@@ -1,4 +1,4 @@
-package pl.com.pt4q.product_manager.modules.product.services;
+package pl.com.pt4q.product_manager.modules.product.services.product_series;
 
 import pl.com.pt4q.product_manager.modules.product.data.product_series.ProductSeriesEntity;
 

@@ -1,18 +1,16 @@
 package pl.com.pt4q.product_manager.config;
 
 import lombok.SneakyThrows;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import pl.com.pt4q.product_manager.modules.product.data.manufacturer.ManufacturerEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_category.ProductCategoryEntity;
-import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartAttributeEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_series.ProductSeriesEntity;
 import pl.com.pt4q.product_manager.modules.product.services.manufacturer.ManufacturerCrudService;
-import pl.com.pt4q.product_manager.modules.product.services.product.AddNewOrUpdateExistingProductService;
+import pl.com.pt4q.product_manager.modules.product.services.product.ProductCreatorAndUpdaterService;
 import pl.com.pt4q.product_manager.modules.product.services.product_category.ProductCategoryCrudService;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.exceptions.ProductSeriesAlreadyExistsException;
@@ -25,7 +23,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Log4j2
 @Component
 public class AppInitializer implements CommandLineRunner {
 
@@ -36,31 +33,26 @@ public class AppInitializer implements CommandLineRunner {
     @Autowired
     private ProductSeriesCrudService productSeriesCrudService;
     @Autowired
-    private AddNewOrUpdateExistingProductService addNewOrUpdateExistingProductService;
+    private ProductCreatorAndUpdaterService productCreatorAndUpdaterService;
     @Autowired
     private TestCardForProductCategoryCreator cardForProductCreator;
 
     @Override
     public void run(String... args) throws Exception {
         List<ProductCategoryEntity> categories = initCategories();
-        categories
-                .forEach(category -> logToConsoleWhatWasCreated("category", category.getCategoryName(), category.getId()));
+        categories.forEach(category -> logToConsoleWhatWasCreated("category", category.getCategoryName(), category.getId()));
 
         List<ManufacturerEntity> manufacturers = initManufacturers();
-        manufacturers
-                .forEach(manufacturer -> logToConsoleWhatWasCreated("manufacturer", manufacturer.getManufacturerName(), manufacturer.getId()));
+        manufacturers.forEach(manufacturer -> logToConsoleWhatWasCreated("manufacturer", manufacturer.getManufacturerName(), manufacturer.getId()));
 
         List<ProductSeriesEntity> seriesList = initSeries();
-        seriesList
-                .forEach(series -> logToConsoleWhatWasCreated("series", series.getSeries(), series.getId()));
+        seriesList.forEach(series -> logToConsoleWhatWasCreated("series", series.getSeries(), series.getId()));
 
         List<ProductEntity> products = initProducts(categories, manufacturers);
-        products
-                .forEach(product -> logToConsoleWhatWasCreated("product", product.getProductSku(), product.getId()));
+        products.forEach(product -> logToConsoleWhatWasCreated("product", product.getProductSku(), product.getId()));
 
-        List<ProductPartEntity> firstProductParts = initProductParts(products.get(0), seriesList);
-        firstProductParts
-                .forEach(part -> logToConsoleWhatWasCreated("part", String.format("%s part for %s product (id:%d)", part.getPartModelOrPartName(), part.getProduct().getProductSku(), part.getProduct().getId()), part.getId()));
+//        List<ProductPartEntity> firstProductParts = initProductParts(products.get(0), seriesList);
+//        firstProductParts.forEach(part -> logToConsoleWhatWasCreated("part", String.format("%s part for %s product (id:%d)", part.getPartModelOrPartName(), part.getProduct().getProductSku(), part.getProduct().getId()), part.getId()));
 
 //        List<ProductPartAttributeEntity> firstProductPartAttributes = initAttributesForPart(firstProductParts.get(0));
 //        firstProductPartAttributes
@@ -116,7 +108,7 @@ public class AppInitializer implements CommandLineRunner {
 
     @SneakyThrows
     private List<ProductEntity> initProducts(List<ProductCategoryEntity> categories, List<ManufacturerEntity> manufacturers) {
-        ProductEntity productEntity1 = addNewOrUpdateExistingProductService.add(ProductEntity.builder()
+        ProductEntity productEntity1 = productCreatorAndUpdaterService.add(ProductEntity.builder()
                 .productSku("DED1234")
                 .productCategory(categories.get(0))
                 .manufacturer(manufacturers.get(0))
@@ -167,6 +159,6 @@ public class AppInitializer implements CommandLineRunner {
     }
 
     private void logToConsoleWhatWasCreated(String createdObjectType, String createdObjectName, Long objectId) {
-        log.info(String.format("TEST INIT: Created %s: %s (id:%d)", createdObjectType, createdObjectName, objectId));
+        System.out.println(String.format("TEST INIT: Created %s: %s (id:%d)", createdObjectType, createdObjectName, objectId));
     }
 }
