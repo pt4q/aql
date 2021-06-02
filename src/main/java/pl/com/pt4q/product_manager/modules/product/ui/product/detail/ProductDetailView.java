@@ -39,7 +39,7 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
 
     private SaveObjectAndBackButtonsDiv saveProductOrBackButtonsDiv;
     private ProductDetailFormDiv productDetailFormDiv;
-    private ProductPartsDiv productPartsDiv;
+    private ProductPartsGridDiv productPartsGridDiv;
 
     private ProductCategoryCrudService productCategoryCrudService;
     private ManufacturerCrudService manufacturerCrudService;
@@ -67,7 +67,7 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
 
         saveProductOrBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save product");
         productDetailFormDiv = new ProductDetailFormDiv(this.product, productCategoryCrudService, manufacturerCrudService);
-        productPartsDiv = new ProductPartsDiv();
+        productPartsGridDiv = new ProductPartsGridDiv();
 
         initSaveButtonActionListener();
         initBackButtonActionListener();
@@ -79,7 +79,7 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
         VerticalLayout pageLayout = new VerticalLayout(
                 saveProductOrBackButtonsDiv,
                 productDetailFormDiv,
-                productPartsDiv
+                productPartsGridDiv
         );
         pageLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         add(pageLayout);
@@ -101,7 +101,7 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
 
     private void refreshPartsGrid(ProductEntity product) {
         try {
-            this.productPartsDiv.refreshGrid(productPartFinderService.findAllProductPartsByProduct(product));
+            this.productPartsGridDiv.refreshGrid(productPartFinderService.findAllProductPartsByProduct(product));
         } catch (ProductPartNotFoundException e) {
         }
     }
@@ -148,7 +148,7 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
     }
 
     private void initAddNewAttributeAction(){
-        this.productPartsDiv.getAddNewPartButton().addClickListener(buttonClickEvent -> {
+        this.productPartsGridDiv.getAddNewPartButton().addClickListener(buttonClickEvent -> {
             UI ui = UI.getCurrent();
 
             ProductEntity productFromContext = ComponentUtil.getData(ui, ProductEntity.class);

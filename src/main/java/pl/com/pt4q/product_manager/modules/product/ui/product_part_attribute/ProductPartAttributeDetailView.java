@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute.ProductPartAttributeEntity;
-import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute_value_version.ProductPartAttributeValueVersionEntity;
+import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute_version.ProductPartAttributeVersionEntity;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartCreatorService;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartAttributeNotFoundException;
@@ -20,7 +20,7 @@ import pl.com.pt4q.product_manager.modules.product.services.product_part_attribu
 import pl.com.pt4q.product_manager.modules.product.services.product_part_attribute.ProductPartAttributeUpdaterService;
 import pl.com.pt4q.product_manager.modules.product.services.product_part_attribute.exceptions.ProductPartAttributeAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.product.ui.product_part.ProductPartDetailView;
-import pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute_value_version.ProductPartAttributeValueVersionDetailView;
+import pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute_version.ProductPartAttributeVersionDetailView;
 import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
@@ -38,13 +38,13 @@ public class ProductPartAttributeDetailView extends Div implements HasUrlParamet
 
     private SaveObjectAndBackButtonsDiv saveObjectAndBackButtonsDiv;
     private ProductPartAttributeEditorDiv productPartAttributeEditorDiv;
-    private ProductPartAttributeValueVersionsDiv productPartAttributeValueVersionsDiv;
+    private ProductPartAttributeVersionsGridDiv productPartAttributeVersionsGridDiv;
 
     private ProductPartCreatorService productPartCreatorService;
     private ProductPartAttributeFinderService productPartAttributeFinderService;
     private ProductPartAttributeCreatorService productPartAttributeCreatorService;
     private ProductPartAttributeUpdaterService productPartAttributeUpdaterService;
-
+// todo: Add attributeUnits and attributeValueType (decimal, float, text etc)
     private ProductPartAttributeEntity productPartAttribute;
 
     @Autowired
@@ -62,7 +62,7 @@ public class ProductPartAttributeDetailView extends Div implements HasUrlParamet
 
         this.saveObjectAndBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save attribute");
         this.productPartAttributeEditorDiv = new ProductPartAttributeEditorDiv(this.productPartAttribute);
-        this.productPartAttributeValueVersionsDiv = new ProductPartAttributeValueVersionsDiv(this.productPartAttribute);
+        this.productPartAttributeVersionsGridDiv = new ProductPartAttributeVersionsGridDiv(this.productPartAttribute);
 
         initSaveButtonListener();
         initBackButtonListener();
@@ -71,7 +71,7 @@ public class ProductPartAttributeDetailView extends Div implements HasUrlParamet
         VerticalLayout layout = new VerticalLayout(
                 saveObjectAndBackButtonsDiv,
                 productPartAttributeEditorDiv,
-                productPartAttributeValueVersionsDiv
+                productPartAttributeVersionsGridDiv
         );
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
         layout.setWidthFull();
@@ -136,7 +136,6 @@ public class ProductPartAttributeDetailView extends Div implements HasUrlParamet
                     log.error(String.format("%s: save button action error - %s", PAGE_TITLE, ex.getMessage()));
                 }
             }
-            log.error(String.format("%s: save button action error - %s", PAGE_TITLE, partAttributeFromForm.toString()));
         });
     }
 
@@ -159,10 +158,10 @@ public class ProductPartAttributeDetailView extends Div implements HasUrlParamet
     }
 
     private void initAddNewAttributeVersion() {
-        this.productPartAttributeValueVersionsDiv.getAddNewValueVersionButton().addClickListener(buttonClickEvent -> {
+        this.productPartAttributeVersionsGridDiv.getAddNewValueVersionButton().addClickListener(buttonClickEvent -> {
             UI ui = UI.getCurrent();
-            ComponentUtil.setData(ui, ProductPartAttributeValueVersionEntity.class, ProductPartAttributeValueVersionEntity.builder().partAttribute(this.productPartAttribute).build());
-            ui.navigate(ProductPartAttributeValueVersionDetailView.ROUTE);
+            ComponentUtil.setData(ui, ProductPartAttributeVersionEntity.class, ProductPartAttributeVersionEntity.builder().partAttribute(this.productPartAttribute).build());
+            ui.navigate(ProductPartAttributeVersionDetailView.ROUTE);
         });
     }
 }

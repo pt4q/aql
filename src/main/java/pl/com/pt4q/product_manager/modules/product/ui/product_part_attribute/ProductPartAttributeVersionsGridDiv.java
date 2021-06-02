@@ -1,6 +1,5 @@
 package pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute;
 
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
@@ -10,21 +9,20 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import lombok.Getter;
 import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute.ProductPartAttributeEntity;
-import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute_value_version.ProductPartAttributeValueVersionEntity;
-import pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute_value_version.ProductPartAttributeValueVersionDetailView;
+import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute_version.ProductPartAttributeVersionEntity;
 
 import java.util.List;
 
-class ProductPartAttributeValueVersionsDiv extends Div {
+class ProductPartAttributeVersionsGridDiv extends Div {
 
     @Getter
-    private Grid<ProductPartAttributeValueVersionEntity> attributeValueVersionsGrid = new Grid<>();
+    private Grid<ProductPartAttributeVersionEntity> attributeValueVersionsGrid = new Grid<>();
     @Getter
     private Button addNewValueVersionButton = new Button(new Icon(VaadinIcon.PLUS_CIRCLE_O));
 
     private ProductPartAttributeEntity productPartAttribute;
 
-    public ProductPartAttributeValueVersionsDiv(ProductPartAttributeEntity productPartAttribute) {
+    public ProductPartAttributeVersionsGridDiv(ProductPartAttributeEntity productPartAttribute) {
         this.productPartAttribute = productPartAttribute;
 
         initPartAttributesGrid();
@@ -42,7 +40,7 @@ class ProductPartAttributeValueVersionsDiv extends Div {
         String dateTimeFormat = "yyyy-MM-dd";
 
         this.attributeValueVersionsGrid
-                .addColumn(ProductPartAttributeValueVersionEntity::getProductSeries)
+                .addColumn(ProductPartAttributeVersionEntity::getProductSeries)
                 .setHeader("Attribute value version")
                 .setSortable(true);
 //        this.attributeValueVersionsGrid
@@ -66,17 +64,8 @@ class ProductPartAttributeValueVersionsDiv extends Div {
         return url + "?" + paramName + "=" + id.toString();
     }
 
-    public void refreshGrid(List<ProductPartAttributeValueVersionEntity> partAttributes) {
+    public void refreshGrid(List<ProductPartAttributeVersionEntity> partAttributes) {
         this.attributeValueVersionsGrid.select(null);
         this.attributeValueVersionsGrid.setItems(partAttributes);
-    }
-
-    private void initAddNewAttributeVersionValueButton(){
-        this.addNewValueVersionButton.getElement().setProperty("title", "add new value version to the attribute");
-        this.attributeValueVersionsGrid.addItemClickListener(event ->{
-            UI ui = UI.getCurrent();
-//            ComponentUtil.setData();
-            ui.navigate(ProductPartAttributeValueVersionDetailView.ROUTE);
-        });
     }
 }

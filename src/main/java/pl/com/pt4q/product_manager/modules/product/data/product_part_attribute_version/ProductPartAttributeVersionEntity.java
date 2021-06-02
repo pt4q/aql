@@ -1,4 +1,4 @@
-package pl.com.pt4q.product_manager.modules.product.data.product_part_attribute_value_version;
+package pl.com.pt4q.product_manager.modules.product.data.product_part_attribute_version;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Builder
 @Data
 @Entity
-public class ProductPartAttributeValueVersionEntity {
+public class ProductPartAttributeVersionEntity {
 
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +32,6 @@ public class ProductPartAttributeValueVersionEntity {
     private LocalDate validFromDate;
 
     @OneToOne
-    private ProductPartAttributeValueVersionEntity previousAttribute;
+    private ProductPartAttributeVersionEntity previousAttribute;
     private boolean actualAttribute;
 }

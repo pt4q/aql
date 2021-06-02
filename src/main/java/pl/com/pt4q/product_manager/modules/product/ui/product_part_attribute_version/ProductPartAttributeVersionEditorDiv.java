@@ -1,4 +1,4 @@
-package pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute_value_version;
+package pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute_version;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasStyle;
@@ -16,7 +16,7 @@ import com.vaadin.flow.data.binder.Binder;
 import lombok.Getter;
 import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute.ProductPartAttributeEntity;
 
-class ProductPartAttributeValueVersionEditorDiv extends Div {
+class ProductPartAttributeVersionEditorDiv extends Div {
 
     private TextField newAttributeNameTextField = new TextField("New attribute name");
     private TextField newAttributeValueTextField = new TextField("New attribute value");
@@ -31,7 +31,7 @@ class ProductPartAttributeValueVersionEditorDiv extends Div {
 
     private Binder<ProductPartAttributeEntity> partAttributeEntityBinder = new Binder<>(ProductPartAttributeEntity.class);
 
-    public ProductPartAttributeValueVersionEditorDiv() {
+    public ProductPartAttributeVersionEditorDiv() {
         setId("editor-layout");
 
         initAttributeBinder();

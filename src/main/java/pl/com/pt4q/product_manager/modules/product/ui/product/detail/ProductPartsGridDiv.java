@@ -21,12 +21,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Data
-class ProductPartsDiv extends Div {
+class ProductPartsGridDiv extends Div {
 
     private Grid<ProductPartEntity> productPartsGrid = new Grid<>();
     private Button addNewPartButton = new Button(new Icon(VaadinIcon.PLUS_CIRCLE_O));
 
-    public ProductPartsDiv() {
+    public ProductPartsGridDiv() {
         initGrid();
         initAddNewPartButton();
 

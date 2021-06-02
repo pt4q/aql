@@ -16,17 +16,13 @@ import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute.P
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartCreatorService;
 import pl.com.pt4q.product_manager.modules.product.services.product_part_attribute.ProductPartAttributeFinderService;
-import pl.com.pt4q.product_manager.modules.product.services.product_part_attribute.ProductPartAttributesInMemoryManager;
-import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartAttributeNotFoundException;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
 import pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute.ProductPartAttributeDetailView;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-class ProductPartAttributesDiv extends Div {
+class ProductPartAttributesGridDiv extends Div {
 
     private Grid<ProductPartAttributeEntity> partAttributesGrid = new Grid<>();
     @Getter
@@ -36,14 +32,12 @@ class ProductPartAttributesDiv extends Div {
     private ProductPartCreatorService productPartCreatorService;
     private ProductPartAttributeFinderService productPartAttributeFinderService;
 
-    private ProductPartAttributesInMemoryManager productPartAttributesInMemoryManager;
-
     private ProductPartEntity productPart;
 
-    public ProductPartAttributesDiv(ProductPartEntity productPart,
-                                    ProductSeriesCrudService productSeriesCrudService,
-                                    ProductPartCreatorService productPartCreatorService,
-                                    ProductPartAttributeFinderService productPartAttributeFinderService) {
+    public ProductPartAttributesGridDiv(ProductPartEntity productPart,
+                                        ProductSeriesCrudService productSeriesCrudService,
+                                        ProductPartCreatorService productPartCreatorService,
+                                        ProductPartAttributeFinderService productPartAttributeFinderService) {
 
         this.productPart = productPart;
         this.productSeriesCrudService = productSeriesCrudService;
@@ -52,7 +46,6 @@ class ProductPartAttributesDiv extends Div {
 
         Div attributesGridDiv = initAttributesDiv();
         initAddNewAttributeButton();
-        initProductPartAttributesInMemoryManager();
 
         VerticalLayout vl = new VerticalLayout(attributesGridDiv, addNewAttributeButton);
         vl.setAlignItems(FlexComponent.Alignment.CENTER);
@@ -91,7 +84,6 @@ class ProductPartAttributesDiv extends Div {
 
         this.partAttributesGrid.setWidthFull();
         this.partAttributesGrid.setHeightByRows(true);
-//        this.refreshGrid(testCardFinder.getAll());
     }
 
     private String createLinkWithParam(String url, String paramName, Long id) {
@@ -101,15 +93,6 @@ class ProductPartAttributesDiv extends Div {
     public void refreshGrid(List<ProductPartAttributeEntity> partAttributes) {
         this.partAttributesGrid.select(null);
         this.partAttributesGrid.setItems(partAttributes);
-    }
-
-    private void initProductPartAttributesInMemoryManager() {
-        List<ProductPartAttributeEntity> attributes = new ArrayList<>();
-        try {
-            this.productPartAttributesInMemoryManager = new ProductPartAttributesInMemoryManager(productPartAttributeFinderService.findAllProductPartsAttributesByProductPart(productPart));
-        } catch (ProductPartAttributeNotFoundException e) {
-            this.productPartAttributesInMemoryManager = new ProductPartAttributesInMemoryManager(Collections.emptyList());
-        }
     }
 
     private void initAddNewAttributeButton() {
