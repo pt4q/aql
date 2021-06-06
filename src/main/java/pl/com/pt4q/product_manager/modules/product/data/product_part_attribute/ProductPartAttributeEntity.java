@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute_version.ProductPartAttributeVersionEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
+import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
 
 import javax.persistence.*;
 
@@ -24,6 +25,10 @@ public class ProductPartAttributeEntity {
     private ProductPartEntity part;
 
     private String attributeName;
+
+    @ManyToOne
+    private UnitEntity unit;
+
     @OneToOne
-    private ProductPartAttributeVersionEntity actualValueVersion;
+    private ProductPartAttributeVersionEntity actualVersion;
 }

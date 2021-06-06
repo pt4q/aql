@@ -1,5 +1,6 @@
 package pl.com.pt4q.product_manager.modules.product.ui.product.general;
 
+import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,9 @@ public class ProductsGeneralView extends Div {
 
     private void initAddProductButton(){
         this.addNewProductButton.addClickListener(buttonClickEvent -> {
-            UI.getCurrent().navigate(ProductDetailView.ROUTE);
+            UI ui = UI.getCurrent();
+            ComponentUtil.setData(ui, ProductEntity.class, new ProductEntity());
+            ui.navigate(ProductDetailView.ROUTE);
         });
     }
 }

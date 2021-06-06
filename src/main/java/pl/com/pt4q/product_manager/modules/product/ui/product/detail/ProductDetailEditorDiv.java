@@ -17,7 +17,7 @@ import pl.com.pt4q.product_manager.modules.product.services.product_category.Pro
 
 import java.util.Optional;
 
-class ProductDetailFormDiv extends Div {
+class ProductDetailEditorDiv extends Div {
 
     private ComboBox<String> categoryComboBox = new ComboBox("Product category");
     private ComboBox<String> manufacturerComboBox = new ComboBox("Product manufacturer");
@@ -33,9 +33,9 @@ class ProductDetailFormDiv extends Div {
 
     private ProductEntity product;
 
-    public ProductDetailFormDiv(ProductEntity product,
-                                ProductCategoryCrudService productCategoryCrudService,
-                                ManufacturerCrudService manufacturerCrudService) {
+    public ProductDetailEditorDiv(ProductEntity product,
+                                  ProductCategoryCrudService productCategoryCrudService,
+                                  ManufacturerCrudService manufacturerCrudService) {
 
         this.productCategoryCrudService = productCategoryCrudService;
         this.manufacturerCrudService = manufacturerCrudService;
@@ -90,7 +90,10 @@ class ProductDetailFormDiv extends Div {
     }
 
     private void configSkuTextField() {
-        productSkuTextField.addValueChangeListener(event -> {
+        if (product == null)
+            this.productSkuTextField.setAutofocus(true);
+
+        this.productSkuTextField.addValueChangeListener(event -> {
             String sku = event.getValue().toUpperCase();
 //            this.product = initProductIfNullOrBypass(product);
             this.product.setProductSku(sku);
@@ -99,8 +102,8 @@ class ProductDetailFormDiv extends Div {
     }
 
     private void configCategoryComboBox() {
-        categoryComboBox.setItems(categoriesInMemoryListManager.getCategoriesNames());
-        categoryComboBox.addValueChangeListener(event -> {
+        this.categoryComboBox.setItems(categoriesInMemoryListManager.getCategoriesNames());
+        this.categoryComboBox.addValueChangeListener(event -> {
 //            this.product = initProductIfNullOrBypass(product);
             Optional<ProductCategoryEntity> category = categoriesInMemoryListManager.getByName(event.getValue());
             category.ifPresent(productCategoryEntity -> this.product.setProductCategory(productCategoryEntity));
@@ -109,8 +112,8 @@ class ProductDetailFormDiv extends Div {
     }
 
     private void configManufacturerComboBox() {
-        manufacturerComboBox.setItems(manufacturersInMemoryManager.getManufacturersNames());
-        manufacturerComboBox.addValueChangeListener(event -> {
+        this.manufacturerComboBox.setItems(manufacturersInMemoryManager.getManufacturersNames());
+        this.manufacturerComboBox.addValueChangeListener(event -> {
 //            this.product = initProductIfNullOrBypass(product);
             Optional<ManufacturerEntity> manufacturer = manufacturersInMemoryManager.getByName(event.getValue());
             manufacturer.ifPresent(manufacturerEntity -> this.product.setManufacturer(manufacturerEntity));

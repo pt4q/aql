@@ -1,5 +1,6 @@
 package pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute;
 
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -9,12 +10,17 @@ import lombok.Getter;
 import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute.ProductPartAttributeEntity;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
 
+import java.util.List;
+
 class ProductPartAttributeEditorDiv extends Div {
 
     private TextField attributeNameTextField = new TextField("Attribute name");
 
     @Getter
     private Binder<ProductPartAttributeEntity> productPartAttributeEntityBinder = new Binder<>();
+
+    @Getter
+    private ComboBox<String> unitComboBox = new ComboBox<>("Unit");
 
     private ProductPartAttributeEntity productPartAttribute;
 
@@ -36,6 +42,7 @@ class ProductPartAttributeEditorDiv extends Div {
         String minWidth = "20%";
         String maxWidth = "60%";
 
+        this.attributeNameTextField.setAutofocus(true);
         this.attributeNameTextField.setMinWidth(minWidth);
         this.attributeNameTextField.setMaxWidth(maxWidth);
     }

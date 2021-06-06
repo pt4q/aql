@@ -71,14 +71,14 @@ class ProductPartAttributesGridDiv extends Div {
                 .setHeader("Attribute name")
                 .setSortable(true);
         this.partAttributesGrid
-                .addColumn(attribute -> attribute.getActualValueVersion() != null ? attribute.getActualValueVersion().getAttributeValue() : "")
+                .addColumn(attribute -> attribute.getActualVersion() != null ? attribute.getActualVersion().getAttributeValue() : "")
                 .setHeader("Attribute actual value");
         this.partAttributesGrid
-                .addColumn(attribute -> attribute.getActualValueVersion() != null ? attribute.getActualValueVersion().getProductSeries().getSeries() : "")
+                .addColumn(attribute -> attribute.getActualVersion() != null ? attribute.getActualVersion().getProductSeries().getSeries() : "")
                 .setHeader("Actual product series")
                 .setSortable(true);
         this.partAttributesGrid
-                .addColumn(attribute -> attribute.getActualValueVersion() != null ? attribute.getActualValueVersion().getValidFromDate().format(DateTimeFormatter.ofPattern(dateTimeFormat)) : "")
+                .addColumn(attribute -> attribute.getActualVersion() != null ? attribute.getActualVersion().getValidFromDate().format(DateTimeFormatter.ofPattern(dateTimeFormat)) : "")
                 .setHeader("Valid from time")
                 .setSortable(true);
 

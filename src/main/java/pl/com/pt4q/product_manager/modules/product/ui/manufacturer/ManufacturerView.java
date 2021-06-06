@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.pt4q.product_manager.modules.product.data.manufacturer.ManufacturerEntity;
 import pl.com.pt4q.product_manager.modules.product.services.manufacturer.ManufacturerCrudService;
 import pl.com.pt4q.product_manager.modules.product.services.manufacturer.exceptions.ManufacturerNotFoundException;
+import pl.com.pt4q.product_manager.modules.product.services.product_category.exceptions.ProductCategoryAlreadyExistsException;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 @CssImport(ManufacturerView.CSS)
@@ -124,7 +125,10 @@ public class ManufacturerView extends VerticalLayout {
                     try {
                         manufacturerCrudService.updateOrThrow(this.manufacturerEntity);
                     } catch (ManufacturerNotFoundException ex) {
-                        manufacturerCrudService.create(this.manufacturerEntity);
+                        try {
+                            manufacturerCrudService.create(this.manufacturerEntity);
+                        } catch (ProductCategoryAlreadyExistsException productCategoryAlreadyExistsException) {
+                        }
                     }
 
                     clearForm();

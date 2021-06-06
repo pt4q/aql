@@ -22,7 +22,7 @@ class SaveProductOrBackButtonsDiv extends Div {
     private Button saveButton = new Button("Save product");
     private Button backButton = new Button(new Icon(VaadinIcon.ARROW_BACKWARD));
 
-    private ProductDetailFormDiv productDetailFormDiv;
+    private ProductDetailEditorDiv productDetailEditorDiv;
 
     private ProductCreatorAndUpdaterService productCreatorAndUpdaterService;
     private ProductEntity product;
