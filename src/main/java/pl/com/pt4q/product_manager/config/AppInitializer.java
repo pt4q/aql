@@ -12,6 +12,7 @@ import pl.com.pt4q.product_manager.modules.product.data.product_series.ProductSe
 import pl.com.pt4q.product_manager.modules.product.services.manufacturer.ManufacturerCrudService;
 import pl.com.pt4q.product_manager.modules.product.services.product.ProductCreatorAndUpdaterService;
 import pl.com.pt4q.product_manager.modules.product.services.product_category.ProductCategoryCrudService;
+import pl.com.pt4q.product_manager.modules.product.services.product_category.exceptions.ProductCategoryAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.exceptions.ProductSeriesAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.test_card.data.test_card.TestCardEntity;
@@ -78,13 +79,18 @@ public class AppInitializer implements CommandLineRunner {
     }
 
     private List<ManufacturerEntity> initManufacturers() {
-        ManufacturerEntity manufacturerEntity1 = manufacturerCrudService.create(ManufacturerEntity.builder()
-                .manufacturerName("Ping Pong")
-                .description("ping ..... pong ..... ping ..... pong")
-                .build());
-        return new LinkedList<>() {{
-            add(manufacturerEntity1);
-        }};
+        List<ManufacturerEntity> manufacturers = new LinkedList<>();
+        try {
+            manufacturers.add(
+                    manufacturerCrudService.create(ManufacturerEntity.builder()
+                            .manufacturerName("Ping Pong")
+                            .description("ping ..... pong ..... ping ..... pong")
+                            .build())
+            );
+        } catch (ProductCategoryAlreadyExistsException e) {
+        }
+
+        return manufacturers;
     }
 
     private List<ProductSeriesEntity> initSeries() {

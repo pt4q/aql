@@ -5,6 +5,7 @@ import lombok.Setter;
 import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class UnitsComboBoxManager {
@@ -12,19 +13,17 @@ public class UnitsComboBoxManager {
     @Getter @Setter
     private List<UnitEntity> units;
     @Getter
-    private String comboBoxStringFormat = "name: %s unit: %s multiplicity: %d";
+    private String comboBoxStringFormat = "%s";
 
-    public UnitsComboBoxManager(List<UnitEntity> units) {
-        this.units = units;
-    }
-
-    public UnitEntity getByName(String name){
-        return null;
+    public Optional<UnitEntity> getByName(String name){
+        return units.stream()
+                .filter(unit ->unit.getUnit().equals(name))
+                .findFirst();
     }
 
     public List<String> getAllUnitFormattedStrings(){
         return this.units.stream()
-                .map(unitEntity -> String.format(this.comboBoxStringFormat, unitEntity.getName(), unitEntity.getUnit(), unitEntity.getMultiplicity()))
+                .map(unitEntity -> String.format(this.comboBoxStringFormat, unitEntity.getUnit()))
                 .collect(Collectors.toList());
     }
 

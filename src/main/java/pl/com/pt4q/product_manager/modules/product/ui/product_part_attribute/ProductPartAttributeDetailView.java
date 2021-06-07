@@ -44,7 +44,6 @@ public class ProductPartAttributeDetailView extends Div implements HasUrlParamet
     private ProductPartAttributeVersionsGridDiv productPartAttributeVersionsGridDiv;
 
     private UnitCrudService unitCrudService;
-    private UnitsComboBoxManager unitsComboBoxManager;
 
     private ProductPartCreatorService productPartCreatorService;
     private ProductPartAttributeFinderService productPartAttributeFinderService;
@@ -128,8 +127,7 @@ public class ProductPartAttributeDetailView extends Div implements HasUrlParamet
     }
 
     private void initUnitsComboBox() {
-        this.unitsComboBoxManager = new UnitsComboBoxManager(unitCrudService.getAll());
-        this.productPartAttributeEditorDiv.getUnitComboBox().setItems(this.unitsComboBoxManager.getAllUnitFormattedStrings());
+        this.productPartAttributeEditorDiv.setUnitComboBoxOptions(unitCrudService.getAll());
     }
 
     private void initSaveButtonListener() {
