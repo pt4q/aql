@@ -20,10 +20,10 @@ public class UnitEntity {
 
     private String name;
 
-    private String unit;
+    private String units;
 
     private Integer multiplicity;
 
     @Enumerated(EnumType.STRING)
-    private UnitTypeEnum type;
+    private UnitTypeEnum valuesType;
 }

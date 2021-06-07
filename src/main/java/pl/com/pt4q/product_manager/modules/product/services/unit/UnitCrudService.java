@@ -10,7 +10,6 @@ import pl.com.pt4q.product_manager.service_utils.CustomCrudServiceInterface;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -25,10 +24,10 @@ public class UnitCrudService implements CustomCrudServiceInterface<UnitEntity, L
             getByIdOrThrow(unit.getId());
         } catch (UnitNotFoundException e) {
             unit = unitCrudRepository.save(unit);
-            log.info(String.format("Unit '%s %s' has been created on id: %d", unit.getName(), unit.getUnit(), unit.getId()));
+            log.info(String.format("Unit '%s %s' has been created on id: %d", unit.getName(), unit.getUnits(), unit.getId()));
             return unit;
         }
-        throw new UnitAlreadyExistsException(String.format("Unit '%s %s' already exists on id: %d", unit.getName(), unit.getUnit(), unit.getId()));
+        throw new UnitAlreadyExistsException(String.format("Unit '%s %s' already exists on id: %d", unit.getName(), unit.getUnits(), unit.getId()));
     }
 
     @Override
@@ -47,7 +46,7 @@ public class UnitCrudService implements CustomCrudServiceInterface<UnitEntity, L
     public UnitEntity updateOrThrow(UnitEntity unit) throws UnitNotFoundException {
         getByIdOrThrow(unit.getId());
         unit = unitCrudRepository.save(unit);
-        log.info(String.format("Unit '%s %s' has been updated on id: %d", unit.getName(), unit.getUnit(), unit.getId()));
+        log.info(String.format("Unit '%s %s' has been updated on id: %d", unit.getName(), unit.getUnits(), unit.getId()));
         return unit;
     }
 

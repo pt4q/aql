@@ -1,13 +1,10 @@
-package pl.com.pt4q.product_manager.modules.product.ui.product_category;
+package pl.com.pt4q.product_manager.modules.product.ui.units;
 
-import pl.com.pt4q.product_manager.modules.product.data.product_category.ProductCategoryEntity;
-import pl.com.pt4q.product_manager.modules.product.services.product_category.ProductCategoryCrudService;
-import pl.com.pt4q.product_manager.modules.product.services.product_category.exceptions.ProductCategoryNotFoundException;
-import pl.com.pt4q.product_manager.views.main.MainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
@@ -17,39 +14,48 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
+import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
+import pl.com.pt4q.product_manager.modules.product.data.unit.UnitTypeEnum;
+import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
+import pl.com.pt4q.product_manager.modules.product.services.unit.exceptions.UnitAlreadyExistsException;
+import pl.com.pt4q.product_manager.modules.product.services.unit.exceptions.UnitNotFoundException;
+import pl.com.pt4q.product_manager.views.main.MainView;
 
-@CssImport(ProductCategoryView.CSS)
-@Route(value = ProductCategoryView.ROUTE, layout = MainView.class)
-//@RouteAlias(value = "", layout = MainView.class)
-@PageTitle(ProductCategoryView.PAGE_TITLE)
-public class ProductCategoryView extends VerticalLayout {
+@CssImport(UnitsView.CSS)
+@Route(value = UnitsView.ROUTE, layout = MainView.class)
+@PageTitle(UnitsView.PAGE_TITLE)
+public class UnitsView extends VerticalLayout {
 
-    public static final String PAGE_TITLE = "Product category";
-    public static final String ROUTE = "product-category";
-    public static final String CSS = "./views/product_module/product_category/product-category-view.css";
+    public static final String PAGE_TITLE = "Units";
+    public static final String ROUTE = "units";
+    public static final String CSS = "./views/product_module/unit/unit-view.css";
 
-    private ProductCategoryCrudService productCategoryCrudService;
+    private UnitCrudService unitCrudService;
 
-    private Grid<ProductCategoryEntity> grid = new Grid<>(ProductCategoryEntity.class, false);
+    private Grid<UnitEntity> grid = new Grid<>(UnitEntity.class, false);
 
-    private TextField productCategory = new TextField("Category name");
+    private TextField unitNameTextField = new TextField("Unit name");
+    private TextField unitsTextField = new TextField("Units");
+    private NumberField multiplicityNumberField = new NumberField("Multiplicity");
+    private ComboBox<String> valuesTypeComboBox = new ComboBox<>("Values type");
 
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
 
-    private BeanValidationBinder<ProductCategoryEntity> binder;
+    private BeanValidationBinder<UnitEntity> binder;
 
-    private ProductCategoryEntity product;
+    private UnitEntity unitEntity;
 
     @Autowired
-    public ProductCategoryView(ProductCategoryCrudService productCategoryCrudService) {
-        this.productCategoryCrudService = productCategoryCrudService;
+    public UnitsView(UnitCrudService unitCrudService) {
+        this.unitCrudService = unitCrudService;
         addClassName(ROUTE + "-view");
         // Create UI
         SplitLayout splitLayout = new SplitLayout();
@@ -61,31 +67,24 @@ public class ProductCategoryView extends VerticalLayout {
         add(splitLayout);
 
         // Configure Grid
-        grid.addColumn(ProductCategoryEntity::getId).setHeader("Id").setAutoWidth(true);
-        grid.addColumn(ProductCategoryEntity::getCategoryName).setHeader("Product category").setAutoWidth(true);
-//        grid.addColumn("lastName").setAutoWidth(true);
-//        grid.addColumn("email").setAutoWidth(true);
-//        grid.addColumn("phone").setAutoWidth(true);
-//        grid.addColumn("dateOfBirth").setAutoWidth(true);
-//        grid.addColumn("occupation").setAutoWidth(true);
-//        TemplateRenderer<ProductEntity> importantRenderer = TemplateRenderer.<SamplePerson>of(
-//                "<iron-icon hidden='[[!item.important]]' icon='vaadin:check' style='width: var(--lumo-icon-size-s); height: var(--lumo-icon-size-s); color: var(--lumo-primary-text-color);'></iron-icon><iron-icon hidden='[[item.important]]' icon='vaadin:minus' style='width: var(--lumo-icon-size-s); height: var(--lumo-icon-size-s); color: var(--lumo-disabled-text-color);'></iron-icon>")
-//                .withProperty("important", SamplePerson::isImportant);
-//        grid.addColumn(importantRenderer).setHeader("Important").setAutoWidth(true);
+        grid.addColumn(UnitEntity::getId).setHeader("Id").setAutoWidth(true);
+        grid.addColumn(UnitEntity::getName).setHeader("Unit name").setAutoWidth(true);
+        grid.addColumn(UnitEntity::getUnits).setHeader("Units").setAutoWidth(true);
+        grid.addColumn(UnitEntity::getMultiplicity).setHeader("Multiplicity").setAutoWidth(true);
+        grid.addColumn(UnitEntity::getValuesType).setHeader("Values type").setAutoWidth(true);
 
-//        grid.setDataProvider(new CrudServiceDataProvider<>(productCrudService));
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         grid.setHeightFull();
 
         // when a row is selected or deselected, populate form
         grid.asSingleSelect().addValueChangeListener(event -> {
             if (event.getValue() != null) {
-                ProductCategoryEntity productFromBackend = null;
+                UnitEntity manufacturerFromBackend = null;
                 // when a row is selected but the data is no longer available, refresh grid
                 try {
-                    productFromBackend = productCategoryCrudService.getByIdOrThrow(event.getValue().getId());
-                    populateForm(productFromBackend);
-                } catch (ProductCategoryNotFoundException ex) {
+                    manufacturerFromBackend = unitCrudService.getByIdOrThrow(event.getValue().getId());
+                    populateForm(manufacturerFromBackend);
+                } catch (UnitNotFoundException ex) {
                     refreshGrid();
                 }
 
@@ -96,11 +95,14 @@ public class ProductCategoryView extends VerticalLayout {
         refreshGrid();
 
         // Configure Form
-        binder = new BeanValidationBinder<>(ProductCategoryEntity.class);
+        binder = new BeanValidationBinder<>(UnitEntity.class);
 
         // Bind fields. This where you'd define e.g. validation rules
 
-        binder.forField(productCategory).bind(ProductCategoryEntity::getCategoryName, ProductCategoryEntity::setCategoryName);
+        binder.forField(unitNameTextField).bind(UnitEntity::getName, UnitEntity::setName);
+        binder.forField(unitsTextField).bind(UnitEntity::getUnits, UnitEntity::setUnits);
+        binder.forField(multiplicityNumberField);
+        binder.forField(valuesTypeComboBox);
 
         cancel.addClickListener(e -> {
             clearForm();
@@ -108,20 +110,26 @@ public class ProductCategoryView extends VerticalLayout {
         });
 
         save.addClickListener(e -> {
-            if (productCategory.getValue() != null) {
+            if (unitNameTextField.getValue() != null) {
                 try {
-                    if (this.product == null) {
-                        this.product = ProductCategoryEntity
+                    if (this.unitEntity == null) {
+                        this.unitEntity = UnitEntity
                                 .builder()
-                                .categoryName(productCategory.getValue())
+                                .name(unitNameTextField.getValue())
+                                .units(unitsTextField.getValue())
+                                .multiplicity(multiplicityNumberField.getValue().intValue())
+                                .valuesType(UnitTypeEnum.valueOf(valuesTypeComboBox.getValue()))
                                 .build();
                     }
-                    binder.writeBean(this.product);
+                    binder.writeBean(this.unitEntity);
 
                     try {
-                        productCategoryCrudService.updateOrThrow(this.product);
-                    } catch (ProductCategoryNotFoundException productCategoryNotFoundException) {
-                        productCategoryCrudService.create(this.product);
+                        unitCrudService.updateOrThrow(this.unitEntity);
+                    } catch (UnitNotFoundException ex) {
+                        try {
+                            unitCrudService.create(this.unitEntity);
+                        } catch (UnitAlreadyExistsException exx) {
+                        }
                     }
 
                     clearForm();
@@ -146,7 +154,7 @@ public class ProductCategoryView extends VerticalLayout {
 
         FormLayout formLayout = new FormLayout();
 
-        Component[] fields = new Component[]{productCategory};
+        Component[] fields = new Component[]{unitNameTextField, unitsTextField, multiplicityNumberField, valuesTypeComboBox};
 
         for (Component field : fields) {
             ((HasStyle) field).addClassName("full-width");
@@ -180,16 +188,19 @@ public class ProductCategoryView extends VerticalLayout {
     private void refreshGrid() {
         grid.select(null);
 //        grid.getDataProvider().refreshAll();
-        grid.setItems(productCategoryCrudService.getAll());
+        grid.setItems(unitCrudService.getAll());
+    }
+
+    private void initTypeComboBox(){
+
     }
 
     private void clearForm() {
         populateForm(null);
     }
 
-    private void populateForm(ProductCategoryEntity value) {
-        this.product = value;
-        binder.readBean(this.product);
-
+    private void populateForm(UnitEntity value) {
+        this.unitEntity = value;
+        binder.readBean(this.unitEntity);
     }
 }

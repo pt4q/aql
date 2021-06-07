@@ -4,7 +4,6 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import lombok.Getter;
@@ -61,7 +60,7 @@ class ProductPartAttributeEditorDiv extends Div {
         this.productPartAttributeEntityBinder
                 .forField(unitComboBox)
                 .bind(
-                        attributeEntity -> attributeEntity.getUnit().getUnit(),
+                        attributeEntity -> attributeEntity.getUnit().getUnits(),
                         (attributeEntity, s) -> attributeEntity.setUnit(unitsComboBoxManager.getByName(s).isPresent() ? unitsComboBoxManager.getByName(s).get() : new UnitEntity())
                 );
     }

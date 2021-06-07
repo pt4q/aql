@@ -17,13 +17,13 @@ public class UnitsComboBoxManager {
 
     public Optional<UnitEntity> getByName(String name){
         return units.stream()
-                .filter(unit ->unit.getUnit().equals(name))
+                .filter(unit ->unit.getUnits().equals(name))
                 .findFirst();
     }
 
     public List<String> getAllUnitFormattedStrings(){
         return this.units.stream()
-                .map(unitEntity -> String.format(this.comboBoxStringFormat, unitEntity.getUnit()))
+                .map(unitEntity -> String.format(this.comboBoxStringFormat, unitEntity.getUnits()))
                 .collect(Collectors.toList());
     }
 

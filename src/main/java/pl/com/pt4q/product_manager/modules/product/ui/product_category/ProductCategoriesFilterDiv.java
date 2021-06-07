@@ -6,11 +6,11 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import lombok.Data;
 
 @Data
-public class ProductCategoryFilterDiv extends Div {
+public class ProductCategoriesFilterDiv extends Div {
 
     private TextField productCategoryFiler = new TextField("Product category filter");
 
-    public ProductCategoryFilterDiv() {
+    public ProductCategoriesFilterDiv() {
         initTestCardsFilter();
         add(productCategoryFiler);
     }
