@@ -23,7 +23,7 @@ public class UnitCrudService implements CustomCrudServiceInterface<UnitEntity, L
         try {
             getByIdOrThrow(unit.getId());
         } catch (UnitNotFoundException e) {
-            unit = unitCrudRepository.save(unit);
+            unit = unitCrudRepository.save(setDefaultsBeforeSave(unit));
             log.info(String.format("Unit '%s %s' has been created on id: %d", unit.getName(), unit.getUnits(), unit.getId()));
             return unit;
         }
@@ -45,8 +45,15 @@ public class UnitCrudService implements CustomCrudServiceInterface<UnitEntity, L
     @Override
     public UnitEntity updateOrThrow(UnitEntity unit) throws UnitNotFoundException {
         getByIdOrThrow(unit.getId());
-        unit = unitCrudRepository.save(unit);
+
+        unit = unitCrudRepository.save(setDefaultsBeforeSave(unit));
         log.info(String.format("Unit '%s %s' has been updated on id: %d", unit.getName(), unit.getUnits(), unit.getId()));
+        return unit;
+    }
+
+    private UnitEntity setDefaultsBeforeSave(UnitEntity unit){
+        if(unit.getDecimalPlaces() != null)
+            unit.setDecimalPlaces(0);
         return unit;
     }
 

@@ -96,6 +96,7 @@ public class UnitsView extends VerticalLayout {
 
         // Configure Form
         initUnitValueTypeComboBox();
+        initDecimalPlacesNumberField();
         binder = new BeanValidationBinder<>(UnitEntity.class);
 
         // Bind fields. This where you'd define e.g. validation rules
@@ -132,7 +133,7 @@ public class UnitsView extends VerticalLayout {
                                 .builder()
                                 .name(unitNameTextField.getValue())
                                 .units(unitsTextField.getValue())
-                                .decimalPlaces(multiplicityNumberField.getValue().intValue())
+                                .decimalPlaces(multiplicityNumberField.getValue() != null ? multiplicityNumberField.getValue().intValue() : 0)
                                 .valuesType(new UnitTypeEnumWrapper().getUnitTypeFromString(valuesTypeComboBox.getValue()))
                                 .build();
                     }
@@ -207,12 +208,20 @@ public class UnitsView extends VerticalLayout {
     }
 
     private void initUnitValueTypeComboBox() {
-        String helpText = new StringBuilder("Większość parametrów powinna być wybrana jako float, float ponieważ mogą zawierać ułamki.\n")
-                .append("Typ decimal wybiera się dla jednostek takich jak np. szt, opak itd")
-                .append("Tekst nie ma jednostki (\"[-]\")")
+        String helpText = new StringBuilder("Większość parametrów powinna być wybrana jako float, float ponieważ mogą zawierać ułamki.")
+                .append("\nTyp decimal wybiera się dla jednostek takich jak np. szt, opak itd")
+                .append("\nTekst nie ma jednostki (\"[-]\")")
                 .toString();
         this.valuesTypeComboBox.setItems(new UnitTypeEnumWrapper().getUnitsStringsForComboBox());
         this.valuesTypeComboBox.setHelperText(helpText);
+    }
+
+    private void initDecimalPlacesNumberField(){
+        this.multiplicityNumberField.setHasControls(true);
+        this.multiplicityNumberField.setValue(0d);
+        this.multiplicityNumberField.setStep(3d);
+        this.multiplicityNumberField.setMin(-9d);
+        this.multiplicityNumberField.setMax(9d);
     }
 
     private void clearForm() {

@@ -9,12 +9,16 @@ import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_category.ProductCategoryEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_series.ProductSeriesEntity;
+import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
+import pl.com.pt4q.product_manager.modules.product.data.unit.UnitTypeEnum;
 import pl.com.pt4q.product_manager.modules.product.services.manufacturer.ManufacturerCrudService;
 import pl.com.pt4q.product_manager.modules.product.services.product.ProductCreatorAndUpdaterService;
 import pl.com.pt4q.product_manager.modules.product.services.product_category.ProductCategoryCrudService;
 import pl.com.pt4q.product_manager.modules.product.services.product_category.exceptions.ProductCategoryAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
 import pl.com.pt4q.product_manager.modules.product.services.product_series.exceptions.ProductSeriesAlreadyExistsException;
+import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
+import pl.com.pt4q.product_manager.modules.product.services.unit.exceptions.UnitAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.test_card.data.test_card.TestCardEntity;
 import pl.com.pt4q.product_manager.modules.test_card.services.test_card.TestCardForProductCategoryCreator;
 
@@ -28,6 +32,8 @@ import java.util.stream.Collectors;
 public class AppInitializer implements CommandLineRunner {
 
     @Autowired
+    private UnitCrudService unitCrudService;
+    @Autowired
     private ProductCategoryCrudService productCategoryCrudService;
     @Autowired
     private ManufacturerCrudService manufacturerCrudService;
@@ -40,6 +46,9 @@ public class AppInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        List<UnitEntity> units = initDefaultUnits();
+        units.forEach(unitEntity -> logToConsoleWhatWasCreated("units", unitEntity.getName(), unitEntity.getId()));
+
         List<ProductCategoryEntity> categories = initCategories();
         categories.forEach(category -> logToConsoleWhatWasCreated("category", category.getCategoryName(), category.getId()));
 
@@ -61,6 +70,50 @@ public class AppInitializer implements CommandLineRunner {
 
 //        List <TestCardEntity> testCards = initTestCards(categories);
 //        testCards.forEach(testCard -> logToConsoleWhatWasCreated("test card", testCard.getTestCardName(), testCard.getId()));
+    }
+
+    private List<UnitEntity> initDefaultUnits() {
+        List<UnitEntity> units = new ArrayList<>();
+        units.add(UnitEntity.builder()
+                .name("tekst")
+                .units("[-]")
+                .decimalPlaces(0)
+                .valuesType(UnitTypeEnum.TEXT)
+                .build());
+        units.add(UnitEntity.builder()
+                .name("sztuka")
+                .units("[szt]")
+                .decimalPlaces(0)
+                .valuesType(UnitTypeEnum.DECIMAL)
+                .build());
+        units.add(UnitEntity.builder()
+                .name("metr")
+                .units("[m]")
+                .decimalPlaces(0)
+                .valuesType(UnitTypeEnum.FLOAT)
+                .build());
+        units.add(UnitEntity.builder()
+                .name("milimetr")
+                .units("[mm]")
+                .decimalPlaces(-3)
+                .valuesType(UnitTypeEnum.FLOAT)
+                .build());
+        units.add(UnitEntity.builder()
+                .name("centymetr")
+                .units("[szt]")
+                .decimalPlaces(0)
+                .valuesType(UnitTypeEnum.DECIMAL)
+                .build());
+
+        return units.stream()
+                .map(unit -> {
+                    try {
+                        return unitCrudService.create(unit);
+                    } catch (UnitAlreadyExistsException e) {
+                        return null;
+                    }
+                })
+                .collect(Collectors.toList());
     }
 
     private List<ProductCategoryEntity> initCategories() {

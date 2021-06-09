@@ -63,6 +63,7 @@ class ProductPartAttributeEditorDiv extends Div {
                         attributeEntity -> attributeEntity.getUnit().getUnits(),
                         (attributeEntity, s) -> attributeEntity.setUnit(unitsComboBoxManager.getByName(s).isPresent() ? unitsComboBoxManager.getByName(s).get() : new UnitEntity())
                 );
+        this.productPartAttributeEntityBinder.setBean(this.productPartAttribute);
     }
 
     public void setUnitComboBoxOptions(List<UnitEntity> units) {
