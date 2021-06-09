@@ -10,19 +10,24 @@ import java.util.stream.Collectors;
 
 public class UnitsComboBoxManager {
 
-    @Getter @Setter
-    private List<UnitEntity> units;
+    @Getter
+    private List<UnitEntity> unitsList;
     @Getter
     private String comboBoxStringFormat = "%s";
 
-    public Optional<UnitEntity> getByName(String name){
-        return units.stream()
-                .filter(unit ->unit.getUnits().equals(name))
-                .findFirst();
+    public UnitsComboBoxManager(List<UnitEntity> unitsList) {
+        this.unitsList = unitsList;
     }
 
-    public List<String> getAllUnitFormattedStrings(){
-        return this.units.stream()
+    public UnitEntity getByUnitsString(String units) {
+        return this.unitsList.stream()
+                .filter(unit -> unit.getUnits().equals(units))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public List<String> getAllUnitFormattedStrings() {
+        return this.unitsList.stream()
                 .map(unitEntity -> String.format(this.comboBoxStringFormat, unitEntity.getUnits()))
                 .collect(Collectors.toList());
     }

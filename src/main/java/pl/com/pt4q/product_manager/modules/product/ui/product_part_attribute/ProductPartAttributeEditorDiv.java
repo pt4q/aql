@@ -16,14 +16,13 @@ import java.util.List;
 class ProductPartAttributeEditorDiv extends Div {
 
     private TextField attributeNameTextField = new TextField("Attribute name");
+    @Getter
+    private ComboBox<String> unitComboBox = new ComboBox<>("Units");
 
     @Getter
     private Binder<ProductPartAttributeEntity> productPartAttributeEntityBinder = new Binder<>();
 
-    @Getter
-    private ComboBox<String> unitComboBox = new ComboBox<>("Units");
-
-    private UnitsComboBoxManager unitsComboBoxManager = new UnitsComboBoxManager();
+    private UnitsComboBoxManager unitsComboBoxManager;
     private ProductPartAttributeEntity productPartAttribute;
 
     public ProductPartAttributeEditorDiv(ProductPartAttributeEntity productPartAttribute) {
@@ -44,10 +43,9 @@ class ProductPartAttributeEditorDiv extends Div {
     private void initFormFieldSizes() {
         if (productPartAttribute == null)
             this.attributeNameTextField.setAutofocus(true);
-
         this.attributeNameTextField.setMinWidth("25%");
         this.attributeNameTextField.setMaxWidth("70%");
-//        this.attributeNameTextField.setMaxWidth(maxWidth);
+
         this.unitComboBox.setMinWidth("10%");
         this.unitComboBox.setMaxWidth("15%");
     }
@@ -55,20 +53,23 @@ class ProductPartAttributeEditorDiv extends Div {
     private void initProductPartAttributeEntityBinder() {
         this.productPartAttributeEntityBinder
                 .forField(attributeNameTextField)
-                .asRequired("Part attribute can't be empty")
+                .asRequired("Part attribute name can't be empty")
                 .bind(ProductPartAttributeEntity::getAttributeName, ProductPartAttributeEntity::setAttributeName);
         this.productPartAttributeEntityBinder
                 .forField(unitComboBox)
+                .asRequired("The part attribute mush have defined units")
                 .bind(
-                        attributeEntity -> attributeEntity.getUnit().getUnits(),
-                        (attributeEntity, s) -> attributeEntity.setUnit(unitsComboBoxManager.getByName(s).isPresent() ? unitsComboBoxManager.getByName(s).get() : new UnitEntity())
+                        attributeEntity -> attributeEntity.getUnits().getUnits(),
+                        (attributeEntity, s) -> attributeEntity.setUnits(unitsComboBoxManager.getByUnitsString(s))
                 );
-        this.productPartAttributeEntityBinder.setBean(this.productPartAttribute);
+//        this.productPartAttributeEntityBinder.setBean(productPartAttribute);
     }
 
     public void setUnitComboBoxOptions(List<UnitEntity> units) {
-        this.unitsComboBoxManager.setUnits(units);
+        this.unitsComboBoxManager = new UnitsComboBoxManager(units);
         this.unitComboBox.setItems(this.unitsComboBoxManager.getAllUnitFormattedStrings());
+
+        this.productPartAttributeEntityBinder.setBean(productPartAttribute);
     }
 
     public void cleanForm() {

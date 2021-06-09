@@ -41,7 +41,7 @@ public class UnitsView extends VerticalLayout {
 
     private TextField unitNameTextField = new TextField("Unit name");
     private TextField unitsTextField = new TextField("Units");
-    private NumberField multiplicityNumberField = new NumberField("Decimal places");
+    private NumberField decimalPlacesNumberField = new NumberField("Decimal places");
     private ComboBox<String> valuesTypeComboBox = new ComboBox<>("Values type");
 
     private Button cancel = new Button("Cancel");
@@ -107,7 +107,7 @@ public class UnitsView extends VerticalLayout {
         binder.forField(unitsTextField)
                 .asRequired("Units can't be empty")
                 .bind(UnitEntity::getUnits, UnitEntity::setUnits);
-        binder.forField(multiplicityNumberField)
+        binder.forField(decimalPlacesNumberField)
                 .asRequired("Unit multiplication can't be empty")
                 .bind(
                         unitEntity -> unitEntity.getDecimalPlaces().doubleValue(),
@@ -133,7 +133,7 @@ public class UnitsView extends VerticalLayout {
                                 .builder()
                                 .name(unitNameTextField.getValue())
                                 .units(unitsTextField.getValue())
-                                .decimalPlaces(multiplicityNumberField.getValue() != null ? multiplicityNumberField.getValue().intValue() : 0)
+                                .decimalPlaces(decimalPlacesNumberField.getValue() != null ? decimalPlacesNumberField.getValue().intValue() : 0)
                                 .valuesType(new UnitTypeEnumWrapper().getUnitTypeFromString(valuesTypeComboBox.getValue()))
                                 .build();
                     }
@@ -170,7 +170,7 @@ public class UnitsView extends VerticalLayout {
 
         FormLayout formLayout = new FormLayout();
 
-        Component[] fields = new Component[]{unitNameTextField, unitsTextField, multiplicityNumberField, valuesTypeComboBox};
+        Component[] fields = new Component[]{unitNameTextField, unitsTextField, decimalPlacesNumberField, valuesTypeComboBox};
 
         for (Component field : fields) {
             ((HasStyle) field).addClassName("full-width");
@@ -217,11 +217,11 @@ public class UnitsView extends VerticalLayout {
     }
 
     private void initDecimalPlacesNumberField(){
-        this.multiplicityNumberField.setHasControls(true);
-        this.multiplicityNumberField.setValue(0d);
-        this.multiplicityNumberField.setStep(3d);
-        this.multiplicityNumberField.setMin(-9d);
-        this.multiplicityNumberField.setMax(9d);
+        this.decimalPlacesNumberField.setHasControls(true);
+        this.decimalPlacesNumberField.setValue(0d);
+        this.decimalPlacesNumberField.setStep(3d);
+        this.decimalPlacesNumberField.setMin(-9d);
+        this.decimalPlacesNumberField.setMax(9d);
     }
 
     private void clearForm() {

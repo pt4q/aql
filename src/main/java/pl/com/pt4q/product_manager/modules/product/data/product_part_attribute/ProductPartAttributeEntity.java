@@ -27,7 +27,7 @@ public class ProductPartAttributeEntity {
     private String attributeName;
 
     @ManyToOne
-    private UnitEntity unit;
+    private UnitEntity units;
 
     @OneToOne
     private ProductPartAttributeVersionEntity actualVersion;
