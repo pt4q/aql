@@ -22,7 +22,7 @@ public class UnitEntity {
 
     private String units;
 
-    private Integer multiplicity;
+    private Integer decimalPlaces;
 
     @Enumerated(EnumType.STRING)
     private UnitTypeEnum valuesType;

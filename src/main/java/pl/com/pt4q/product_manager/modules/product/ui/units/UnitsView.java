@@ -22,7 +22,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
-import pl.com.pt4q.product_manager.modules.product.data.unit.UnitTypeEnum;
+import pl.com.pt4q.product_manager.modules.product.data.unit.UnitTypeEnumWrapper;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
 import pl.com.pt4q.product_manager.modules.product.services.unit.exceptions.UnitAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.product.services.unit.exceptions.UnitNotFoundException;
@@ -37,19 +37,19 @@ public class UnitsView extends VerticalLayout {
     public static final String ROUTE = "units";
     public static final String CSS = "./views/product_module/unit/unit-view.css";
 
-    private UnitCrudService unitCrudService;
-
     private Grid<UnitEntity> grid = new Grid<>(UnitEntity.class, false);
 
     private TextField unitNameTextField = new TextField("Unit name");
     private TextField unitsTextField = new TextField("Units");
-    private NumberField multiplicityNumberField = new NumberField("Multiplicity");
+    private NumberField multiplicityNumberField = new NumberField("Decimal places");
     private ComboBox<String> valuesTypeComboBox = new ComboBox<>("Values type");
 
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
 
     private BeanValidationBinder<UnitEntity> binder;
+
+    private UnitCrudService unitCrudService;
 
     private UnitEntity unitEntity;
 
@@ -67,11 +67,11 @@ public class UnitsView extends VerticalLayout {
         add(splitLayout);
 
         // Configure Grid
-        grid.addColumn(UnitEntity::getId).setHeader("Id").setAutoWidth(true);
-        grid.addColumn(UnitEntity::getName).setHeader("Unit name").setAutoWidth(true);
-        grid.addColumn(UnitEntity::getUnits).setHeader("Units").setAutoWidth(true);
-        grid.addColumn(UnitEntity::getMultiplicity).setHeader("Multiplicity").setAutoWidth(true);
-        grid.addColumn(UnitEntity::getValuesType).setHeader("Values type").setAutoWidth(true);
+        grid.addColumn(UnitEntity::getId).setHeader("Id").setAutoWidth(true).setSortable(true);
+        grid.addColumn(UnitEntity::getName).setHeader("Unit name").setAutoWidth(true).setSortable(true);
+        grid.addColumn(UnitEntity::getUnits).setHeader("Units").setAutoWidth(true).setSortable(true);
+        grid.addColumn(UnitEntity::getDecimalPlaces).setHeader("Decimal places (x10^n)").setAutoWidth(true).setSortable(true);
+        grid.addColumn(UnitEntity::getValuesType).setHeader("Values type").setAutoWidth(true).setSortable(true);
 
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         grid.setHeightFull();
@@ -95,14 +95,29 @@ public class UnitsView extends VerticalLayout {
         refreshGrid();
 
         // Configure Form
+        initUnitValueTypeComboBox();
         binder = new BeanValidationBinder<>(UnitEntity.class);
 
         // Bind fields. This where you'd define e.g. validation rules
 
-        binder.forField(unitNameTextField).bind(UnitEntity::getName, UnitEntity::setName);
-        binder.forField(unitsTextField).bind(UnitEntity::getUnits, UnitEntity::setUnits);
-        binder.forField(multiplicityNumberField);
-        binder.forField(valuesTypeComboBox);
+        binder.forField(unitNameTextField)
+                .asRequired("Unit name can't be empty")
+                .bind(UnitEntity::getName, UnitEntity::setName);
+        binder.forField(unitsTextField)
+                .asRequired("Units can't be empty")
+                .bind(UnitEntity::getUnits, UnitEntity::setUnits);
+        binder.forField(multiplicityNumberField)
+                .asRequired("Unit multiplication can't be empty")
+                .bind(
+                        unitEntity -> unitEntity.getDecimalPlaces().doubleValue(),
+                        (unitEntity, aDouble) -> unitEntity.setDecimalPlaces(aDouble.intValue())
+                );
+        binder.forField(valuesTypeComboBox)
+                .asRequired("Unit value type can't be empty")
+                .bind(
+                        unitEntity -> unitEntity.getValuesType().toString(),
+                        (unitEntity, s) -> unitEntity.setValuesType(new UnitTypeEnumWrapper().getUnitTypeFromString(s))
+                        );
 
         cancel.addClickListener(e -> {
             clearForm();
@@ -117,8 +132,8 @@ public class UnitsView extends VerticalLayout {
                                 .builder()
                                 .name(unitNameTextField.getValue())
                                 .units(unitsTextField.getValue())
-                                .multiplicity(multiplicityNumberField.getValue().intValue())
-                                .valuesType(UnitTypeEnum.valueOf(valuesTypeComboBox.getValue()))
+                                .decimalPlaces(multiplicityNumberField.getValue().intValue())
+                                .valuesType(new UnitTypeEnumWrapper().getUnitTypeFromString(valuesTypeComboBox.getValue()))
                                 .build();
                     }
                     binder.writeBean(this.unitEntity);
@@ -191,8 +206,13 @@ public class UnitsView extends VerticalLayout {
         grid.setItems(unitCrudService.getAll());
     }
 
-    private void initTypeComboBox(){
-
+    private void initUnitValueTypeComboBox() {
+        String helpText = new StringBuilder("Większość parametrów powinna być wybrana jako float, float ponieważ mogą zawierać ułamki.\n")
+                .append("Typ decimal wybiera się dla jednostek takich jak np. szt, opak itd")
+                .append("Tekst nie ma jednostki (\"[-]\")")
+                .toString();
+        this.valuesTypeComboBox.setItems(new UnitTypeEnumWrapper().getUnitsStringsForComboBox());
+        this.valuesTypeComboBox.setHelperText(helpText);
     }
 
     private void clearForm() {

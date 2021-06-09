@@ -1,25 +1,17 @@
 package pl.com.pt4q.product_manager.modules.product.data.unit;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.Getter;
 
 public enum UnitTypeEnum {
 
-    TEXT("text"),
-    DECIMAL("decimal"),
-    FLOAT("float");
+    TEXT(1),
+    DECIMAL(2),
+    FLOAT(3);
 
-    private String type;
+    @Getter
+    private Integer type;
 
-    UnitTypeEnum(String type) {
+    UnitTypeEnum(Integer type) {
         this.type = type;
-    }
-
-    public List<String> toList() {
-        return new ArrayList<String>() {{
-            add(TEXT.type);
-            add(DECIMAL.type);
-            add(FLOAT.type);
-        }};
     }
 }
