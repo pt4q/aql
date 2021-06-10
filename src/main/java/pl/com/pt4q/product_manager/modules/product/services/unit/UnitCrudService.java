@@ -52,7 +52,7 @@ public class UnitCrudService implements CustomCrudServiceInterface<UnitEntity, L
     }
 
     private UnitEntity setDefaultsBeforeSave(UnitEntity unit){
-        if(unit.getDecimalPlaces() != null)
+        if(unit.getDecimalPlaces() == null)
             unit.setDecimalPlaces(0);
         return unit;
     }

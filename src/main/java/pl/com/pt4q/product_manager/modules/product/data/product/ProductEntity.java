@@ -30,6 +30,9 @@ public class ProductEntity {
     @ManyToOne
     private ManufacturerEntity manufacturer;
     private String productSku;
+
+    private String descriptionPL;
+    private String descriptionENG;
 //    @ManyToMany
 //    private Set<ProductSeriesEntity> productSeries;
 //    @OneToMany (fetch = FetchType.LAZY, mappedBy = "product")

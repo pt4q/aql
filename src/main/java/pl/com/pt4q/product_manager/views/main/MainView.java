@@ -2,6 +2,7 @@ package pl.com.pt4q.product_manager.views.main;
 
 import java.util.Optional;
 
+import pl.com.pt4q.product_manager.modules.environment.ui.master.general.EnvMasterGeneralView;
 import pl.com.pt4q.product_manager.modules.product.ui.product.general.ProductsGeneralView;
 import pl.com.pt4q.product_manager.modules.product.ui.product_category.ProductCategoriesView;
 import pl.com.pt4q.product_manager.modules.product.ui.manufacturer.ManufacturersView;
@@ -94,7 +95,9 @@ public class MainView extends AppLayout {
                 createTab(ManufacturersView.PAGE_TITLE, ManufacturersView.class),
                 createTab(UnitsView.PAGE_TITLE, UnitsView.class),
                 createTab(ProductsGeneralView.PAGE_TITLE, ProductsGeneralView.class),
-                createTab(TestCardsMainView.PAGE_TITLE, TestCardsMainView.class)};
+                createTab(EnvMasterGeneralView.PAGE_TITLE, EnvMasterGeneralView.class)
+//                createTab(TestCardsMainView.PAGE_TITLE, TestCardsMainView.class)
+        };
     }
 
     private static Tab createTab(String text, Class<? extends Component> navigationTarget) {

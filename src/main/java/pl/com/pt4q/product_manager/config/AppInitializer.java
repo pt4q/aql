@@ -99,9 +99,15 @@ public class AppInitializer implements CommandLineRunner {
                 .valuesType(UnitTypeEnum.FLOAT)
                 .build());
         units.add(UnitEntity.builder()
-                .name("centymetr")
-                .units("[szt]")
+                .name("kilogram")
+                .units("[kg]")
                 .decimalPlaces(0)
+                .valuesType(UnitTypeEnum.DECIMAL)
+                .build());
+        units.add(UnitEntity.builder()
+                .name("gram")
+                .units("[g]")
+                .decimalPlaces(-3)
                 .valuesType(UnitTypeEnum.DECIMAL)
                 .build());
 
