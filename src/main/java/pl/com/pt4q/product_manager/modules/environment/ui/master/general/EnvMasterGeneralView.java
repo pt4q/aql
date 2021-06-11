@@ -10,7 +10,9 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import lombok.extern.log4j.Log4j2;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.detail.EnvMasterDetailView;
-import pl.com.pt4q.product_manager.modules.product.ui.product_category.ProductCategoriesFilterDiv;
+import pl.com.pt4q.product_manager.modules.environment.ui.master.general.report.EnvMasterReportView;
+import pl.com.pt4q.product_manager.view_utils.FilterComboBoxDiv;
+import pl.com.pt4q.product_manager.view_utils.FilterTextFieldDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 @Log4j2
@@ -21,35 +23,57 @@ public class EnvMasterGeneralView extends Div {
     public static final String PAGE_TITLE = "Environmental conditions";
     public static final String ROUTE = "environment";
 
-    private ProductCategoriesFilterDiv productCategoriesFilterDiv;
-    private EnvMasterGeneralGridDiv masterGridDiv;
+    private FilterTextFieldDiv productFilterDiv = new FilterTextFieldDiv("Filter by product");
+    private FilterComboBoxDiv masterStatusFilterDiv = new FilterComboBoxDiv("Filter by product status");
+    private EnvMasterGeneralGridDiv masterGridDiv = new EnvMasterGeneralGridDiv();
 
     private Button addNewProductButton = new Button("Add new env condition");
+    private Button createEnvironmentConditionsButton = new Button("Create report");
 
 
     public EnvMasterGeneralView() {
 
-        this.productCategoriesFilterDiv = new ProductCategoriesFilterDiv();
-        this.masterGridDiv = new EnvMasterGeneralGridDiv();
-
         initAddProductButton();
+        initCreateEnvironmentReportButton();
 //        masterGridDiv.refreshGrid();
 
-        HorizontalLayout toolPanel = new HorizontalLayout(productCategoriesFilterDiv, addNewProductButton);
-        toolPanel.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
-        toolPanel.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
 
-        VerticalLayout layout = new VerticalLayout(toolPanel, masterGridDiv);
+        VerticalLayout layout = new VerticalLayout(createToolPanelDiv(), this.masterGridDiv);
         layout.setWidthFull();
 
-
         add(layout);
+    }
+
+    private Div createToolPanelDiv() {
+        Div leftSideOfToolPanelDiv = new Div();
+        HorizontalLayout lsLayout = new HorizontalLayout(this.productFilterDiv, this.masterStatusFilterDiv, this.addNewProductButton);
+        lsLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
+        leftSideOfToolPanelDiv.add(lsLayout);
+
+        Div rightSideOfToolPanelDiv = new Div();
+        HorizontalLayout rsLayout = new HorizontalLayout(this.createEnvironmentConditionsButton);
+        rsLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
+        rightSideOfToolPanelDiv.add(rsLayout);
+
+        Div toolPanel = new Div();
+        HorizontalLayout tpLayout = new HorizontalLayout(leftSideOfToolPanelDiv, rightSideOfToolPanelDiv);
+        tpLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
+        tpLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
+
+        toolPanel.add(tpLayout);
+        return toolPanel;
     }
 
     private void initAddProductButton() {
         this.addNewProductButton.addClickListener(buttonClickEvent -> {
             UI ui = UI.getCurrent();
             ui.navigate(EnvMasterDetailView.ROUTE);
+        });
+    }
+
+    private void initCreateEnvironmentReportButton() {
+        this.createEnvironmentConditionsButton.addClickListener(buttonClickEvent -> {
+            UI.getCurrent().navigate(EnvMasterReportView.ROUTE);
         });
     }
 }

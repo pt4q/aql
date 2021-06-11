@@ -63,7 +63,9 @@ class EnvMasterDetailEditorDiv extends Div {
         this.validFromDatePicker.setWidthFull();
         this.validToDatePicker.setWidthFull();
         this.grossWeightNumberField.setWidthFull();
+        this.grossWeightNumberField.setMinWidth("10%");
         this.grossWeightUnitComboBox.setWidthFull();
+        this.grossWeightUnitComboBox.setMinWidth("10%");
     }
 
     private void initBinder(){

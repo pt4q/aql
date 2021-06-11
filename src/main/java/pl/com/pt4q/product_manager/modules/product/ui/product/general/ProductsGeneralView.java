@@ -9,7 +9,7 @@ import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.services.product.ProductFinderService;
 import pl.com.pt4q.product_manager.views.main.MainView;
 import pl.com.pt4q.product_manager.modules.product.ui.product.detail.ProductDetailView;
-import pl.com.pt4q.product_manager.modules.product.ui.product_category.ProductCategoriesFilterDiv;
+import pl.com.pt4q.product_manager.view_utils.FilterTextFieldDiv;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -26,7 +26,7 @@ public class ProductsGeneralView extends Div {
     public static final String ROUTE = "products";
 //    public static final String css = "./views/product_category/product-category-view.css";
 
-    private ProductCategoriesFilterDiv productCategoriesFilterDiv;
+    private FilterTextFieldDiv filterTextFieldDiv;
     private ProductGeneralProductsGridDiv productsGridDiv;
 
     private Button addNewProductButton = new Button("Add new product");
@@ -39,12 +39,12 @@ public class ProductsGeneralView extends Div {
     public ProductsGeneralView(ProductFinderService productFinderService) {
         this.productFinderService = productFinderService;
 
-        this.productCategoriesFilterDiv = new ProductCategoriesFilterDiv();
+        this.filterTextFieldDiv = new FilterTextFieldDiv("Filter by product category");
         this.productsGridDiv = new ProductGeneralProductsGridDiv(productFinderService);
 
         initAddProductButton();
 
-        HorizontalLayout toolPanel = new HorizontalLayout(productCategoriesFilterDiv, addNewProductButton);
+        HorizontalLayout toolPanel = new HorizontalLayout(filterTextFieldDiv, addNewProductButton);
         toolPanel.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
         toolPanel.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
 

@@ -4,12 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.com.pt4q.product_manager.modules.environment.EnvSourceTypeEnum;
+import pl.com.pt4q.product_manager.modules.environment.data.data_utils.EnvSourceTypeEnum;
 import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
 import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -26,8 +25,8 @@ public class EnvWeeeEntity {
     @OneToOne
     private EnvMasterEntity master;
 
-    private LocalDate validFrom;
-    private LocalDate validTo;
+//    private LocalDate validFrom;
+//    private LocalDate validTo;
 
     private Double netWeight;
     @ManyToOne

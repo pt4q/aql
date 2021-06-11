@@ -27,6 +27,9 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
     public EnvMasterDetailView() {
         initAddWeeButton();
 
+        initSaveButton();
+        initBackButton();
+
         VerticalLayout layout = new VerticalLayout();
         layout.add(this.saveObjectAndBackButtonsDiv, this.masterDetailEditorDiv, this.buttonsDiv);
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
@@ -41,6 +44,17 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
         this.buttonsDiv.getAddWeeButton().addClickListener(buttonClickEvent -> {
             UI ui = UI.getCurrent();
             ui.navigate(EnvWeeeView.ROUTE);
+        });
+    }
+
+    private void initSaveButton(){
+
+    }
+
+    private void initBackButton(){
+        this.saveObjectAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
+            UI ui= UI.getCurrent();
+            ui.navigate(EnvMasterGeneralView.ROUTE);
         });
     }
 

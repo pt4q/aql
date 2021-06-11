@@ -15,7 +15,7 @@ public class SaveObjectAndBackButtonsDiv<T> extends Div {
     @Getter
     private Button saveButton;
     @Getter
-    private Button backButton = new Button(new Icon(VaadinIcon.ARROW_BACKWARD));
+    private Button backButton;
 
     public SaveObjectAndBackButtonsDiv(String saveButtonLabel) {
         initSaveButton(saveButtonLabel);
@@ -33,30 +33,7 @@ public class SaveObjectAndBackButtonsDiv<T> extends Div {
     }
 
     private void initBackButton() {
+        this.backButton = new BackButtonDiv().getBackButton();
         this.backButton.getElement().getStyle().set("margin-right", "auto");
     }
-
-//    public void createBackButtonClickListenerWithSaveObjectFromContext(String backButtonNavigationPath, Class<T> objClass, T obj) {
-//        this.backButton.addClickListener(buttonClickEvent -> {
-//            UI ui = UI.getCurrent();
-//            saveObjectToContext(ui, objClass, obj);
-//            ui.navigate(backButtonNavigationPath);
-//        });
-//    }
-//
-//    public void createBackButtonClickListenerWithRemoveObjectFromContext(String backButtonNavigationPath, Class<T> objClass) {
-//        this.backButton.addClickListener(buttonClickEvent -> {
-//            UI ui = UI.getCurrent();
-//            removeObjectFromContext(ui, objClass);
-//            ui.navigate(backButtonNavigationPath);
-//        });
-//    }
-//
-//    private void saveObjectToContext(UI ui, Class<T> objClass, T obj) {
-//        ComponentUtil.setData(ui, objClass, obj);
-//    }
-//
-//    private void removeObjectFromContext(UI ui, Class<T> objClass) {
-//        saveObjectToContext(ui, objClass, null);
-//    }
 }

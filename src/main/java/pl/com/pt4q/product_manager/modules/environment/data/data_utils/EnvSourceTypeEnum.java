@@ -1,4 +1,4 @@
-package pl.com.pt4q.product_manager.modules.environment;
+package pl.com.pt4q.product_manager.modules.environment.data.data_utils;
 
 import lombok.Getter;
 
