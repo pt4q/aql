@@ -6,6 +6,8 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 import lombok.extern.log4j.Log4j2;
+import pl.com.pt4q.product_manager.modules.environment.ui.bat.EnvBatView;
+import pl.com.pt4q.product_manager.modules.environment.ui.light_source.EnvLightSourceView;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.general.EnvMasterGeneralView;
 import pl.com.pt4q.product_manager.modules.environment.ui.weee.EnvWeeeView;
 import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
@@ -26,6 +28,9 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
 
     public EnvMasterDetailView() {
         initAddWeeButton();
+        initAddLightSourceButton();
+        initAddBatButton();
+        initAddPackButton();
 
         initSaveButton();
         initBackButton();
@@ -44,6 +49,26 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
         this.buttonsDiv.getAddWeeButton().addClickListener(buttonClickEvent -> {
             UI ui = UI.getCurrent();
             ui.navigate(EnvWeeeView.ROUTE);
+        });
+    }
+
+    private void initAddLightSourceButton(){
+        this.buttonsDiv.getAddLightSourceButton().addClickListener(buttonClickEvent -> {
+            UI ui = UI.getCurrent();
+            ui.navigate(EnvLightSourceView.ROUTE);
+        });
+    }
+
+    private void initAddBatButton(){
+        this.buttonsDiv.getAddBatButton().addClickListener(buttonClickEvent -> {
+            UI ui = UI.getCurrent();
+            ui.navigate(EnvBatView.ROUTE);
+        });
+    }
+
+    private void initAddPackButton(){
+        this.buttonsDiv.getAddPackButton().addClickListener(buttonClickEvent -> {
+
         });
     }
 

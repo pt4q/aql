@@ -1,4 +1,4 @@
-package pl.com.pt4q.product_manager.modules.environment.ui.weee;
+package pl.com.pt4q.product_manager.modules.environment.ui.bat;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
@@ -11,18 +11,18 @@ import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 @Log4j2
-@Route(value = EnvWeeeView.ROUTE, layout = MainView.class)
-@PageTitle(EnvWeeeView.PAGE_TITLE)
-public class EnvWeeeView extends Div implements HasUrlParameter<String> {
+@Route(value = EnvBatView.ROUTE, layout = MainView.class)
+@PageTitle(EnvBatView.PAGE_TITLE)
+public class EnvBatView extends Div implements HasUrlParameter<String> {
 
-    public static final String PAGE_TITLE = "WEEE type product card";
-    public static final String ROUTE = EnvMasterDetailView.ROUTE + "-weee";
+    public static final String PAGE_TITLE = "Battery type product card";
+    public static final String ROUTE = EnvMasterDetailView.ROUTE + "-bat";
     public static final String QUERY_PARAM_ID_NAME = "productId";
 
-    private SaveObjectAndBackButtonsDiv saveObjectAndBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save WEEE card");
-    private EnvWeeeEditorDiv weeeEditorDiv = new EnvWeeeEditorDiv();
+    private SaveObjectAndBackButtonsDiv saveObjectAndBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save BAT card");
+    private EnvBatEditorDiv weeeEditorDiv = new EnvBatEditorDiv();
 
-    public EnvWeeeView() {
+    public EnvBatView() {
 
         initSaveButton();
         initBackButton();
