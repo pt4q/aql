@@ -8,6 +8,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import lombok.Getter;
 import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
+import pl.com.pt4q.product_manager.modules.environment.ui.bat.EnvBatView;
+import pl.com.pt4q.product_manager.modules.environment.ui.light_source.EnvLightSourceView;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.detail.EnvMasterDetailView;
 import pl.com.pt4q.product_manager.modules.environment.ui.weee.EnvWeeeView;
 
@@ -76,7 +78,22 @@ class EnvMasterGeneralGridDiv extends Div {
                 .setHeader("WEEE")
                 .setSortable(true)
                 .setAutoWidth(true);
-
+        this.masterGrid
+                .addColumn(envMasterEntity -> envMasterEntity.getLightSource() != null ?
+                        new ComponentRenderer<>(ls -> new Anchor(createLinkWithParam(EnvLightSourceView.ROUTE, EnvLightSourceView.QUERY_PARAM_ID_NAME, envMasterEntity.getId()), "Yes")) :
+                        "No"
+                )
+                .setHeader("LS")
+                .setSortable(true)
+                .setAutoWidth(true);
+        this.masterGrid
+                .addColumn(envMasterEntity -> envMasterEntity.getBattery() != null ?
+                        new ComponentRenderer<>(ls -> new Anchor(createLinkWithParam(EnvBatView.ROUTE, EnvBatView.QUERY_PARAM_ID_NAME, envMasterEntity.getId()), "Yes")) :
+                        "No"
+                )
+                .setHeader("BAT")
+                .setSortable(true)
+                .setAutoWidth(true);
 
         this.masterGrid.setWidthFull();
         this.masterGrid.setHeightByRows(true);
