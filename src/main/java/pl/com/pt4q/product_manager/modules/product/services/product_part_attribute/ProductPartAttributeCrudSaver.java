@@ -45,7 +45,7 @@ class ProductPartAttributeCrudSaver {
 
         ProductPartEntity partEntity = partAttribute.getPart();
         ProductEntity productEntity = partEntity.getProduct();
-        log.info(String.format("Created new attribute %s (id:%d) for part %s (id:%d) for product %s (id:%d)",
+        log.info(String.format("Updated attribute %s (id:%d) for part %s (id:%d) for product %s (id:%d)",
                 partAttribute.getAttributeName(),
                 partAttribute.getId(),
                 partEntity.getPartModelOrPartName(),

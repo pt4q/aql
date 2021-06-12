@@ -4,11 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.com.pt4q.product_manager.modules.product.data.manufacturer_address.ManufacturerAddressEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,6 +22,9 @@ public class ManufacturerEntity {
 
     @OneToOne
     private ManufacturerTypeEntity manufacturerType;
+
+    @OneToOne
+    private ManufacturerAddressEntity address;
 
     private String manufacturerName;
     private String description;

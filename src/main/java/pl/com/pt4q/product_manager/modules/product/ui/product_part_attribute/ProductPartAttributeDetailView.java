@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute.ProductPartAttributeEntity;
-import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute_value_version.ProductPartAttributeValueVersionEntity;
+import pl.com.pt4q.product_manager.modules.product.data.product_part_attribute_version.ProductPartAttributeVersionEntity;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartCreatorService;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartAttributeNotFoundException;
@@ -19,13 +19,16 @@ import pl.com.pt4q.product_manager.modules.product.services.product_part_attribu
 import pl.com.pt4q.product_manager.modules.product.services.product_part_attribute.ProductPartAttributeFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.product_part_attribute.ProductPartAttributeUpdaterService;
 import pl.com.pt4q.product_manager.modules.product.services.product_part_attribute.exceptions.ProductPartAttributeAlreadyExistsException;
+import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
+import pl.com.pt4q.product_manager.modules.product.services.unit.UnitsComboBoxManager;
 import pl.com.pt4q.product_manager.modules.product.ui.product_part.ProductPartDetailView;
-import pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute_value_version.ProductPartAttributeValueVersionDetailView;
+import pl.com.pt4q.product_manager.modules.product.ui.product_part_attribute_version.ProductPartAttributeVersionDetailView;
 import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Route(value = ProductPartAttributeDetailView.ROUTE, layout = MainView.class)
@@ -38,21 +41,25 @@ public class ProductPartAttributeDetailView extends Div implements HasUrlParamet
 
     private SaveObjectAndBackButtonsDiv saveObjectAndBackButtonsDiv;
     private ProductPartAttributeEditorDiv productPartAttributeEditorDiv;
-    private ProductPartAttributeValueVersionsDiv productPartAttributeValueVersionsDiv;
+    private ProductPartAttributeVersionsGridDiv productPartAttributeVersionsGridDiv;
+
+    private UnitCrudService unitCrudService;
 
     private ProductPartCreatorService productPartCreatorService;
     private ProductPartAttributeFinderService productPartAttributeFinderService;
     private ProductPartAttributeCreatorService productPartAttributeCreatorService;
     private ProductPartAttributeUpdaterService productPartAttributeUpdaterService;
-
+    // todo: Add attributeUnits and attributeValueType (decimal, float, text etc)
     private ProductPartAttributeEntity productPartAttribute;
 
     @Autowired
-    public ProductPartAttributeDetailView(ProductPartCreatorService productPartCreatorService,
+    public ProductPartAttributeDetailView(UnitCrudService unitCrudService,
+                                          ProductPartCreatorService productPartCreatorService,
                                           ProductPartAttributeFinderService productPartAttributeFinderService,
                                           ProductPartAttributeCreatorService productPartAttributeCreatorService,
                                           ProductPartAttributeUpdaterService productPartAttributeUpdaterService) {
 
+        this.unitCrudService = unitCrudService;
         this.productPartCreatorService = productPartCreatorService;
         this.productPartAttributeFinderService = productPartAttributeFinderService;
         this.productPartAttributeCreatorService = productPartAttributeCreatorService;
@@ -62,7 +69,9 @@ public class ProductPartAttributeDetailView extends Div implements HasUrlParamet
 
         this.saveObjectAndBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save attribute");
         this.productPartAttributeEditorDiv = new ProductPartAttributeEditorDiv(this.productPartAttribute);
-        this.productPartAttributeValueVersionsDiv = new ProductPartAttributeValueVersionsDiv(this.productPartAttribute);
+        this.productPartAttributeVersionsGridDiv = new ProductPartAttributeVersionsGridDiv(this.productPartAttribute);
+
+        initUnitsComboBox();
 
         initSaveButtonListener();
         initBackButtonListener();
@@ -71,7 +80,7 @@ public class ProductPartAttributeDetailView extends Div implements HasUrlParamet
         VerticalLayout layout = new VerticalLayout(
                 saveObjectAndBackButtonsDiv,
                 productPartAttributeEditorDiv,
-                productPartAttributeValueVersionsDiv
+                productPartAttributeVersionsGridDiv
         );
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
         layout.setWidthFull();
@@ -110,10 +119,15 @@ public class ProductPartAttributeDetailView extends Div implements HasUrlParamet
                 saveAttributeToContext(this.productPartAttribute);
                 populatePartAttributeForm(this.productPartAttribute);
                 refreshPartAttributeVersions(this.productPartAttribute);
+
             } catch (ProductPartAttributeNotFoundException ignored) {
                 log.warn(String.format("%s: GET parameter is incorrect - %s=%d", PAGE_TITLE, QUERY_PARAM_ID_NAME, id));
             }
         }
+    }
+
+    private void initUnitsComboBox() {
+        this.productPartAttributeEditorDiv.setUnitComboBoxOptions(unitCrudService.getAll());
     }
 
     private void initSaveButtonListener() {
@@ -136,11 +150,10 @@ public class ProductPartAttributeDetailView extends Div implements HasUrlParamet
                     log.error(String.format("%s: save button action error - %s", PAGE_TITLE, ex.getMessage()));
                 }
             }
-            log.error(String.format("%s: save button action error - %s", PAGE_TITLE, partAttributeFromForm.toString()));
         });
     }
 
-    private ProductPartEntity createProductPartIfNotCreatedYet(ProductPartEntity productPart){
+    private ProductPartEntity createProductPartIfNotCreatedYet(ProductPartEntity productPart) {
         if (productPart.getId() == null) {
             try {
                 productPart = productPartCreatorService.create(productPart);
@@ -154,15 +167,19 @@ public class ProductPartAttributeDetailView extends Div implements HasUrlParamet
     }
 
     private void initBackButtonListener() {
-        ProductPartEntity productPart = this.productPartAttribute.getPart();
-        this.saveObjectAndBackButtonsDiv.createBackButtonClickListenerWithSaveObjectFromContext(ProductPartDetailView.ROUTE, ProductPartEntity.class, productPart);
+        this.saveObjectAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
+            ProductPartEntity productPart = this.productPartAttribute.getPart();
+            UI ui = UI.getCurrent();
+            ComponentUtil.setData(ui, ProductPartEntity.class, productPart);
+            ui.navigate(ProductPartDetailView.ROUTE);
+        });
     }
 
     private void initAddNewAttributeVersion() {
-        this.productPartAttributeValueVersionsDiv.getAddNewValueVersionButton().addClickListener(buttonClickEvent -> {
+        this.productPartAttributeVersionsGridDiv.getAddNewValueVersionButton().addClickListener(buttonClickEvent -> {
             UI ui = UI.getCurrent();
-            ComponentUtil.setData(ui, ProductPartAttributeValueVersionEntity.class, ProductPartAttributeValueVersionEntity.builder().partAttribute(this.productPartAttribute).build());
-            ui.navigate(ProductPartAttributeValueVersionDetailView.ROUTE);
+            ComponentUtil.setData(ui, ProductPartAttributeVersionEntity.class, ProductPartAttributeVersionEntity.builder().partAttribute(this.productPartAttribute).build());
+            ui.navigate(ProductPartAttributeVersionDetailView.ROUTE);
         });
     }
 }

@@ -38,8 +38,8 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
     public static final String QUERY_PARAM_ID_NAME = "productId";
 
     private SaveObjectAndBackButtonsDiv saveProductOrBackButtonsDiv;
-    private ProductDetailFormDiv productDetailFormDiv;
-    private ProductPartsDiv productPartsDiv;
+    private ProductDetailEditorDiv productDetailEditorDiv;
+    private ProductPartsGridDiv productPartsGridDiv;
 
     private ProductCategoryCrudService productCategoryCrudService;
     private ManufacturerCrudService manufacturerCrudService;
@@ -66,20 +66,20 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
         this.product = getProductFromContextOrCreateNewEmptyInstance();
 
         saveProductOrBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save product");
-        productDetailFormDiv = new ProductDetailFormDiv(this.product, productCategoryCrudService, manufacturerCrudService);
-        productPartsDiv = new ProductPartsDiv();
+        productDetailEditorDiv = new ProductDetailEditorDiv(this.product, productCategoryCrudService, manufacturerCrudService);
+        productPartsGridDiv = new ProductPartsGridDiv();
 
         initSaveButtonActionListener();
         initBackButtonActionListener();
-        initAddNewAttributeAction();
+        initAddNewPartAction();
 
         populateProductForm(product);
         refreshPartsGrid(product);
 
         VerticalLayout pageLayout = new VerticalLayout(
                 saveProductOrBackButtonsDiv,
-                productDetailFormDiv,
-                productPartsDiv
+                productDetailEditorDiv,
+                productPartsGridDiv
         );
         pageLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         add(pageLayout);
@@ -96,12 +96,12 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
 
     private void populateProductForm(ProductEntity product) {
         if (product.getProductSku() != null)
-            this.productDetailFormDiv.populateForm(product);
+            this.productDetailEditorDiv.populateForm(product);
     }
 
     private void refreshPartsGrid(ProductEntity product) {
         try {
-            this.productPartsDiv.refreshGrid(productPartFinderService.findAllProductPartsByProduct(product));
+            this.productPartsGridDiv.refreshGrid(productPartFinderService.findAllProductPartsByProduct(product));
         } catch (ProductPartNotFoundException e) {
         }
     }
@@ -143,12 +143,16 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
         });
     }
 
-    private void initBackButtonActionListener(){
-        this.saveProductOrBackButtonsDiv.createBackButtonClickListenerWithRemoveObjectFromContext(ProductsGeneralView.ROUTE, ProductEntity.class);
+    private void initBackButtonActionListener() {
+        this.saveProductOrBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
+            UI ui = UI.getCurrent();
+            ComponentUtil.setData(ui, ProductEntity.class, null);
+            ui.navigate(ProductsGeneralView.ROUTE);
+        });
     }
 
-    private void initAddNewAttributeAction(){
-        this.productPartsDiv.getAddNewPartButton().addClickListener(buttonClickEvent -> {
+    private void initAddNewPartAction() {
+        this.productPartsGridDiv.getAddNewPartButton().addClickListener(buttonClickEvent -> {
             UI ui = UI.getCurrent();
 
             ProductEntity productFromContext = ComponentUtil.getData(ui, ProductEntity.class);
@@ -161,7 +165,7 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
         });
     }
 
-    private String showNotification(String message){
+    private String showNotification(String message) {
         String theWholeMessage = String.format("%s: %s", ProductDetailView.PAGE_TITLE, message);
         Notification.show(theWholeMessage);
         return theWholeMessage;

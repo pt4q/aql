@@ -35,7 +35,7 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
 
     private SaveObjectAndBackButtonsDiv saveProductPartOrBackButtonsDiv;
     private ProductPartFormDiv productPartFormDiv;
-    private ProductPartAttributesDiv productPartAttributesDiv;
+    private ProductPartAttributesGridDiv productPartAttributesGridDiv;
 
     private ProductSeriesCrudService productSeriesCrudService;
     private ProductPartCreatorService productPartCreatorService;
@@ -63,7 +63,7 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
 
         this.saveProductPartOrBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save part");
         this.productPartFormDiv = new ProductPartFormDiv(this.productPart);
-        this.productPartAttributesDiv = new ProductPartAttributesDiv(this.productPart, productSeriesCrudService, productPartCreatorService, productPartAttributeFinderService);
+        this.productPartAttributesGridDiv = new ProductPartAttributesGridDiv(this.productPart, productSeriesCrudService, productPartCreatorService, productPartAttributeFinderService);
 
         initSaveButtonAction();
         initBackButtonAction();
@@ -77,7 +77,7 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
         add(
                 saveProductPartOrBackButtonsDiv,
                 productPartFormDiv,
-                productPartAttributesDiv
+                productPartAttributesGridDiv
         );
     }
 
@@ -103,9 +103,9 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
     private void refreshPartAttributesGrid(ProductPartEntity part) {
 //        this.partAttributesDiv.refreshAttributesGrid(part);
         try {
-            this.productPartAttributesDiv.refreshGrid(productPartAttributeFinderService.findAllProductPartsAttributesByProductPart(part));
+            this.productPartAttributesGridDiv.refreshGrid(productPartAttributeFinderService.findAllProductPartsAttributesByProductPart(part));
         } catch (ProductPartAttributeNotFoundException e) {
-            this.productPartAttributesDiv.refreshGrid(Collections.emptyList());
+            this.productPartAttributesGridDiv.refreshGrid(Collections.emptyList());
         }
     }
 

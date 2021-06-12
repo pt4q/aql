@@ -4,26 +4,25 @@ import pl.com.pt4q.product_manager.modules.test_card.data.test_card.TestCardEnti
 import pl.com.pt4q.product_manager.modules.product.services.product_category.ProductCategoryCrudService;
 import pl.com.pt4q.product_manager.modules.test_card.services.test_card.TestCardFinder;
 import pl.com.pt4q.product_manager.views.main.MainView;
-import pl.com.pt4q.product_manager.modules.product.ui.product_category.ProductCategoryFilterDiv;
+import pl.com.pt4q.product_manager.view_utils.FilterTextFieldDiv;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteAlias;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 @Route(value = TestCardsMainView.ROUTE, layout = MainView.class)
-@RouteAlias(value = "", layout = MainView.class)
+//@RouteAlias(value = "", layout = MainView.class)
 @PageTitle(TestCardsMainView.PAGE_TITLE)
 public class TestCardsMainView extends VerticalLayout {
 
     public static final String PAGE_TITLE = "Test cards";
     public static final String ROUTE = "test-cards";
 
-    private ProductCategoryFilterDiv productCategoryFiler;
+    private FilterTextFieldDiv productCategoryFiler;
     private AddNewTestCardToGridDiv addNewTestCardToGridDiv;
     private TestCardsGridDiv testCardsGrid;
 
@@ -39,7 +38,7 @@ public class TestCardsMainView extends VerticalLayout {
         this.productCategoryCrudService = productCategoryCrudService;
         this.testCardFinder = testCardFinder;
 
-        this.productCategoryFiler = new ProductCategoryFilterDiv();
+        this.productCategoryFiler = new FilterTextFieldDiv("Filter by product category");
         this.addNewTestCardToGridDiv = new AddNewTestCardToGridDiv();
         this.testCardsGrid = new TestCardsGridDiv(this.testCardFinder);
 
