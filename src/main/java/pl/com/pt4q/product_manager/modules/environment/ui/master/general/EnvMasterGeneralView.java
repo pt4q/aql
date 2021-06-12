@@ -10,7 +10,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import lombok.extern.log4j.Log4j2;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.detail.EnvMasterDetailView;
-import pl.com.pt4q.product_manager.modules.environment.ui.master.general.report.EnvMasterReportView;
+import pl.com.pt4q.product_manager.modules.environment.ui.master_general_report.EnvMasterReportView;
 import pl.com.pt4q.product_manager.view_utils.FilterComboBoxDiv;
 import pl.com.pt4q.product_manager.view_utils.FilterTextFieldDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;

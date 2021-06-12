@@ -9,6 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import pl.com.pt4q.product_manager.modules.environment.ui.bat.EnvBatView;
 import pl.com.pt4q.product_manager.modules.environment.ui.light_source.EnvLightSourceView;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.general.EnvMasterGeneralView;
+import pl.com.pt4q.product_manager.modules.environment.ui.pack.EnvPackView;
 import pl.com.pt4q.product_manager.modules.environment.ui.weee.EnvWeeeView;
 import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
@@ -68,7 +69,8 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
 
     private void initAddPackButton(){
         this.buttonsDiv.getAddPackButton().addClickListener(buttonClickEvent -> {
-
+            UI ui = UI.getCurrent();
+            ui.navigate(EnvPackView.ROUTE);
         });
     }
 

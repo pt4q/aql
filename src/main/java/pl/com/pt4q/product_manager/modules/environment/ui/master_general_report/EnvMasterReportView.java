@@ -1,4 +1,4 @@
-package pl.com.pt4q.product_manager.modules.environment.ui.master.general.report;
+package pl.com.pt4q.product_manager.modules.environment.ui.master_general_report;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;

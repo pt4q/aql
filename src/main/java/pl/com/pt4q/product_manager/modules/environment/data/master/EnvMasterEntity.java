@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.com.pt4q.product_manager.modules.environment.data.bat.EnvBatteryEntity;
 import pl.com.pt4q.product_manager.modules.environment.data.light_source.EnvLightSourceEntity;
+import pl.com.pt4q.product_manager.modules.environment.data.pack.EnvPackagingEntity;
 import pl.com.pt4q.product_manager.modules.environment.data.weee.EnvWeeeEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
@@ -42,10 +43,11 @@ public class EnvMasterEntity {
     @OneToOne(mappedBy = "master")
     private EnvLightSourceEntity lightSource;
 
-@OneToOne(mappedBy = "master")
+    @OneToOne(mappedBy = "master")
     private EnvBatteryEntity battery;
-//
-//    private EnvPackagingEntity packaging;
+
+    @OneToOne(mappedBy = "master")
+    private EnvPackagingEntity packaging;
 
 //    private boolean copyright;
 

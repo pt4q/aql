@@ -94,6 +94,14 @@ class EnvMasterGeneralGridDiv extends Div {
                 .setHeader("BAT")
                 .setSortable(true)
                 .setAutoWidth(true);
+        this.masterGrid
+                .addColumn(envMasterEntity -> envMasterEntity.getPackaging() != null ?
+                        new ComponentRenderer<>(ls -> new Anchor(createLinkWithParam(EnvBatView.ROUTE, EnvBatView.QUERY_PARAM_ID_NAME, envMasterEntity.getId()), "Yes")) :
+                        "No"
+                )
+                .setHeader("PACK")
+                .setSortable(true)
+                .setAutoWidth(true);
 
         this.masterGrid.setWidthFull();
         this.masterGrid.setHeightByRows(true);
