@@ -69,6 +69,10 @@ class EnvMasterDetailEditorDiv extends Div {
     }
 
     private void initBinder(){
-
+//        this.masterBinder.forField(productComboBox)
+//                .bind(
+//                        masterEntity -> masterEntity.getProduct().getProductSku(),
+//                        (masterEntity, s) -> masterEntity.setProduct()
+//                        );
     }
 }

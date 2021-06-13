@@ -1,13 +1,10 @@
 package pl.com.pt4q.product_manager.modules.product.ui.product.detail;
 
 
-import com.vaadin.flow.component.ComponentUtil;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
-import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
+import pl.com.pt4q.product_manager.modules.product_parts.data.product_part.ProductPartEntity;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
@@ -15,7 +12,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import lombok.Data;
-import pl.com.pt4q.product_manager.modules.product.ui.product_part.ProductPartDetailView;
+import pl.com.pt4q.product_manager.modules.product_parts.ui.product_part.ProductPartDetailView;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;

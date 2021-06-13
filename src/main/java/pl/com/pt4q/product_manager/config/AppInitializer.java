@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import pl.com.pt4q.product_manager.modules.product.data.manufacturer.ManufacturerEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_category.ProductCategoryEntity;
-import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
+import pl.com.pt4q.product_manager.modules.product_parts.data.product_part.ProductPartEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_series.ProductSeriesEntity;
 import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
 import pl.com.pt4q.product_manager.modules.product.data.unit.UnitTypeEnum;

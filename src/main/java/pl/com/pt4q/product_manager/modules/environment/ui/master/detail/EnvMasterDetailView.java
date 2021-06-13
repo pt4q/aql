@@ -6,6 +6,10 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
+import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterCreatorService;
+import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterFinderService;
 import pl.com.pt4q.product_manager.modules.environment.ui.bat.EnvBatView;
 import pl.com.pt4q.product_manager.modules.environment.ui.light_source.EnvLightSourceView;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.general.EnvMasterGeneralView;
@@ -25,9 +29,20 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
 
     private SaveObjectAndBackButtonsDiv saveObjectAndBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save master card");
     private EnvMasterDetailEditorDiv masterDetailEditorDiv = new EnvMasterDetailEditorDiv();
-    private AddEnvCardsButtonsDiv buttonsDiv = new AddEnvCardsButtonsDiv();
+    private AddAdditionalEnvCardsButtonsDiv buttonsDiv = new AddAdditionalEnvCardsButtonsDiv();
 
-    public EnvMasterDetailView() {
+    private EnvMasterFinderService masterFinderService;
+    private EnvMasterCreatorService masterCreatorService;
+
+    private EnvMasterEntity masterEntity;
+
+    @Autowired
+    public EnvMasterDetailView(EnvMasterFinderService masterFinderService,
+                               EnvMasterCreatorService masterCreatorService) {
+
+        this.masterFinderService = masterFinderService;
+        this.masterCreatorService = masterCreatorService;
+
         initAddWeeButton();
         initAddLightSourceButton();
         initAddBatButton();
@@ -74,15 +89,20 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
         });
     }
 
-    private void initSaveButton(){
-
-    }
-
     private void initBackButton(){
         this.saveObjectAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
             UI ui= UI.getCurrent();
             ui.navigate(EnvMasterGeneralView.ROUTE);
         });
+    }
+
+    private void initSaveButton(){
+        this.saveObjectAndBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> ){
+            UI ui = UI.getCurrent();
+
+            this.masterEntity = masterDetailEditorDiv.getMasterBinder().getBean();
+
+        }
     }
 
     @Override

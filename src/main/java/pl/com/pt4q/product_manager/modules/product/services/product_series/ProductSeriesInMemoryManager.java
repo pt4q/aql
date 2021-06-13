@@ -2,8 +2,6 @@ package pl.com.pt4q.product_manager.modules.product.services.product_series;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import pl.com.pt4q.product_manager.modules.product.data.product_category.ProductCategoryEntity;
-import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_series.ProductSeriesEntity;
 
 import java.util.List;
