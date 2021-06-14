@@ -146,7 +146,7 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
     private void initBackButtonActionListener() {
         this.saveProductOrBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
             UI ui = UI.getCurrent();
-            ComponentUtil.setData(ui, ProductEntity.class, null);
+            saveProductToContext(null);
             ui.navigate(ProductsGeneralView.ROUTE);
         });
     }

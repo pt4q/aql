@@ -42,6 +42,7 @@ class ProductDetailEditorDiv extends Div {
 
         this.product = product;
 
+        //TODO change in memory manager to crud
         this.categoriesInMemoryListManager = new ProductCategoriesInMemoryManager(productCategoryCrudService.getAll());
         this.manufacturersInMemoryManager = new ManufacturersInMemoryManager(manufacturerCrudService.getAll());
 
