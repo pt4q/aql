@@ -36,7 +36,7 @@ class EnvMasterGeneralGridDiv extends Div {
 
         this.masterGrid
                 .addColumn(new ComponentRenderer<>(envMasterEntity ->
-                        new Anchor(createLinkWithParam(EnvMasterDetailView.ROUTE, EnvMasterDetailView.QUERY_PARAM_ID_NAME, envMasterEntity.getId()), envMasterEntity.getProduct().getProductSku())))
+                        new Anchor(createLinkWithParam(EnvMasterDetailView.ROUTE, EnvMasterDetailView.QUERY_PARAM_ID_NAME, envMasterEntity.getId()), envMasterEntity.getProduct().getSku())))
                 .setHeader("Product SKU")
                 .setSortable(true)
                 .setAutoWidth(true);

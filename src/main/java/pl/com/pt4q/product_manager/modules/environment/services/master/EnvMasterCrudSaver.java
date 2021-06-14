@@ -18,7 +18,7 @@ class EnvMasterCrudSaver {
         ProductEntity productEntity = masterEntity.getProduct();
         log.info(String.format("Master card (id:%d) has been created for product %s (id:%d)",
                 masterEntity.getId(),
-                productEntity.getProductSku(),
+                productEntity.getSku(),
                 productEntity.getId())
         );
         return masterEntity;
@@ -29,7 +29,7 @@ class EnvMasterCrudSaver {
         ProductEntity productEntity = masterEntity.getProduct();
         log.info(String.format("Master card (id:%d) has been updated for product %s (id:%d)",
                 masterEntity.getId(),
-                productEntity.getProductSku(),
+                productEntity.getSku(),
                 productEntity.getId())
         );
         return masterEntity;

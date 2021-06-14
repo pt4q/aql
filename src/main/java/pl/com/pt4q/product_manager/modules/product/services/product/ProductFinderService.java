@@ -31,6 +31,10 @@ public class ProductFinderService {
         }
     }
 
+    public Optional<ProductEntity> findBySku(String sku){
+        return productCrudRepository.findBySku(sku);
+    }
+
     public List<ProductEntity> findAll(){
         return productCrudRepository.findAll();
     }

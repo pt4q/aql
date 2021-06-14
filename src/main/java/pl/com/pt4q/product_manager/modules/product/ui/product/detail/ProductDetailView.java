@@ -95,7 +95,7 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
     }
 
     private void populateProductForm(ProductEntity product) {
-        if (product.getProductSku() != null)
+        if (product.getSku() != null)
             this.productDetailEditorDiv.populateForm(product);
     }
 
@@ -130,12 +130,12 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
             try {
                 this.product = productCreatorAndUpdaterService.add(product);
                 saveProductToContext(this.product);
-                showNotification(String.format("The product %s has been created", product.getProductSku()));
+                showNotification(String.format("The product %s has been created", product.getSku()));
             } catch (ProductValidatorException | ProductAlreadyExistsException e) {
                 try {
                     this.product = productCreatorAndUpdaterService.updateExisting(product);
                     saveProductToContext(this.product);
-                    showNotification(String.format("The product %s has been updated", product.getProductSku()));
+                    showNotification(String.format("The product %s has been updated", product.getSku()));
                 } catch (ProductValidatorException ex) {
                     log.error(showNotification(ex.getMessage()));
                 }

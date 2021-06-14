@@ -134,12 +134,12 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
                 ProductPartEntity partFromForm = this.productPartFormDiv.getPartFromForm();
                 this.productPart = productPartCreatorService.create(partFromForm);
 
-                Notification.show(String.format("The part %s has been saved in the product %s", productPart.getPartModelOrPartName(), productPart.getProduct().getProductSku()));
+                Notification.show(String.format("The part %s has been saved in the product %s", productPart.getPartModelOrPartName(), productPart.getProduct().getSku()));
             } catch (ProductPartAlreadyExistsException e) {
                 try {
                     this.productPart = productPartUpdaterService.update(productPart);
 
-                    Notification.show(String.format("The part %s has been updated in the product %s", productPart.getPartModelOrPartName(), productPart.getProduct().getProductSku()));
+                    Notification.show(String.format("The part %s has been updated in the product %s", productPart.getPartModelOrPartName(), productPart.getProduct().getSku()));
                 } catch (ProductPartNotFoundException ex) {
                     Notification.show(String.format("Can't save part because: %s", ex.getMessage()));
                 }

@@ -25,7 +25,7 @@ public class ProductEntity {
     private ProductCategoryEntity productCategory;
     @ManyToOne
     private ManufacturerEntity manufacturer;
-    private String productSku;
+    private String sku;
 
     private String descriptionPL;
     private String descriptionENG;

@@ -25,7 +25,7 @@ class ProductPartCrudSaver {
             log.info(String.format("Created new part %s (id:%d) for %s product (id:%d)",
                     part.getPartModelOrPartName(),
                     part.getId(),
-                    part.getProduct().getProductSku(),
+                    part.getProduct().getSku(),
                     part.getProduct().getId()
             ));
             return part;
@@ -39,7 +39,7 @@ class ProductPartCrudSaver {
         log.info(String.format("Updated part %s (id:%d) for %s product (id:%d)",
                 part.getPartModelOrPartName(),
                 part.getId(),
-                part.getProduct().getProductSku(),
+                part.getProduct().getSku(),
                 part.getProduct().getId()
         ));
         return part;

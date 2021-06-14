@@ -139,7 +139,7 @@ public class ProductPartAttributeDetailView extends Div implements HasUrlParamet
                         PAGE_TITLE,
                         partAttributeFromForm.getAttributeName(),
                         productPartFromPartAttribute.getPartModelOrPartName(),
-                        productPartFromPartAttribute.getProduct().getProductSku()
+                        productPartFromPartAttribute.getProduct().getSku()
                 ));
             } catch (ProductPartAttributeAlreadyExistsException e) {
                 try {

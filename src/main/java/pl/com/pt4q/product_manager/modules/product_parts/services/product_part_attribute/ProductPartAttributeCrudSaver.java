@@ -31,7 +31,7 @@ class ProductPartAttributeCrudSaver {
                     partAttribute.getId(),
                     partEntity.getPartModelOrPartName(),
                     partEntity.getId(),
-                    productEntity.getProductSku(),
+                    productEntity.getSku(),
                     productEntity.getId()
             ));
             return partAttribute;
@@ -50,7 +50,7 @@ class ProductPartAttributeCrudSaver {
                 partAttribute.getId(),
                 partEntity.getPartModelOrPartName(),
                 partEntity.getId(),
-                productEntity.getProductSku(),
+                productEntity.getSku(),
                 productEntity.getId()
         ));
         return partAttribute;

@@ -12,6 +12,11 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import lombok.Getter;
 import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
+import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
+import pl.com.pt4q.product_manager.modules.product.services.product.ProductFinderService;
+import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
+
+import java.util.Optional;
 
 @Getter
 class EnvMasterDetailEditorDiv extends Div {
@@ -25,7 +30,17 @@ class EnvMasterDetailEditorDiv extends Div {
 
     private Binder<EnvMasterEntity> masterBinder = new Binder<>();
 
-    public EnvMasterDetailEditorDiv() {
+    private ProductFinderService productFinderService;
+    private UnitCrudService unitCrudService;
+
+//    private EnvMasterEntity masterEntity;
+
+    public EnvMasterDetailEditorDiv(ProductFinderService productFinderService,
+                                    UnitCrudService unitCrudService) {
+
+        this.productFinderService = productFinderService;
+        this.unitCrudService = unitCrudService;
+
         initFields();
         initBinder();
 
@@ -68,11 +83,38 @@ class EnvMasterDetailEditorDiv extends Div {
         this.grossWeightUnitComboBox.setMinWidth("10%");
     }
 
-    private void initBinder(){
-//        this.masterBinder.forField(productComboBox)
-//                .bind(
-//                        masterEntity -> masterEntity.getProduct().getProductSku(),
-//                        (masterEntity, s) -> masterEntity.setProduct()
-//                        );
+    private void initBinder() {
+        this.masterBinder.forField(productComboBox)
+                .bind(
+                        masterEntity -> masterEntity.getProduct().getSku(),
+                        (masterEntity, s) -> productFinderService.findBySku(s).ifPresent(masterEntity::setProduct)
+                );
+        this.masterBinder.forField(productDescriptionTextArea)
+                .bind(
+                        masterEntity -> masterEntity.getProduct().getDescriptionENG(),
+                        (masterEntity, s) -> masterEntity.getProduct().setDescriptionENG(s)
+                        );
+        this.masterBinder.forField(validFromDatePicker)
+                .asRequired("Valid from date can't be empty")
+                .bind(EnvMasterEntity::getValidFrom, EnvMasterEntity::setValidFrom);
+        this.masterBinder.forField(validToDatePicker)
+                .bind(EnvMasterEntity::getValidTo, EnvMasterEntity::setValidTo);
+        this.masterBinder.forField(grossWeightNumberField)
+                .asRequired("")
+                .bind(EnvMasterEntity::getGrossWeight, EnvMasterEntity::setGrossWeight);
+        this.masterBinder.forField(grossWeightUnitComboBox)
+                .bind(
+                        masterEntity -> masterEntity.getGrossWeightUnit().getUnits(),
+                        (masterEntity, s) -> unitCrudService.findByUnits(s).ifPresent(masterEntity::setGrossWeightUnit)
+                );
+    }
+
+    private void cleanForm() {
+        populateForm(null);
+    }
+
+    public void populateForm(EnvMasterEntity masterEntity) {
+//        this.masterEntity = masterEntity;
+        masterBinder.readBean(masterEntity);
     }
 }

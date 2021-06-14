@@ -42,6 +42,15 @@ public class UnitCrudService implements CustomCrudServiceInterface<UnitEntity, L
         throw new UnitNotFoundException(String.format("Unit id: %d", id));
     }
 
+    public Optional<UnitEntity> findByUnits(String units){
+        return unitCrudRepository.findByUnits(units);
+    }
+
+    @Override
+    public List<UnitEntity> getAll() {
+        return unitCrudRepository.findAll();
+    }
+
     @Override
     public UnitEntity updateOrThrow(UnitEntity unit) throws UnitNotFoundException {
         getByIdOrThrow(unit.getId());
@@ -55,11 +64,6 @@ public class UnitCrudService implements CustomCrudServiceInterface<UnitEntity, L
         if(unit.getDecimalPlaces() == null)
             unit.setDecimalPlaces(0);
         return unit;
-    }
-
-    @Override
-    public List<UnitEntity> getAll() {
-        return unitCrudRepository.findAll();
     }
 
 }

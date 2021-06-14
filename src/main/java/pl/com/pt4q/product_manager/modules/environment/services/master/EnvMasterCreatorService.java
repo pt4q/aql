@@ -26,7 +26,7 @@ public class EnvMasterCreatorService {
         }
         throw new EnvMasterAlreadyExistsException(String.format("Master card (id: %d) for product %s (id: %d) already exists",
                 envMasterEntity.getId(),
-                productEntity != null ? productEntity.getProductSku() : null,
+                productEntity != null ? productEntity.getSku() : null,
                 productEntity != null ? productEntity.getId() : null
         ));
     }

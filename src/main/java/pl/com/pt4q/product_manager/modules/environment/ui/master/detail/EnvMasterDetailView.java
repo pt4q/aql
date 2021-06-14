@@ -15,6 +15,8 @@ import pl.com.pt4q.product_manager.modules.environment.ui.light_source.EnvLightS
 import pl.com.pt4q.product_manager.modules.environment.ui.master.general.EnvMasterGeneralView;
 import pl.com.pt4q.product_manager.modules.environment.ui.pack.EnvPackView;
 import pl.com.pt4q.product_manager.modules.environment.ui.weee.EnvWeeeView;
+import pl.com.pt4q.product_manager.modules.product.services.product.ProductFinderService;
+import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
 import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
@@ -27,9 +29,12 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
     public static final String ROUTE = EnvMasterGeneralView.ROUTE + "-detail";
     public static final String QUERY_PARAM_ID_NAME = "masterId";
 
-    private SaveObjectAndBackButtonsDiv saveObjectAndBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save master card");
-    private EnvMasterDetailEditorDiv masterDetailEditorDiv = new EnvMasterDetailEditorDiv();
-    private AddAdditionalEnvCardsButtonsDiv buttonsDiv = new AddAdditionalEnvCardsButtonsDiv();
+    private SaveObjectAndBackButtonsDiv saveObjectAndBackButtonsDiv;
+    private EnvMasterDetailEditorDiv masterDetailEditorDiv;
+    private AddAdditionalEnvCardsButtonsDiv buttonsDiv;
+
+    private ProductFinderService productFinderService;
+    private UnitCrudService unitCrudService;
 
     private EnvMasterFinderService masterFinderService;
     private EnvMasterCreatorService masterCreatorService;
@@ -37,11 +42,21 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
     private EnvMasterEntity masterEntity;
 
     @Autowired
-    public EnvMasterDetailView(EnvMasterFinderService masterFinderService,
+    public EnvMasterDetailView(ProductFinderService productFinderService,
+                               UnitCrudService unitCrudService,
+                               EnvMasterFinderService masterFinderService,
                                EnvMasterCreatorService masterCreatorService) {
 
+        this.productFinderService = productFinderService;
+        this.unitCrudService = unitCrudService;
         this.masterFinderService = masterFinderService;
         this.masterCreatorService = masterCreatorService;
+
+        this.saveObjectAndBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save master card");
+        this.masterDetailEditorDiv = new EnvMasterDetailEditorDiv(this.productFinderService, this.unitCrudService);
+        this.buttonsDiv = new AddAdditionalEnvCardsButtonsDiv();
+
+
 
         initAddWeeButton();
         initAddLightSourceButton();
@@ -61,49 +76,51 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
     }
 
 
-    private void initAddWeeButton(){
+    private void initAddWeeButton() {
         this.buttonsDiv.getAddWeeButton().addClickListener(buttonClickEvent -> {
             UI ui = UI.getCurrent();
             ui.navigate(EnvWeeeView.ROUTE);
         });
     }
 
-    private void initAddLightSourceButton(){
+    private void initAddLightSourceButton() {
         this.buttonsDiv.getAddLightSourceButton().addClickListener(buttonClickEvent -> {
             UI ui = UI.getCurrent();
             ui.navigate(EnvLightSourceView.ROUTE);
         });
     }
 
-    private void initAddBatButton(){
+    private void initAddBatButton() {
         this.buttonsDiv.getAddBatButton().addClickListener(buttonClickEvent -> {
             UI ui = UI.getCurrent();
             ui.navigate(EnvBatView.ROUTE);
         });
     }
 
-    private void initAddPackButton(){
+    private void initAddPackButton() {
         this.buttonsDiv.getAddPackButton().addClickListener(buttonClickEvent -> {
             UI ui = UI.getCurrent();
             ui.navigate(EnvPackView.ROUTE);
         });
     }
 
-    private void initBackButton(){
+    private void initBackButton() {
         this.saveObjectAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
-            UI ui= UI.getCurrent();
+            UI ui = UI.getCurrent();
             ui.navigate(EnvMasterGeneralView.ROUTE);
         });
     }
 
-    private void initSaveButton(){
-        this.saveObjectAndBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> ){
-            UI ui = UI.getCurrent();
+    private void initSaveButton() {
 
-            this.masterEntity = masterDetailEditorDiv.getMasterBinder().getBean();
+        this.saveObjectAndBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
+                    this.masterEntity = masterDetailEditorDiv.getMasterBinder().getBean();
+                    UI ui = UI.getCurrent();
+                }
 
-        }
+        );
     }
+
 
     @Override
     public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String s) {

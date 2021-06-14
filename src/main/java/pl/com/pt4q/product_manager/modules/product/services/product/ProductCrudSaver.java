@@ -15,7 +15,7 @@ class ProductCrudSaver {
     public ProductEntity save(ProductEntity product) {
         product = productCrudRepository.save(product);
         log.info(String.format("Product %s (id:%d) with category: %s has been created",
-                product.getProductSku(),
+                product.getSku(),
                 product.getId(),
                 product.getProductCategory().getCategoryName()
         ));
@@ -25,7 +25,7 @@ class ProductCrudSaver {
     public ProductEntity update(ProductEntity product) {
         product = productCrudRepository.save(product);
         log.info(String.format("Product %s (id:%d) with category: %s has been updated",
-                product.getProductSku(),
+                product.getSku(),
                 product.getId(),
                 product.getProductCategory().getCategoryName()
                 )
