@@ -113,6 +113,7 @@ class EnvMasterDetailEditorDiv extends Div {
                 .asRequired("Gross weight can't be empty")
                 .bind(EnvMasterEntity::getGrossWeight, EnvMasterEntity::setGrossWeight);
         this.masterBinder.forField(grossWeightUnitComboBox)
+                .asRequired("Unit can't be empty")
                 .bind(
                         masterEntity -> masterEntity.getGrossWeightUnit() != null ? masterEntity.getGrossWeightUnit().getUnits() : "",
                         (masterEntity, s) -> unitCrudService.findByUnits(s).ifPresent(masterEntity::setGrossWeightUnit)

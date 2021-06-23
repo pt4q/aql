@@ -96,8 +96,8 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
         return masterEntity != null ? masterEntity : new EnvMasterEntity();
     }
 
-    private void saveMasterToContext(EnvMasterEntity masterEntity) {
-        ComponentUtil.setData(UI.getCurrent(), EnvMasterEntity.class, masterEntity);
+    private void saveMasterToContext(UI ui, EnvMasterEntity masterEntity) {
+        ComponentUtil.setData(ui, EnvMasterEntity.class, masterEntity);
     }
 
     private void populateForm(EnvMasterEntity masterEntity) {
@@ -121,30 +121,37 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
 
     private void initAddWeeButton() {
         this.buttonsDiv.getAddWeeButton().addClickListener(buttonClickEvent -> {
-            UI ui = UI.getCurrent();
-            ui.navigate(EnvWeeeView.ROUTE);
+           saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvWeeeView.ROUTE);
         });
     }
 
     private void initAddLightSourceButton() {
         this.buttonsDiv.getAddLightSourceButton().addClickListener(buttonClickEvent -> {
-            UI ui = UI.getCurrent();
-            ui.navigate(EnvLightSourceView.ROUTE);
+            saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvLightSourceView.ROUTE);
         });
     }
 
     private void initAddBatButton() {
         this.buttonsDiv.getAddBatButton().addClickListener(buttonClickEvent -> {
-            UI ui = UI.getCurrent();
-            ui.navigate(EnvBatView.ROUTE);
+            saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvBatView.ROUTE);
         });
     }
 
     private void initAddPackButton() {
         this.buttonsDiv.getAddPackButton().addClickListener(buttonClickEvent -> {
-            UI ui = UI.getCurrent();
-            ui.navigate(EnvPackView.ROUTE);
+            saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvPackView.ROUTE);
         });
+    }
+
+    private void saveMasterToContextIfBinderIsValidAndRouteToEndpoint(String route){
+        Binder<EnvMasterEntity> masterEntityBinder = this.masterDetailEditorDiv.getMasterBinder();
+        masterEntityBinder.validate();
+        if (masterEntityBinder.isValid()) {
+            EnvMasterEntity masterEntityFromForm = masterEntityBinder.getBean();
+            UI ui = UI.getCurrent();
+            ComponentUtil.setData(ui, EnvMasterEntity.class, masterEntityFromForm);
+            ui.navigate(route);
+        }
     }
 
     @Override
@@ -157,7 +164,7 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
             Long id = Long.valueOf(parametersMap.get(QUERY_PARAM_ID_NAME).get(0));
             try {
                 this.masterEntity = masterFinderService.findByIdOrThrowException(id);
-                saveMasterToContext(this.masterEntity);
+                saveMasterToContext(UI.getCurrent(), this.masterEntity);
                 populateForm(this.masterEntity);
             } catch (EnvMasterNotFoundException e) {
                 log.warn(showNotification(e.getMessage()));
@@ -168,7 +175,7 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
     private void initBackButton() {
         this.saveObjectAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
             UI ui = UI.getCurrent();
-            saveMasterToContext(null);
+            saveMasterToContext(ui,null);
             ui.navigate(EnvMasterGeneralView.ROUTE);
         });
     }
