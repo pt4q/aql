@@ -12,6 +12,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import lombok.Getter;
 import pl.com.pt4q.product_manager.modules.environment.data.data_utils.EnvSourceTypeEnum;
+import pl.com.pt4q.product_manager.modules.environment.data.data_utils.EnvSourceTypeEnumWrapper;
 import pl.com.pt4q.product_manager.modules.environment.data.weee.EnvWeeeEntity;
 import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
@@ -104,10 +105,10 @@ class EnvWeeeEditorDiv extends Div {
         this.lengthUnitComboBox.setItems(units);
         this.netWeightUnitComboBox.setItems(units);
 
-        List<String> sourceTypes = Arrays.stream(EnvSourceTypeEnum.values())
-                .map(Enum::name)
-                .collect(Collectors.toList());
-        this.sourceTypeComboBox.setItems(sourceTypes);
+//        List<String> sourceTypes = Arrays.stream(EnvSourceTypeEnum.values())
+//                .map(Enum::name)
+//                .collect(Collectors.toList());
+        this.sourceTypeComboBox.setItems(new EnvSourceTypeEnumWrapper().getUnitsStringsForComboBox());
     }
 
     private void initFields() {
@@ -140,25 +141,17 @@ class EnvWeeeEditorDiv extends Div {
 
     private void initBinder() {
         this.weeeEntityBinder.forField(productTextField)
-                .bind(
-                        envWeeeEntity -> envWeeeEntity.getMaster() != null ? envWeeeEntity.getMaster().getProduct().getSku() : "",
-                        null
-                );
+                .bind(envWeeeEntity -> envWeeeEntity.getMaster() != null ? envWeeeEntity.getMaster().getProduct().getSku() : "",
+                        null);
         this.weeeEntityBinder.forField(productDescriptionTextArea)
-                .bind(
-                        envWeeeEntity -> envWeeeEntity.getMaster() != null ? envWeeeEntity.getMaster().getProduct().getDescriptionPL() : "",
-                        null
-                );
+                .bind(envWeeeEntity -> envWeeeEntity.getMaster() != null ? envWeeeEntity.getMaster().getProduct().getDescriptionPL() : "",
+                        null);
         this.weeeEntityBinder.forField(validFromDatePicker)
-                .bind(
-                        envWeeeEntity -> envWeeeEntity.getMaster() != null ? envWeeeEntity.getMaster().getValidFrom() : null,
-                        null
-                );
+                .bind(envWeeeEntity -> envWeeeEntity.getMaster() != null ? envWeeeEntity.getMaster().getValidFrom() : null,
+                        null);
         this.weeeEntityBinder.forField(validToDatePicker)
-                .bind(
-                        envWeeeEntity -> envWeeeEntity.getMaster() != null ? envWeeeEntity.getMaster().getValidTo() : null,
-                        null
-                );
+                .bind(envWeeeEntity -> envWeeeEntity.getMaster() != null ? envWeeeEntity.getMaster().getValidTo() : null,
+                        null);
 
         this.weeeEntityBinder.forField(itemHeightNumberField)
                 .bind(EnvWeeeEntity::getItemHeight, EnvWeeeEntity::setItemHeight);
@@ -168,20 +161,17 @@ class EnvWeeeEditorDiv extends Div {
                 .bind(EnvWeeeEntity::getItemDepth, EnvWeeeEntity::setItemDepth);
         this.weeeEntityBinder.forField(lengthUnitComboBox)
                 .bind(envWeeeEntity -> envWeeeEntity.getItemLengthUnit() != null ? envWeeeEntity.getItemLengthUnit().getUnits() : "",
-                        (envWeeeEntity, s) -> unitCrudService.findByUnits(s).ifPresent(envWeeeEntity::setItemLengthUnit)
-                );
+                        (envWeeeEntity, s) -> unitCrudService.findByUnits(s).ifPresent(envWeeeEntity::setItemLengthUnit));
 
         this.weeeEntityBinder.forField(netWeightNumberField)
                 .bind(EnvWeeeEntity::getNetWeight, EnvWeeeEntity::setNetWeight);
         this.weeeEntityBinder.forField(netWeightUnitComboBox)
                 .bind(envWeeeEntity -> envWeeeEntity.getNetWeightUnit() != null ? envWeeeEntity.getNetWeightUnit().getUnits() : "",
-                        (envWeeeEntity, s) -> unitCrudService.findByUnits(s).ifPresent(envWeeeEntity::setNetWeightUnit)
-                );
+                        (envWeeeEntity, s) -> unitCrudService.findByUnits(s).ifPresent(envWeeeEntity::setNetWeightUnit));
 
         this.weeeEntityBinder.forField(sourceTypeComboBox)
-                .bind(envWeeeEntity -> envWeeeEntity.getSourceType() != null ? envWeeeEntity.getSourceType().name() : "",
-                        (envWeeeEntity, s) -> EnvSourceTypeEnum.valueOf(s)
-                );
+                .bind(envWeeeEntity -> envWeeeEntity.getSourceType() != null ? new EnvSourceTypeEnumWrapper().getUnitTypeStringFromEnum(envWeeeEntity.getSourceType()) : "",
+                        (envWeeeEntity, s) -> new EnvSourceTypeEnumWrapper().getUnitTypeFromString(s));
 
         this.weeeEntityBinder.setBean(new EnvWeeeEntity());
     }

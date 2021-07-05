@@ -101,10 +101,15 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
             if (formBinder.isValid()){
                 try {
                     this.envWeeeEntity = envWeeeSaverService.create(formBinder.getBean());
+                    this.envMasterEntity.setWeee(envWeeeEntity);
+                    saveMasterToContext(UI.getCurrent(), this.envMasterEntity);
                     Notification.show(String.format("%s: WEEE card has been created for %s", PAGE_TITLE, envWeeeEntity.getMaster().getProduct().getSku()));
                 } catch (EnvMasterAlreadyExistsException e) {
                     try {
                         this.envWeeeEntity = envWeeeSaverService.update(formBinder.getBean());
+                        this.envMasterEntity.setWeee(envWeeeEntity);
+                        saveMasterToContext(UI.getCurrent(), this.envMasterEntity);
+                        Notification.show(String.format("%s: WEEE card has been updated for %s", PAGE_TITLE, envWeeeEntity.getMaster().getProduct().getSku()));
                     } catch (EnvWeeeNotFoundException ex) {
                         String errMsg = ex.getMessage();
                         EnvWeeeEntity fromBinder = formBinder.getBean();
@@ -120,8 +125,8 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
         this.saveObjectAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
             if(this.weeeEditorDiv.getWeeeEntityBinder().getBean().getId() == null)
                 Notification.show(String.format("WEEE card for %s product has not been saved", envMasterEntity.getProduct().getSku()));
-
             UI ui = UI.getCurrent();
+
             ui.navigate(EnvMasterDetailView.ROUTE);
         });
     }

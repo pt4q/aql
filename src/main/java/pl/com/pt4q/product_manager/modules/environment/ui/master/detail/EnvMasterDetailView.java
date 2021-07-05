@@ -69,9 +69,6 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
         this.masterDetailEditorDiv = new EnvMasterDetailEditorDiv(this.productFinderService, this.unitCrudService);
         this.buttonsDiv = new AddAdditionalEnvCardsButtonsDiv();
 
-//        initProductComboBox();
-//        initUnitComboBox();
-
         initAddWeeButton();
         initAddLightSourceButton();
         initAddBatButton();
@@ -104,40 +101,37 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
         this.masterDetailEditorDiv.populateForm(masterEntity);
     }
 
-//    private void initProductComboBox() {
-//        this.masterDetailEditorDiv.getProductComboBox().setItems(productFinderService.findAll()
-//                .stream()
-//                .map(ProductEntity::getSku)
-//                .collect(Collectors.toList())
-//        );
-//    }
-//
-//    private void initUnitComboBox() {
-//        this.masterDetailEditorDiv.getGrossWeightUnitComboBox().setItems(unitCrudService.getAll().stream()
-//                .map(UnitEntity::getUnits)
-//                .collect(Collectors.toList())
-//        );
-//    }
-
     private void initAddWeeButton() {
+        if (this.masterEntity.getWeee() != null)
+            this.buttonsDiv.getAddWeeButton().setText("Open WEEE");
+
         this.buttonsDiv.getAddWeeButton().addClickListener(buttonClickEvent -> {
             saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvWeeeView.ROUTE);
         });
     }
 
     private void initAddLightSourceButton() {
+        if (this.masterEntity.getLightSource() != null)
+            this.buttonsDiv.getAddLightSourceButton().setText("Open LS");
+
         this.buttonsDiv.getAddLightSourceButton().addClickListener(buttonClickEvent -> {
             saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvLightSourceView.ROUTE);
         });
     }
 
     private void initAddBatButton() {
+        if (this.masterEntity.getBattery() != null)
+            this.buttonsDiv.getAddBatButton().setText("Open BAT");
+
         this.buttonsDiv.getAddBatButton().addClickListener(buttonClickEvent -> {
             saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvBatView.ROUTE);
         });
     }
 
     private void initAddPackButton() {
+        if (this.masterEntity.getPackaging() != null)
+            this.buttonsDiv.getAddPackButton().setText("Open PACK");
+
         this.buttonsDiv.getAddPackButton().addClickListener(buttonClickEvent -> {
             saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvPackView.ROUTE);
         });
