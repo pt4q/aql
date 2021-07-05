@@ -11,9 +11,8 @@ import com.vaadin.flow.router.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
-import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterCreatorService;
+import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterSaverService;
 import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterFinderService;
-import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterUpdaterService;
 import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterNotFoundException;
 import pl.com.pt4q.product_manager.modules.environment.ui.bat.EnvBatView;
@@ -49,8 +48,7 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
     private UnitCrudService unitCrudService;
 
     private EnvMasterFinderService masterFinderService;
-    private EnvMasterCreatorService masterCreatorService;
-    private EnvMasterUpdaterService masterUpdaterService;
+    private EnvMasterSaverService envMasterSaverService;
 
     private EnvMasterEntity masterEntity;
 
@@ -58,14 +56,12 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
     public EnvMasterDetailView(ProductFinderService productFinderService,
                                UnitCrudService unitCrudService,
                                EnvMasterFinderService masterFinderService,
-                               EnvMasterCreatorService masterCreatorService,
-                               EnvMasterUpdaterService masterUpdaterService) {
+                               EnvMasterSaverService envMasterSaverService) {
 
         this.productFinderService = productFinderService;
         this.unitCrudService = unitCrudService;
         this.masterFinderService = masterFinderService;
-        this.masterCreatorService = masterCreatorService;
-        this.masterUpdaterService = masterUpdaterService;
+        this.envMasterSaverService = envMasterSaverService;
 
         this.masterEntity = getMasterFromContextOrCreateNewEmptyInstance();
 
@@ -190,11 +186,11 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
 
             if (formBinder.isValid()) {
                 try {
-                    this.masterEntity = masterCreatorService.create(formBinder.getBean());
+                    this.masterEntity = envMasterSaverService.create(formBinder.getBean());
                     Notification.show(String.format("%s: Master card has been created for %s", PAGE_TITLE, masterEntity.getProduct().getSku()));
                 } catch (EnvMasterAlreadyExistsException e) {
                     try {
-                        this.masterEntity = masterUpdaterService.update(formBinder.getBean());
+                        this.masterEntity = envMasterSaverService.update(formBinder.getBean());
                         Notification.show(String.format("%s: Master card has been updated for %s", PAGE_TITLE, masterEntity.getProduct().getSku()));
                     } catch (EnvMasterNotFoundException ex) {
                         String errMsg = ex.getMessage();

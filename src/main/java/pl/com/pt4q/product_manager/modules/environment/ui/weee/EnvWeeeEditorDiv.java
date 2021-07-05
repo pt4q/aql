@@ -33,7 +33,6 @@ class EnvWeeeEditorDiv extends Div {
 
     public EnvWeeeEditorDiv() {
         initFields();
-        initWeightLayout();
         initBinder();
 
         setMinWidth("20%");
@@ -130,6 +129,6 @@ class EnvWeeeEditorDiv extends Div {
     }
 
     public void populateForm(EnvWeeeEntity weeeEntity){
-        this.weeeEntityBinder.readBean(weeeEntity);
+        this.weeeEntityBinder.setBean(weeeEntity);
     }
 }

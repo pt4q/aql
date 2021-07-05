@@ -8,7 +8,7 @@ import pl.com.pt4q.product_manager.modules.environment.services.master.exception
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 
 @Service
-public class EnvMasterCreatorService {
+public class EnvMasterSaverService {
 
     @Autowired
     public EnvMasterCrudSaver envMasterCrudSaver;
@@ -29,5 +29,10 @@ public class EnvMasterCreatorService {
                 productEntity != null ? productEntity.getSku() : null,
                 productEntity != null ? productEntity.getId() : null
         ));
+    }
+
+    public EnvMasterEntity update(EnvMasterEntity masterEntity) throws EnvMasterNotFoundException {
+        this.envMasterFinderService.findByIdOrThrowException(masterEntity.getId());
+        return envMasterCrudSaver.update(masterEntity);
     }
 }

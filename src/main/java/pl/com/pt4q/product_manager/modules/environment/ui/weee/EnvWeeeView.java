@@ -8,8 +8,11 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
 import pl.com.pt4q.product_manager.modules.environment.data.weee.EnvWeeeEntity;
+import pl.com.pt4q.product_manager.modules.environment.services.weee.EnvWeeeFinderService;
+import pl.com.pt4q.product_manager.modules.environment.services.weee.EnvWeeeSaverService;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.detail.EnvMasterDetailView;
 import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
@@ -29,14 +32,26 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
     private SaveObjectAndBackButtonsDiv saveObjectAndBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save WEEE card");
     private EnvWeeeEditorDiv weeeEditorDiv = new EnvWeeeEditorDiv();
 
+    private EnvWeeeFinderService envWeeeFinderService;
+    private EnvWeeeSaverService envWeeeSaverService;
+
+    private EnvWeeeEntity envWeeeEntity;
     private EnvMasterEntity envMasterEntity;
 
-    public EnvWeeeView() {
+    @Autowired
+    public EnvWeeeView(EnvWeeeFinderService envWeeeFinderService,
+                       EnvWeeeSaverService envWeeeSaverService) {
+
+        this.envWeeeFinderService = envWeeeFinderService;
+        this.envWeeeSaverService = envWeeeSaverService;
 
         this.envMasterEntity = getMasterEntityFromContext();
+        this.envWeeeEntity = initWeeeEntity();
 
         initSaveButton();
         initBackButton();
+
+        populateWeeeForm(envWeeeEntity);
 
         VerticalLayout layout = new VerticalLayout();
         layout.add(this.saveObjectAndBackButtonsDiv, this.weeeEditorDiv);
@@ -45,6 +60,16 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
 
         setSizeFull();
         add(layout);
+    }
+
+    private EnvWeeeEntity initWeeeEntity() {
+        if (this.envMasterEntity != null) {
+            if (this.envMasterEntity.getWeee() != null)
+                return envMasterEntity.getWeee();
+            else
+                return EnvWeeeEntity.builder().master(envMasterEntity).build();
+        } else
+            return null;
     }
 
     private EnvMasterEntity getMasterEntityFromContext() {
