@@ -67,7 +67,7 @@ class EnvMasterDetailEditorDiv extends Div {
         return hl;
     }
 
-    private void setUpComboBoxItems(){
+    private void setUpComboBoxItems() {
         this.productComboBox.setItems(productFinderService.findAll()
                 .stream()
                 .map(ProductEntity::getSku)
@@ -95,6 +95,7 @@ class EnvMasterDetailEditorDiv extends Div {
 
     private void initBinder() {
         this.masterBinder.forField(productComboBox)
+                .asRequired("Product can't be empty")
                 .bind(
                         masterEntity -> masterEntity.getProduct() != null ? masterEntity.getProduct().getSku() : "",
                         (masterEntity, s) -> productFinderService.findBySku(s).ifPresent(masterEntity::setProduct)
@@ -126,6 +127,7 @@ class EnvMasterDetailEditorDiv extends Div {
     }
 
     public void populateForm(EnvMasterEntity masterEntity) {
-        this.masterBinder.readBean(masterEntity);
+//        this.masterBinder.readBean(masterEntity);
+        this.masterBinder.setBean(masterEntity);
     }
 }

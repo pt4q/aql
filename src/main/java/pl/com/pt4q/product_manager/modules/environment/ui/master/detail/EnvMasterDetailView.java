@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
 import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterCreatorService;
 import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterFinderService;
+import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterUpdaterService;
 import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterNotFoundException;
 import pl.com.pt4q.product_manager.modules.environment.ui.bat.EnvBatView;
@@ -36,7 +37,7 @@ import java.util.stream.Collectors;
 @PageTitle(EnvMasterDetailView.PAGE_TITLE)
 public class EnvMasterDetailView extends Div implements HasUrlParameter<String> {
 
-    public static final String PAGE_TITLE = EnvMasterGeneralView.ROUTE + " of product";
+    public static final String PAGE_TITLE = EnvMasterGeneralView.PAGE_TITLE + " of product";
     public static final String ROUTE = EnvMasterGeneralView.ROUTE + "-detail";
     public static final String QUERY_PARAM_ID_NAME = "masterId";
 
@@ -49,6 +50,7 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
 
     private EnvMasterFinderService masterFinderService;
     private EnvMasterCreatorService masterCreatorService;
+    private EnvMasterUpdaterService masterUpdaterService;
 
     private EnvMasterEntity masterEntity;
 
@@ -56,12 +58,14 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
     public EnvMasterDetailView(ProductFinderService productFinderService,
                                UnitCrudService unitCrudService,
                                EnvMasterFinderService masterFinderService,
-                               EnvMasterCreatorService masterCreatorService) {
+                               EnvMasterCreatorService masterCreatorService,
+                               EnvMasterUpdaterService masterUpdaterService) {
 
         this.productFinderService = productFinderService;
         this.unitCrudService = unitCrudService;
         this.masterFinderService = masterFinderService;
         this.masterCreatorService = masterCreatorService;
+        this.masterUpdaterService = masterUpdaterService;
 
         this.masterEntity = getMasterFromContextOrCreateNewEmptyInstance();
 
@@ -121,7 +125,7 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
 
     private void initAddWeeButton() {
         this.buttonsDiv.getAddWeeButton().addClickListener(buttonClickEvent -> {
-           saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvWeeeView.ROUTE);
+            saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvWeeeView.ROUTE);
         });
     }
 
@@ -143,11 +147,10 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
         });
     }
 
-    private void saveMasterToContextIfBinderIsValidAndRouteToEndpoint(String route){
-        Binder<EnvMasterEntity> masterEntityBinder = this.masterDetailEditorDiv.getMasterBinder();
-        masterEntityBinder.validate();
-        if (masterEntityBinder.isValid()) {
-            EnvMasterEntity masterEntityFromForm = masterEntityBinder.getBean();
+    private void saveMasterToContextIfBinderIsValidAndRouteToEndpoint(String route) {
+        this.masterDetailEditorDiv.getMasterBinder().validate();
+        if (this.masterDetailEditorDiv.getMasterBinder().isValid()) {
+            EnvMasterEntity masterEntityFromForm = this.masterDetailEditorDiv.getMasterBinder().getBean();
             UI ui = UI.getCurrent();
             ComponentUtil.setData(ui, EnvMasterEntity.class, masterEntityFromForm);
             ui.navigate(route);
@@ -175,7 +178,7 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
     private void initBackButton() {
         this.saveObjectAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
             UI ui = UI.getCurrent();
-            saveMasterToContext(ui,null);
+            saveMasterToContext(ui, null);
             ui.navigate(EnvMasterGeneralView.ROUTE);
         });
     }
@@ -190,7 +193,15 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
                     this.masterEntity = masterCreatorService.create(formBinder.getBean());
                     Notification.show(String.format("%s: Master card has been created for %s", PAGE_TITLE, masterEntity.getProduct().getSku()));
                 } catch (EnvMasterAlreadyExistsException e) {
-                    Notification.show(e.getMessage());
+                    try {
+                        this.masterEntity = masterUpdaterService.update(formBinder.getBean());
+                        Notification.show(String.format("%s: Master card has been updated for %s", PAGE_TITLE, masterEntity.getProduct().getSku()));
+                    } catch (EnvMasterNotFoundException ex) {
+                        String errMsg = ex.getMessage();
+                        EnvMasterEntity fromBinder = formBinder.getBean();
+                        log.error(String.format("%s: %s for object %s", PAGE_TITLE, errMsg, fromBinder.toString()));
+                        Notification.show(String.format("%s: Cannot update master card for %s", PAGE_TITLE, fromBinder.getProduct()));
+                    }
                 }
             }
         });
