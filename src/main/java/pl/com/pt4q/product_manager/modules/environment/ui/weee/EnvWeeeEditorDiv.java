@@ -10,11 +10,22 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import lombok.Getter;
+import pl.com.pt4q.product_manager.modules.environment.data.data_utils.EnvSourceTypeEnum;
 import pl.com.pt4q.product_manager.modules.environment.data.weee.EnvWeeeEntity;
+import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
+import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 class EnvWeeeEditorDiv extends Div {
 
-    private TextField productComboBox = new TextField("Product");
+    private TextField productTextField = new TextField("Product");
     private TextArea productDescriptionTextArea = new TextArea("Product description");
     private DatePicker validFromDatePicker = new DatePicker("Valid from");
     private DatePicker validToDatePicker = new DatePicker("Valid to");
@@ -29,9 +40,16 @@ class EnvWeeeEditorDiv extends Div {
 
     private ComboBox<String> sourceTypeComboBox = new ComboBox<>("Source type");
 
+    @Getter
     private Binder<EnvWeeeEntity> weeeEntityBinder = new Binder<>();
 
-    public EnvWeeeEditorDiv() {
+    private UnitCrudService unitCrudService;
+
+    public EnvWeeeEditorDiv(UnitCrudService unitCrudService) {
+        this.unitCrudService = unitCrudService;
+
+        setUpComboBoxItems();
+
         initFields();
         initBinder();
 
@@ -43,7 +61,7 @@ class EnvWeeeEditorDiv extends Div {
     private Div initFormLayoutDiv() {
         VerticalLayout formLayout = new VerticalLayout();
         formLayout.add(
-                this.productComboBox,
+                this.productTextField,
                 this.productDescriptionTextArea,
                 this.validFromDatePicker,
                 this.validToDatePicker,
@@ -64,35 +82,37 @@ class EnvWeeeEditorDiv extends Div {
         HorizontalLayout hl = new HorizontalLayout();
         hl.add(this.netWeightNumberField, this.netWeightUnitComboBox);
         hl.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
-//        hl.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
         hl.setAlignItems(FlexComponent.Alignment.BASELINE);
         hl.setSizeFull();
         return hl;
-//        Div weightLayoutDiv = new Div();
-//        weightLayoutDiv.add(hl);
-//        weightLayoutDiv.setWidthFull();
-//        return weightLayoutDiv;
     }
 
     private HorizontalLayout initLengthLayout() {
         HorizontalLayout hl = new HorizontalLayout();
         hl.add(this.itemHeightNumberField, this.itemLengthNumberField, this.itemDepthNumberField, this.lengthUnitComboBox);
         hl.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
-//        hl.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
         hl.setAlignItems(FlexComponent.Alignment.BASELINE);
         hl.setSizeFull();
         return hl;
-//        Div lengthLayoutDiv = new Div();
-//        lengthLayoutDiv.add(hl);
-////        lengthLayoutDiv.setWidthFull();
-//        lengthLayoutDiv.setMinWidth("20%");
-//        lengthLayoutDiv.setMaxWidth("40%");
-//        return lengthLayoutDiv;
+    }
+
+    private void setUpComboBoxItems() {
+        List<String> units = unitCrudService.getAll()
+                .stream()
+                .map(UnitEntity::getUnits)
+                .collect(Collectors.toList());
+        this.lengthUnitComboBox.setItems(units);
+        this.netWeightUnitComboBox.setItems(units);
+
+        List<String> sourceTypes = Arrays.stream(EnvSourceTypeEnum.values())
+                .map(Enum::name)
+                .collect(Collectors.toList());
+        this.sourceTypeComboBox.setItems(sourceTypes);
     }
 
     private void initFields() {
-        this.productComboBox.setSizeFull();
-        this.productComboBox.setReadOnly(true);
+        this.productTextField.setSizeFull();
+        this.productTextField.setReadOnly(true);
         this.productDescriptionTextArea.setSizeFull();
         this.productDescriptionTextArea.setReadOnly(true);
 
@@ -119,16 +139,58 @@ class EnvWeeeEditorDiv extends Div {
     }
 
     private void initBinder() {
+        this.weeeEntityBinder.forField(productTextField)
+                .bind(
+                        envWeeeEntity -> envWeeeEntity.getMaster() != null ? envWeeeEntity.getMaster().getProduct().getSku() : "",
+                        null
+                );
+        this.weeeEntityBinder.forField(productDescriptionTextArea)
+                .bind(
+                        envWeeeEntity -> envWeeeEntity.getMaster() != null ? envWeeeEntity.getMaster().getProduct().getDescriptionPL() : "",
+                        null
+                );
+        this.weeeEntityBinder.forField(validFromDatePicker)
+                .bind(
+                        envWeeeEntity -> envWeeeEntity.getMaster() != null ? envWeeeEntity.getMaster().getValidFrom() : null,
+                        null
+                );
+        this.weeeEntityBinder.forField(validToDatePicker)
+                .bind(
+                        envWeeeEntity -> envWeeeEntity.getMaster() != null ? envWeeeEntity.getMaster().getValidTo() : null,
+                        null
+                );
 
+        this.weeeEntityBinder.forField(itemHeightNumberField)
+                .bind(EnvWeeeEntity::getItemHeight, EnvWeeeEntity::setItemHeight);
+        this.weeeEntityBinder.forField(itemLengthNumberField)
+                .bind(EnvWeeeEntity::getItemLength, EnvWeeeEntity::setItemLength);
+        this.weeeEntityBinder.forField(itemDepthNumberField)
+                .bind(EnvWeeeEntity::getItemDepth, EnvWeeeEntity::setItemDepth);
+        this.weeeEntityBinder.forField(lengthUnitComboBox)
+                .bind(envWeeeEntity -> envWeeeEntity.getItemLengthUnit() != null ? envWeeeEntity.getItemLengthUnit().getUnits() : "",
+                        (envWeeeEntity, s) -> unitCrudService.findByUnits(s).ifPresent(envWeeeEntity::setItemLengthUnit)
+                );
+
+        this.weeeEntityBinder.forField(netWeightNumberField)
+                .bind(EnvWeeeEntity::getNetWeight, EnvWeeeEntity::setNetWeight);
+        this.weeeEntityBinder.forField(netWeightUnitComboBox)
+                .bind(envWeeeEntity -> envWeeeEntity.getNetWeightUnit() != null ? envWeeeEntity.getNetWeightUnit().getUnits() : "",
+                        (envWeeeEntity, s) -> unitCrudService.findByUnits(s).ifPresent(envWeeeEntity::setNetWeightUnit)
+                );
+
+        this.weeeEntityBinder.forField(sourceTypeComboBox)
+                .bind(envWeeeEntity -> envWeeeEntity.getSourceType() != null ? envWeeeEntity.getSourceType().name() : "",
+                        (envWeeeEntity, s) -> EnvSourceTypeEnum.valueOf(s)
+                );
 
         this.weeeEntityBinder.setBean(new EnvWeeeEntity());
     }
 
-    private void cleanForm(){
+    private void cleanForm() {
         populateForm(null);
     }
 
-    public void populateForm(EnvWeeeEntity weeeEntity){
+    public void populateForm(EnvWeeeEntity weeeEntity) {
         this.weeeEntityBinder.setBean(weeeEntity);
     }
 }

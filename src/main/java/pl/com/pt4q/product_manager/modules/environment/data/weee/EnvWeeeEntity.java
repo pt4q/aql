@@ -32,9 +32,9 @@ public class EnvWeeeEntity {
     @ManyToOne
     private UnitEntity netWeightUnit;
 
-    private Integer itemHeight;
-    private Integer itemLength;
-    private Integer itemDepth;
+    private Double itemHeight;
+    private Double itemLength;
+    private Double itemDepth;
     @ManyToOne
     private UnitEntity itemLengthUnit;
 

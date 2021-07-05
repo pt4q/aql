@@ -16,16 +16,19 @@ import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
 import pl.com.pt4q.product_manager.modules.product.services.product.ProductFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
 
-@Getter
 class EnvMasterDetailEditorDiv extends Div {
 
+    @Getter
     private ComboBox<String> productComboBox = new ComboBox<>("Product");
     private TextArea productDescriptionTextArea = new TextArea("Product description");
     private DatePicker validFromDatePicker = new DatePicker("Valid from");
     private DatePicker validToDatePicker = new DatePicker("Valid to");
     private NumberField grossWeightNumberField = new NumberField("Gross weight");
+
+    @Getter
     private ComboBox<String> grossWeightUnitComboBox = new ComboBox<>("Gross weight unit");
 
+    @Getter
     private Binder<EnvMasterEntity> masterBinder = new Binder<>();
 
     private ProductFinderService productFinderService;

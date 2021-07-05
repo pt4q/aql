@@ -12,9 +12,9 @@ import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 public class EnvWeeeSaverService {
 
     @Autowired
-    public EnvWeeeCrudSaver envWeeeCrudSaver;
+    private EnvWeeeCrudSaver envWeeeCrudSaver;
     @Autowired
-    public EnvWeeeFinderService envWeeeFinderService;
+    private EnvWeeeFinderService envWeeeFinderService;
 
     public EnvWeeeEntity create(EnvWeeeEntity weeeEntity) throws EnvMasterAlreadyExistsException {
         EnvMasterEntity envMasterEntity;

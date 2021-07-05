@@ -69,8 +69,8 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
         this.masterDetailEditorDiv = new EnvMasterDetailEditorDiv(this.productFinderService, this.unitCrudService);
         this.buttonsDiv = new AddAdditionalEnvCardsButtonsDiv();
 
-        initProductComboBox();
-        initUnitComboBox();
+//        initProductComboBox();
+//        initUnitComboBox();
 
         initAddWeeButton();
         initAddLightSourceButton();
@@ -104,20 +104,20 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
         this.masterDetailEditorDiv.populateForm(masterEntity);
     }
 
-    private void initProductComboBox() {
-        this.masterDetailEditorDiv.getProductComboBox().setItems(productFinderService.findAll()
-                .stream()
-                .map(ProductEntity::getSku)
-                .collect(Collectors.toList())
-        );
-    }
-
-    private void initUnitComboBox() {
-        this.masterDetailEditorDiv.getGrossWeightUnitComboBox().setItems(unitCrudService.getAll().stream()
-                .map(UnitEntity::getUnits)
-                .collect(Collectors.toList())
-        );
-    }
+//    private void initProductComboBox() {
+//        this.masterDetailEditorDiv.getProductComboBox().setItems(productFinderService.findAll()
+//                .stream()
+//                .map(ProductEntity::getSku)
+//                .collect(Collectors.toList())
+//        );
+//    }
+//
+//    private void initUnitComboBox() {
+//        this.masterDetailEditorDiv.getGrossWeightUnitComboBox().setItems(unitCrudService.getAll().stream()
+//                .map(UnitEntity::getUnits)
+//                .collect(Collectors.toList())
+//        );
+//    }
 
     private void initAddWeeButton() {
         this.buttonsDiv.getAddWeeButton().addClickListener(buttonClickEvent -> {
