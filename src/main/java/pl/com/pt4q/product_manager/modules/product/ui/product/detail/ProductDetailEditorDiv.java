@@ -42,6 +42,7 @@ class ProductDetailEditorDiv extends Div {
 
         this.product = product;
 
+        //TODO change in memory manager to crud
         this.categoriesInMemoryListManager = new ProductCategoriesInMemoryManager(productCategoryCrudService.getAll());
         this.manufacturersInMemoryManager = new ManufacturersInMemoryManager(manufacturerCrudService.getAll());
 
@@ -86,7 +87,7 @@ class ProductDetailEditorDiv extends Div {
                 .forField(productSkuTextField)
                 .asRequired("Product SKU can't be empty")
                 .withValidator(sku -> sku.matches("^[A-Z0-9, -]{4,}$"), "Bad SKU format")
-                .bind(ProductEntity::getProductSku, ProductEntity::setProductSku);
+                .bind(ProductEntity::getSku, ProductEntity::setSku);
     }
 
     private void configSkuTextField() {
@@ -96,7 +97,7 @@ class ProductDetailEditorDiv extends Div {
         this.productSkuTextField.addValueChangeListener(event -> {
             String sku = event.getValue().toUpperCase();
 //            this.product = initProductIfNullOrBypass(product);
-            this.product.setProductSku(sku);
+            this.product.setSku(sku);
             saveProductToContext(product);
         });
     }

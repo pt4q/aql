@@ -10,7 +10,7 @@ import com.vaadin.flow.router.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
-import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
+import pl.com.pt4q.product_manager.modules.product_parts.data.product_part.ProductPartEntity;
 import pl.com.pt4q.product_manager.modules.product.services.manufacturer.ManufacturerCrudService;
 import pl.com.pt4q.product_manager.modules.product.services.product.ProductCreatorAndUpdaterService;
 import pl.com.pt4q.product_manager.modules.product.services.product.ProductFinderService;
@@ -18,10 +18,10 @@ import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.P
 import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.ProductNotFoundException;
 import pl.com.pt4q.product_manager.modules.product.services.product.exceptions.ProductValidatorException;
 import pl.com.pt4q.product_manager.modules.product.services.product_category.ProductCategoryCrudService;
-import pl.com.pt4q.product_manager.modules.product.services.product_part.ProductPartFinderService;
-import pl.com.pt4q.product_manager.modules.product.services.product_part.exceptions.ProductPartNotFoundException;
+import pl.com.pt4q.product_manager.modules.product_parts.services.product_part.ProductPartFinderService;
+import pl.com.pt4q.product_manager.modules.product_parts.services.product_part.exceptions.ProductPartNotFoundException;
 import pl.com.pt4q.product_manager.modules.product.ui.product.general.ProductsGeneralView;
-import pl.com.pt4q.product_manager.modules.product.ui.product_part.ProductPartDetailView;
+import pl.com.pt4q.product_manager.modules.product_parts.ui.product_part.ProductPartDetailView;
 import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
@@ -95,7 +95,7 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
     }
 
     private void populateProductForm(ProductEntity product) {
-        if (product.getProductSku() != null)
+        if (product.getSku() != null)
             this.productDetailEditorDiv.populateForm(product);
     }
 
@@ -130,12 +130,12 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
             try {
                 this.product = productCreatorAndUpdaterService.add(product);
                 saveProductToContext(this.product);
-                showNotification(String.format("The product %s has been created", product.getProductSku()));
+                showNotification(String.format("The product %s has been created", product.getSku()));
             } catch (ProductValidatorException | ProductAlreadyExistsException e) {
                 try {
                     this.product = productCreatorAndUpdaterService.updateExisting(product);
                     saveProductToContext(this.product);
-                    showNotification(String.format("The product %s has been updated", product.getProductSku()));
+                    showNotification(String.format("The product %s has been updated", product.getSku()));
                 } catch (ProductValidatorException ex) {
                     log.error(showNotification(ex.getMessage()));
                 }
@@ -146,7 +146,7 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
     private void initBackButtonActionListener() {
         this.saveProductOrBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
             UI ui = UI.getCurrent();
-            ComponentUtil.setData(ui, ProductEntity.class, null);
+            saveProductToContext(null);
             ui.navigate(ProductsGeneralView.ROUTE);
         });
     }

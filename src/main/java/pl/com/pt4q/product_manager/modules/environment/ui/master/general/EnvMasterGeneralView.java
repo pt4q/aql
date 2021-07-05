@@ -9,6 +9,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterFinderService;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.detail.EnvMasterDetailView;
 import pl.com.pt4q.product_manager.modules.environment.ui.master_general_report.EnvMasterReportView;
 import pl.com.pt4q.product_manager.view_utils.FilterComboBoxDiv;
@@ -30,13 +32,16 @@ public class EnvMasterGeneralView extends Div {
     private Button addNewProductButton = new Button("Add new env condition");
     private Button createEnvironmentConditionsButton = new Button("Create report");
 
+    private EnvMasterFinderService envMasterFinderService;
 
-    public EnvMasterGeneralView() {
+    @Autowired
+    public EnvMasterGeneralView(EnvMasterFinderService envMasterFinderService) {
+        this.envMasterFinderService = envMasterFinderService;
 
         initAddProductButton();
         initCreateEnvironmentReportButton();
-//        masterGridDiv.refreshGrid();
 
+        masterGridDiv.refreshGrid(envMasterFinderService.findAll());
 
         VerticalLayout layout = new VerticalLayout(createToolPanelDiv(), this.masterGridDiv);
         layout.setWidthFull();

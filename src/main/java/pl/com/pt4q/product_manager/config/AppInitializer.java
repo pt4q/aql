@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import pl.com.pt4q.product_manager.modules.product.data.manufacturer.ManufacturerEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_category.ProductCategoryEntity;
-import pl.com.pt4q.product_manager.modules.product.data.product_part.ProductPartEntity;
+import pl.com.pt4q.product_manager.modules.product_parts.data.product_part.ProductPartEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_series.ProductSeriesEntity;
 import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
 import pl.com.pt4q.product_manager.modules.product.data.unit.UnitTypeEnum;
@@ -59,7 +59,7 @@ public class AppInitializer implements CommandLineRunner {
         seriesList.forEach(series -> logToConsoleWhatWasCreated("series", series.getSeries(), series.getId()));
 
         List<ProductEntity> products = initProducts(categories, manufacturers);
-        products.forEach(product -> logToConsoleWhatWasCreated("product", product.getProductSku(), product.getId()));
+        products.forEach(product -> logToConsoleWhatWasCreated("product", product.getSku(), product.getId()));
 
 //        List<ProductPartEntity> firstProductParts = initProductParts(products.get(0), seriesList);
 //        firstProductParts.forEach(part -> logToConsoleWhatWasCreated("part", String.format("%s part for %s product (id:%d)", part.getPartModelOrPartName(), part.getProduct().getProductSku(), part.getProduct().getId()), part.getId()));
@@ -174,7 +174,7 @@ public class AppInitializer implements CommandLineRunner {
     @SneakyThrows
     private List<ProductEntity> initProducts(List<ProductCategoryEntity> categories, List<ManufacturerEntity> manufacturers) {
         ProductEntity productEntity1 = productCreatorAndUpdaterService.add(ProductEntity.builder()
-                .productSku("DED1234")
+                .sku("DED1234")
                 .productCategory(categories.get(0))
                 .manufacturer(manufacturers.get(0))
                 .build());

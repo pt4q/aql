@@ -37,7 +37,7 @@ class ProductGeneralProductsGridDiv extends Div {
 
         this.productEntityGrid
                 .addColumn(new ComponentRenderer<>(pe ->
-                        new Anchor(createLinkWithParam(ProductDetailView.ROUTE, ProductDetailView.QUERY_PARAM_ID_NAME, pe.getId()), pe.getProductSku())))
+                        new Anchor(createLinkWithParam(ProductDetailView.ROUTE, ProductDetailView.QUERY_PARAM_ID_NAME, pe.getId()), pe.getSku())))
                 .setHeader("Product SKU")
                 .setSortable(true)
                 .setAutoWidth(true);

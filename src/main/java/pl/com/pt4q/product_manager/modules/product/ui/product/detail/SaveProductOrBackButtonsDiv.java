@@ -59,8 +59,8 @@ class SaveProductOrBackButtonsDiv extends Div {
 
     private void createIfProductIsNewScenario() throws ProductAlreadyExistsException, ProductValidatorException {
         this.product = productCreatorAndUpdaterService.add(product);
-        if (product.getId() != null && product.getProductSku() != null) {
-            Notification.show(String.format("Product %s has been created", product.getProductSku()));
+        if (product.getId() != null && product.getSku() != null) {
+            Notification.show(String.format("Product %s has been created", product.getSku()));
             saveProductToContext(product);
         } else
             Notification.show("After check the product is null");
@@ -69,7 +69,7 @@ class SaveProductOrBackButtonsDiv extends Div {
     private void updateIfProductExistsScenario(ProductEntity productEntity) {
         try {
             this.product = productCreatorAndUpdaterService.updateExisting(productEntity);
-            Notification.show(String.format("Product %s has been updated", product.getProductSku()));
+            Notification.show(String.format("Product %s has been updated", product.getSku()));
             saveProductToContext(product);
         } catch (ProductValidatorException ex) {
             Notification.show(ex.getMessage());

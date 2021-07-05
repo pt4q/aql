@@ -121,5 +121,15 @@ class EnvWeeeEditorDiv extends Div {
 
     private void initBinder() {
 
+
+        this.weeeEntityBinder.setBean(new EnvWeeeEntity());
+    }
+
+    private void cleanForm(){
+        populateForm(null);
+    }
+
+    public void populateForm(EnvWeeeEntity weeeEntity){
+        this.weeeEntityBinder.readBean(weeeEntity);
     }
 }
