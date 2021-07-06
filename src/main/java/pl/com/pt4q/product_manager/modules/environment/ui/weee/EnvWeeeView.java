@@ -15,6 +15,7 @@ import pl.com.pt4q.product_manager.modules.environment.data.weee.EnvWeeeEntity;
 import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.environment.services.weee.EnvWeeeFinderService;
 import pl.com.pt4q.product_manager.modules.environment.services.weee.EnvWeeeSaverService;
+import pl.com.pt4q.product_manager.modules.environment.services.weee.exceptions.EnvWeeeAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.environment.services.weee.exceptions.EnvWeeeNotFoundException;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.detail.EnvMasterDetailView;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
@@ -104,7 +105,7 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
                     this.envMasterEntity.setWeee(envWeeeEntity);
                     saveMasterToContext(UI.getCurrent(), this.envMasterEntity);
                     Notification.show(String.format("%s: WEEE card has been created for %s", PAGE_TITLE, envWeeeEntity.getMaster().getProduct().getSku()));
-                } catch (EnvMasterAlreadyExistsException e) {
+                } catch (EnvWeeeAlreadyExistsException | EnvMasterAlreadyExistsException e) {
                     try {
                         this.envWeeeEntity = envWeeeSaverService.update(formBinder.getBean());
                         this.envMasterEntity.setWeee(envWeeeEntity);

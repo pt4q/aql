@@ -11,18 +11,13 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import lombok.Getter;
-import pl.com.pt4q.product_manager.modules.environment.data.data_utils.EnvSourceTypeEnum;
 import pl.com.pt4q.product_manager.modules.environment.data.data_utils.EnvSourceTypeEnumWrapper;
 import pl.com.pt4q.product_manager.modules.environment.data.weee.EnvWeeeEntity;
 import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 class EnvWeeeEditorDiv extends Div {
 
