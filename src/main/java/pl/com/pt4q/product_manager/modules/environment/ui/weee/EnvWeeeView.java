@@ -54,9 +54,9 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
         this.unitCrudService = unitCrudService;
 
         this.envMasterEntity = getMasterEntityFromContext();
-        this.envWeeeEntity = initWeeeEntity();
+        this.envWeeeEntity = getWeeeFromMasterOrInitNew(this.envMasterEntity);
 
-        this.weeeEditorDiv = new EnvWeeeEditorDiv(unitCrudService);
+        this.weeeEditorDiv = new EnvWeeeEditorDiv(unitCrudService, this.envMasterEntity);
 
         initSaveButton();
         initBackButton();
@@ -72,22 +72,13 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
         add(layout);
     }
 
-    private EnvWeeeEntity initWeeeEntity() {
-        if (this.envMasterEntity != null) {
-            if (this.envMasterEntity.getWeee() != null)
-                return envMasterEntity.getWeee();
-            else
-                return EnvWeeeEntity.builder().master(envMasterEntity).build();
-        } else
+    private EnvWeeeEntity getWeeeFromMasterOrInitNew(EnvMasterEntity masterEntity) {
+        if(masterEntity != null)
+            return envMasterEntity.getWeee() != null ?
+                envMasterEntity.getWeee()
+                : new EnvWeeeEntity();
+        else
             return null;
-    }
-
-    private EnvMasterEntity getMasterEntityFromContext() {
-        return ComponentUtil.getData(UI.getCurrent(), EnvMasterEntity.class);
-    }
-
-    private void saveMasterToContext(UI ui, EnvMasterEntity masterEntity) {
-        ComponentUtil.setData(ui, EnvMasterEntity.class, masterEntity);
     }
 
     private void populateWeeeForm(EnvWeeeEntity weeeEntity) {
@@ -99,23 +90,25 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
             Binder<EnvWeeeEntity> formBinder = this.weeeEditorDiv.getWeeeEntityBinder();
             formBinder.validate().getBeanValidationErrors();
 
-            if (formBinder.isValid()){
+            if (formBinder.isValid()) {
                 try {
                     this.envWeeeEntity = envWeeeSaverService.create(formBinder.getBean());
-                    this.envMasterEntity.setWeee(envWeeeEntity);
-                    saveMasterToContext(UI.getCurrent(), this.envMasterEntity);
-                    Notification.show(String.format("%s: WEEE card has been created for %s", PAGE_TITLE, envWeeeEntity.getMaster().getProduct().getSku()));
+
+                    saveMasterToContext(this.envMasterEntity);
+
+                    Notification.show(String.format("%s: WEEE card has been created for %s", PAGE_TITLE, this.envMasterEntity.getProduct().getSku()));
                 } catch (EnvWeeeAlreadyExistsException | EnvMasterAlreadyExistsException e) {
                     try {
                         this.envWeeeEntity = envWeeeSaverService.update(formBinder.getBean());
-                        this.envMasterEntity.setWeee(envWeeeEntity);
-                        saveMasterToContext(UI.getCurrent(), this.envMasterEntity);
-                        Notification.show(String.format("%s: WEEE card has been updated for %s", PAGE_TITLE, envWeeeEntity.getMaster().getProduct().getSku()));
+
+                        saveMasterToContext(this.envMasterEntity);
+
+                        Notification.show(String.format("%s: WEEE card has been updated for %s", PAGE_TITLE, this.envMasterEntity.getProduct().getSku()));
                     } catch (EnvWeeeNotFoundException ex) {
                         String errMsg = ex.getMessage();
                         EnvWeeeEntity fromBinder = formBinder.getBean();
                         log.error(String.format("%s: %s for object %s", PAGE_TITLE, errMsg, fromBinder.toString()));
-                        Notification.show(String.format("%s: Cannot update WEEE card for %s", PAGE_TITLE, fromBinder.getMaster().getProduct()));
+                        Notification.show(String.format("%s: Cannot update WEEE card for %s", PAGE_TITLE, this.envMasterEntity.getProduct()));
                     }
                 }
             }
@@ -124,11 +117,15 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
 
     private void initBackButton() {
         this.saveObjectAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
-            if(this.weeeEditorDiv.getWeeeEntityBinder().getBean().getId() == null)
-                Notification.show(String.format("WEEE card for %s product has not been saved", envMasterEntity.getProduct().getSku()));
-            UI ui = UI.getCurrent();
+            Binder<EnvWeeeEntity> weeeEntityBinder = this.weeeEditorDiv.getWeeeEntityBinder();
 
-            ui.navigate(EnvMasterDetailView.ROUTE);
+            if (weeeEntityBinder.getBean().getId() != null)
+                this.envMasterEntity.setWeee(weeeEntityBinder.getBean());
+            else
+                Notification.show(String.format("WEEE card for %s product has not been saved", envMasterEntity.getProduct().getSku()));
+
+            saveMasterToContext(this.envMasterEntity);
+            UI.getCurrent().navigate(EnvMasterDetailView.ROUTE);
         });
     }
 
@@ -142,7 +139,7 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
             Long id = Long.valueOf(parametersMap.get(QUERY_PARAM_ID_NAME).get(0));
             try {
                 this.envWeeeEntity = this.envWeeeFinderService.findByIdOrThrowException(id);
-                saveMasterToContext(UI.getCurrent(), this.envWeeeEntity.getMaster());
+                saveMasterToContext(this.envMasterEntity);
                 populateWeeeForm(this.envWeeeEntity);
             } catch (EnvWeeeNotFoundException e) {
                 log.warn(showNotification(e.getMessage()));
@@ -154,5 +151,13 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
         String theWholeMessage = String.format("%s: %s", PAGE_TITLE, message);
         Notification.show(theWholeMessage);
         return theWholeMessage;
+    }
+
+    private void saveMasterToContext(EnvMasterEntity master) {
+        ComponentUtil.setData(UI.getCurrent(), EnvMasterEntity.class, master);
+    }
+
+    private EnvMasterEntity getMasterEntityFromContext() {
+        return ComponentUtil.getData(UI.getCurrent(), EnvMasterEntity.class);
     }
 }

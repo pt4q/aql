@@ -12,6 +12,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import lombok.Getter;
 import pl.com.pt4q.product_manager.modules.environment.data.data_utils.EnvSourceTypeEnumWrapper;
+import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
 import pl.com.pt4q.product_manager.modules.environment.data.weee.EnvWeeeEntity;
 import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
@@ -41,13 +42,13 @@ class EnvWeeeEditorDiv extends Div {
 
     private UnitCrudService unitCrudService;
 
-    public EnvWeeeEditorDiv(UnitCrudService unitCrudService) {
+    public EnvWeeeEditorDiv(UnitCrudService unitCrudService, EnvMasterEntity envMasterEntity) {
         this.unitCrudService = unitCrudService;
 
         setUpComboBoxItems();
 
         initFields();
-        initBinder();
+        initBinder(envMasterEntity);
 
         setMinWidth("20%");
         setMaxWidth("40%");
@@ -134,18 +135,18 @@ class EnvWeeeEditorDiv extends Div {
         this.sourceTypeComboBox.setSizeFull();
     }
 
-    private void initBinder() {
+    private void initBinder(EnvMasterEntity envMasterEntity) {
         this.weeeEntityBinder.forField(productTextField)
-                .bind(envWeeeEntity -> envWeeeEntity.getMaster() != null ? envWeeeEntity.getMaster().getProduct().getSku() : "",
+                .bind(envWeeeEntity -> envMasterEntity != null ? envMasterEntity.getProduct().getSku() : "",
                         null);
         this.weeeEntityBinder.forField(productDescriptionTextArea)
-                .bind(envWeeeEntity -> envWeeeEntity.getMaster() != null ? envWeeeEntity.getMaster().getProduct().getDescriptionPL() : "",
+                .bind(envWeeeEntity -> envMasterEntity != null ? envMasterEntity.getProduct().getDescriptionPL() : "",
                         null);
         this.weeeEntityBinder.forField(validFromDatePicker)
-                .bind(envWeeeEntity -> envWeeeEntity.getMaster() != null ? envWeeeEntity.getMaster().getValidFrom() : null,
+                .bind(envWeeeEntity -> envMasterEntity != null ? envMasterEntity.getValidFrom() : null,
                         null);
         this.weeeEntityBinder.forField(validToDatePicker)
-                .bind(envWeeeEntity -> envWeeeEntity.getMaster() != null ? envWeeeEntity.getMaster().getValidTo() : null,
+                .bind(envWeeeEntity -> envMasterEntity != null ? envMasterEntity.getValidTo() : null,
                         null);
 
         this.weeeEntityBinder.forField(itemHeightNumberField)

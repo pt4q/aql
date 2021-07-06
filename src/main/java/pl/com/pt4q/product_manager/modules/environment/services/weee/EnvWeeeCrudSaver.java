@@ -14,28 +14,30 @@ class EnvWeeeCrudSaver {
     @Autowired
     private EnvWeeeCrudRepository repository;
 
-    public EnvWeeeEntity save(EnvWeeeEntity weeeEntity){
+    public EnvWeeeEntity save(EnvWeeeEntity weeeEntity) {
         weeeEntity = repository.save(weeeEntity);
-        EnvMasterEntity envMasterEntity = weeeEntity.getMaster();
-        ProductEntity productEntity = envMasterEntity.getProduct();
-        log.info(String.format("Weee card (id:%d) has been created for Master (id:%d) to product %s (id:%d)",
-                weeeEntity.getId(),
-                envMasterEntity.getId(),
-                productEntity.getSku(),
-                productEntity.getId())
+//        EnvMasterEntity envMasterEntity = weeeEntity.getMaster();
+//        ProductEntity productEntity = envMasterEntity.getProduct();
+        log.info(String.format("Weee card (id:%d) has been created",
+                weeeEntity.getId()
+//                envMasterEntity.getId(),
+//                productEntity.getSku(),
+//                productEntity.getId()
+                )
         );
         return weeeEntity;
     }
 
-    public EnvWeeeEntity update(EnvWeeeEntity weeeEntity){
+    public EnvWeeeEntity update(EnvWeeeEntity weeeEntity) {
         weeeEntity = repository.save(weeeEntity);
-        EnvMasterEntity envMasterEntity = weeeEntity.getMaster();
-        ProductEntity productEntity = envMasterEntity.getProduct();
-        log.info(String.format("Weee card (id:%d) has been updated for Master (id:%d) to product %s (id:%d)",
-                weeeEntity.getId(),
-                envMasterEntity.getId(),
-                productEntity.getSku(),
-                productEntity.getId())
+//        EnvMasterEntity envMasterEntity = weeeEntity.getMaster();
+//        ProductEntity productEntity = envMasterEntity.getProduct();
+        log.info(String.format("Weee card (id:%d) has been updated",
+                weeeEntity.getId()
+//                envMasterEntity.getId(),
+//                productEntity.getSku(),
+//                productEntity.getId()
+                )
         );
         return weeeEntity;
     }

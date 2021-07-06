@@ -21,22 +21,16 @@ public class EnvWeeeSaverService {
     private EnvMasterSaverService envMasterSaverService;
 
     public EnvWeeeEntity create(EnvWeeeEntity weeeEntity) throws EnvWeeeAlreadyExistsException, EnvMasterAlreadyExistsException {
-        EnvMasterEntity envMasterEntity = weeeEntity.getMaster();
-        ProductEntity productEntity = envMasterEntity.getProduct();
         try {
             weeeEntity = envWeeeFinderService.findByIdOrThrowException(weeeEntity.getId());
         } catch (EnvWeeeNotFoundException e) {
-            if (envMasterEntity.getId() == null) {
-                envMasterEntity = createMasterIfItHasNullId(envMasterEntity);
-                weeeEntity.setMaster(envMasterEntity);
-            }
             return envWeeeCrudSaver.save(weeeEntity);
         }
-        throw new EnvWeeeAlreadyExistsException(String.format("Weee card (id:%d) for Master (id:%d) to product %s (id: %d) already exists",
-                weeeEntity.getId(),
-                envMasterEntity.getId(),
-                productEntity != null ? productEntity.getSku() : null,
-                productEntity != null ? productEntity.getId() : null
+        throw new EnvWeeeAlreadyExistsException(String.format("Weee card (id:%d) already exists",
+                weeeEntity.getId()
+//                envMasterEntity.getId(),
+//                productEntity != null ? productEntity.getSku() : null,
+//                productEntity != null ? productEntity.getId() : null
         ));
     }
 

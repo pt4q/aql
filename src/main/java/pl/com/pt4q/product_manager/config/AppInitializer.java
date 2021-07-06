@@ -76,37 +76,37 @@ public class AppInitializer implements CommandLineRunner {
         List<UnitEntity> units = new ArrayList<>();
         units.add(UnitEntity.builder()
                 .name("tekst")
-                .units("[-]")
+                .units("-")
                 .decimalPlaces(0)
                 .valuesType(UnitTypeEnum.TEXT)
                 .build());
         units.add(UnitEntity.builder()
                 .name("sztuka")
-                .units("[szt]")
+                .units("szt")
                 .decimalPlaces(0)
                 .valuesType(UnitTypeEnum.DECIMAL)
                 .build());
         units.add(UnitEntity.builder()
                 .name("metr")
-                .units("[m]")
+                .units("m")
                 .decimalPlaces(0)
                 .valuesType(UnitTypeEnum.FLOAT)
                 .build());
         units.add(UnitEntity.builder()
                 .name("milimetr")
-                .units("[mm]")
+                .units("mm")
                 .decimalPlaces(-3)
                 .valuesType(UnitTypeEnum.FLOAT)
                 .build());
         units.add(UnitEntity.builder()
                 .name("kilogram")
-                .units("[kg]")
+                .units("kg")
                 .decimalPlaces(0)
                 .valuesType(UnitTypeEnum.DECIMAL)
                 .build());
         units.add(UnitEntity.builder()
                 .name("gram")
-                .units("[g]")
+                .units("g")
                 .decimalPlaces(-3)
                 .valuesType(UnitTypeEnum.DECIMAL)
                 .build());
