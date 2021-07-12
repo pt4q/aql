@@ -10,13 +10,9 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.com.pt4q.product_manager.modules.environment.data.bat.EnvBatteryEntity;
-import pl.com.pt4q.product_manager.modules.environment.data.light_source.EnvLightSourceEntity;
 import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
-import pl.com.pt4q.product_manager.modules.environment.data.pack.EnvPackagingEntity;
-import pl.com.pt4q.product_manager.modules.environment.data.weee.EnvWeeeEntity;
-import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterSaverService;
 import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterFinderService;
+import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterSaverService;
 import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterNotFoundException;
 import pl.com.pt4q.product_manager.modules.environment.services.weee.EnvWeeeFinderService;
@@ -78,10 +74,7 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
         this.masterDetailEditorDiv = new EnvMasterDetailEditorDiv(this.productFinderService, this.unitCrudService);
         this.buttonsDiv = new AddAdditionalEnvCardsButtonsDiv();
 
-        initAddWeeButton();
-        initAddLightSourceButton();
-        initAddBatButton();
-        initAddPackButton();
+        initMasterAdditionalCardsButtons();
 
         initSaveButton();
         initBackButton();
@@ -123,6 +116,13 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
         this.buttonsDiv.getAddWeeButton().addClickListener(buttonClickEvent -> {
             saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvWeeeView.ROUTE);
         });
+    }
+
+    private void initMasterAdditionalCardsButtons() {
+        initAddWeeButton();
+        initAddLightSourceButton();
+        initAddBatButton();
+        initAddPackButton();
     }
 
     private void initAddLightSourceButton() {
@@ -172,8 +172,9 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
             Long id = Long.valueOf(parametersMap.get(QUERY_PARAM_ID_NAME).get(0));
             try {
                 this.envMasterEntity = masterFinderService.findByIdOrThrowException(id);
-                saveMasterToContext(UI.getCurrent(), this.envMasterEntity);
                 populateForm(this.envMasterEntity);
+                initMasterAdditionalCardsButtons();
+                saveMasterToContext(UI.getCurrent(), this.envMasterEntity);
             } catch (EnvMasterNotFoundException e) {
                 log.warn(showNotification(e.getMessage()));
             }

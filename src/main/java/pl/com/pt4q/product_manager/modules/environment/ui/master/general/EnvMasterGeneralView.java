@@ -11,7 +11,6 @@ import com.vaadin.flow.router.Route;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterFinderService;
-import pl.com.pt4q.product_manager.modules.environment.services.weee.EnvWeeeFinderService;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.detail.EnvMasterDetailView;
 import pl.com.pt4q.product_manager.modules.environment.ui.master_general_report.EnvMasterReportView;
 import pl.com.pt4q.product_manager.view_utils.FilterComboBoxDiv;

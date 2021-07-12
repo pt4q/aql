@@ -12,7 +12,9 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
 import pl.com.pt4q.product_manager.modules.environment.data.weee.EnvWeeeEntity;
+import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterSaverService;
 import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterAlreadyExistsException;
+import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterNotFoundException;
 import pl.com.pt4q.product_manager.modules.environment.services.weee.EnvWeeeFinderService;
 import pl.com.pt4q.product_manager.modules.environment.services.weee.EnvWeeeSaverService;
 import pl.com.pt4q.product_manager.modules.environment.services.weee.exceptions.EnvWeeeAlreadyExistsException;
@@ -39,6 +41,7 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
 
     private EnvWeeeFinderService envWeeeFinderService;
     private EnvWeeeSaverService envWeeeSaverService;
+    private EnvMasterSaverService envMasterSaverService;
     private UnitCrudService unitCrudService;
 
     private EnvWeeeEntity envWeeeEntity;
@@ -47,10 +50,12 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
     @Autowired
     public EnvWeeeView(EnvWeeeFinderService envWeeeFinderService,
                        EnvWeeeSaverService envWeeeSaverService,
+                       EnvMasterSaverService envMasterSaverService,
                        UnitCrudService unitCrudService) {
 
         this.envWeeeFinderService = envWeeeFinderService;
         this.envWeeeSaverService = envWeeeSaverService;
+        this.envMasterSaverService = envMasterSaverService;
         this.unitCrudService = unitCrudService;
 
         this.envMasterEntity = getMasterEntityFromContext();
@@ -92,17 +97,15 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
 
             if (formBinder.isValid()) {
                 try {
-                    this.envWeeeEntity = envWeeeSaverService.create(formBinder.getBean());
+                        this.envMasterEntity = envWeeeSaverService.createWeeeAndAddItToMaster(this. envMasterEntity, formBinder.getBean());
+                        this.envWeeeEntity = this.envMasterEntity.getWeee();
+                        saveMasterToContext(this.envMasterEntity);
+                        Notification.show(String.format("%s: WEEE card has been created for %s", PAGE_TITLE, this.envMasterEntity.getProduct().getSku()));
 
-                    saveMasterToContext(this.envMasterEntity);
-
-                    Notification.show(String.format("%s: WEEE card has been created for %s", PAGE_TITLE, this.envMasterEntity.getProduct().getSku()));
-                } catch (EnvWeeeAlreadyExistsException | EnvMasterAlreadyExistsException e) {
+                } catch (EnvWeeeAlreadyExistsException e) {
                     try {
                         this.envWeeeEntity = envWeeeSaverService.update(formBinder.getBean());
-
                         saveMasterToContext(this.envMasterEntity);
-
                         Notification.show(String.format("%s: WEEE card has been updated for %s", PAGE_TITLE, this.envMasterEntity.getProduct().getSku()));
                     } catch (EnvWeeeNotFoundException ex) {
                         String errMsg = ex.getMessage();
@@ -119,10 +122,12 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
         this.saveObjectAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
             Binder<EnvWeeeEntity> weeeEntityBinder = this.weeeEditorDiv.getWeeeEntityBinder();
 
-            if (weeeEntityBinder.getBean().getId() != null)
-                this.envMasterEntity.setWeee(weeeEntityBinder.getBean());
-            else
-                Notification.show(String.format("WEEE card for %s product has not been saved", envMasterEntity.getProduct().getSku()));
+            if (weeeEntityBinder.getBean() != null) {
+                if (weeeEntityBinder.getBean().getId() != null)
+                    this.envMasterEntity.setWeee(weeeEntityBinder.getBean());
+                else
+                    Notification.show(String.format("WEEE card for %s product has not been saved", envMasterEntity.getProduct().getSku()));
+            }
 
             saveMasterToContext(this.envMasterEntity);
             UI.getCurrent().navigate(EnvMasterDetailView.ROUTE);

@@ -4,6 +4,9 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
+import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterSaverService;
+import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.product.data.manufacturer.ManufacturerEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_category.ProductCategoryEntity;
@@ -22,10 +25,10 @@ import pl.com.pt4q.product_manager.modules.product.services.unit.exceptions.Unit
 import pl.com.pt4q.product_manager.modules.test_card.data.test_card.TestCardEntity;
 import pl.com.pt4q.product_manager.modules.test_card.services.test_card.TestCardForProductCategoryCreator;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -42,7 +45,10 @@ public class AppInitializer implements CommandLineRunner {
     @Autowired
     private ProductCreatorAndUpdaterService productCreatorAndUpdaterService;
     @Autowired
-    private TestCardForProductCategoryCreator cardForProductCreator;
+    private EnvMasterSaverService envMasterSaverService;
+//    @Autowired
+//    private TestCardForProductCategoryCreator cardForProductCreator;
+
 
     @Override
     public void run(String... args) throws Exception {
@@ -60,6 +66,9 @@ public class AppInitializer implements CommandLineRunner {
 
         List<ProductEntity> products = initProducts(categories, manufacturers);
         products.forEach(product -> logToConsoleWhatWasCreated("product", product.getSku(), product.getId()));
+
+        List<EnvMasterEntity> envMasterCards = initEnvMasterCards(products);
+        envMasterCards.forEach(master -> logToConsoleWhatWasCreated("master card", String.format("master for %s",master.getProduct().getSku()), master.getId()));
 
 //        List<ProductPartEntity> firstProductParts = initProductParts(products.get(0), seriesList);
 //        firstProductParts.forEach(part -> logToConsoleWhatWasCreated("part", String.format("%s part for %s product (id:%d)", part.getPartModelOrPartName(), part.getProduct().getProductSku(), part.getProduct().getId()), part.getId()));
@@ -102,13 +111,13 @@ public class AppInitializer implements CommandLineRunner {
                 .name("kilogram")
                 .units("kg")
                 .decimalPlaces(0)
-                .valuesType(UnitTypeEnum.DECIMAL)
+                .valuesType(UnitTypeEnum.FLOAT)
                 .build());
         units.add(UnitEntity.builder()
                 .name("gram")
                 .units("g")
                 .decimalPlaces(-3)
-                .valuesType(UnitTypeEnum.DECIMAL)
+                .valuesType(UnitTypeEnum.FLOAT)
                 .build());
 
         return units.stream()
@@ -187,10 +196,10 @@ public class AppInitializer implements CommandLineRunner {
         List<String> partNames = new ArrayList<>();
         partNames.add("wirnik");
 
-        int maxSeries = seriesList.stream()
-                .mapToInt(series -> Integer.parseInt(series.getSeries()))
-                .max()
-                .getAsInt();
+//        int maxSeries = seriesList.stream()
+//                .mapToInt(series -> Integer.parseInt(series.getSeries()))
+//                .max()
+//                .getAsInt();
 
         List<ProductPartEntity> productParts = new ArrayList<>();
 
@@ -208,20 +217,43 @@ public class AppInitializer implements CommandLineRunner {
         return productParts;
     }
 
+    private List<EnvMasterEntity> initEnvMasterCards(List<ProductEntity> products){
+        double minWeightValue = 0d;
+        double maxWeightValue = 50d;
+        int roundPlaces = 2;
+
+        return products.stream()
+                .map(product -> {
+                    try {
+                        return envMasterSaverService.create(EnvMasterEntity.builder()
+                                .product(product)
+                                .validFrom(LocalDate.now())
+                                .grossWeight(BigDecimal.valueOf(new Random().doubles(minWeightValue, maxWeightValue).findFirst().orElse(0.00d))
+                                        .setScale(roundPlaces, RoundingMode.HALF_UP)
+                                        .doubleValue())
+                                .grossWeightUnit(unitCrudService.findByUnits("kg").get())
+                                .build());
+                    } catch (EnvMasterAlreadyExistsException e) {
+                        return null;
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
 //    private List<ProductPartAttributeEntity> initAttributesForPart(ProductPartEntity part) {
 //
 //    }
 
-    private List<TestCardEntity> initTestCards(List<ProductCategoryEntity> categories) {
-        TestCardEntity testCardEntity = cardForProductCreator
-                .createEmptyTestCardForProduct(TestCardEntity.builder()
-                        .productCategory(categories.get(0))
-                        .testCardName("Karta testowa wygenerowana podczas rozruchu aplikacji")
-                        .build());
-        return new LinkedList<>() {{
-            add(testCardEntity);
-        }};
-    }
+//    private List<TestCardEntity> initTestCards(List<ProductCategoryEntity> categories) {
+//        TestCardEntity testCardEntity = cardForProductCreator
+//                .createEmptyTestCardForProduct(TestCardEntity.builder()
+//                        .productCategory(categories.get(0))
+//                        .testCardName("Karta testowa wygenerowana podczas rozruchu aplikacji")
+//                        .build());
+//        return new LinkedList<>() {{
+//            add(testCardEntity);
+//        }};
+//    }
 
     private void logToConsoleWhatWasCreated(String createdObjectType, String createdObjectName, Long objectId) {
         System.out.println(String.format("TEST INIT: Created %s: %s (id:%d)", createdObjectType, createdObjectName, objectId));

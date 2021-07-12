@@ -1,15 +1,18 @@
 package pl.com.pt4q.product_manager.modules.environment.services.weee;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
 import pl.com.pt4q.product_manager.modules.environment.data.weee.EnvWeeeEntity;
+import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterFinderService;
 import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterSaverService;
 import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterAlreadyExistsException;
+import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterNotFoundException;
 import pl.com.pt4q.product_manager.modules.environment.services.weee.exceptions.EnvWeeeAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.environment.services.weee.exceptions.EnvWeeeNotFoundException;
-import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 
+@Slf4j
 @Service
 public class EnvWeeeSaverService {
 
@@ -17,14 +20,20 @@ public class EnvWeeeSaverService {
     private EnvWeeeCrudSaver envWeeeCrudSaver;
     @Autowired
     private EnvWeeeFinderService envWeeeFinderService;
+
     @Autowired
     private EnvMasterSaverService envMasterSaverService;
+    @Autowired
+    private EnvMasterFinderService envMasterFinderService;
 
-    public EnvWeeeEntity create(EnvWeeeEntity weeeEntity) throws EnvWeeeAlreadyExistsException, EnvMasterAlreadyExistsException {
+    public EnvMasterEntity createWeeeAndAddItToMaster(EnvMasterEntity masterEntity, EnvWeeeEntity weeeEntity) throws EnvWeeeAlreadyExistsException {
         try {
             weeeEntity = envWeeeFinderService.findByIdOrThrowException(weeeEntity.getId());
         } catch (EnvWeeeNotFoundException e) {
-            return envWeeeCrudSaver.save(weeeEntity);
+            weeeEntity = envWeeeCrudSaver.save(weeeEntity);
+
+            masterEntity.setWeee(weeeEntity);
+            return connectWeeeWithMaster(masterEntity);
         }
         throw new EnvWeeeAlreadyExistsException(String.format("Weee card (id:%d) already exists",
                 weeeEntity.getId()
@@ -34,8 +43,28 @@ public class EnvWeeeSaverService {
         ));
     }
 
-    private EnvMasterEntity createMasterIfItHasNullId(EnvMasterEntity envMasterEntity) throws EnvMasterAlreadyExistsException {
-        return envMasterSaverService.create(envMasterEntity);
+    private EnvMasterEntity connectWeeeWithMaster(EnvMasterEntity masterEntity) {
+        try {
+            masterEntity = envMasterFinderService.findByIdOrThrowException(masterEntity.getId());
+        } catch (EnvMasterNotFoundException e1) {
+            try {
+                masterEntity = envMasterSaverService.create(masterEntity);
+                log.info(String.format("Master (id=%d) has been created for weee (id:%d)",
+                        masterEntity.getId(),
+                        masterEntity.getWeee().getId()));
+            } catch (EnvMasterAlreadyExistsException e2) {
+                try {
+                    masterEntity = envMasterSaverService.update(masterEntity);
+                } catch (EnvMasterNotFoundException e3) {
+                    envWeeeCrudSaver.delete(masterEntity.getWeee());
+                    log.error(String.format("Error when try to update existing master (id:%d) with weee (id:%d): %s",
+                            masterEntity.getId(),
+                            masterEntity.getWeee().getId(),
+                            e3.getMessage()));
+                }
+            }
+        }
+        return masterEntity;
     }
 
     public EnvWeeeEntity update(EnvWeeeEntity weeeEntity) throws EnvWeeeNotFoundException {

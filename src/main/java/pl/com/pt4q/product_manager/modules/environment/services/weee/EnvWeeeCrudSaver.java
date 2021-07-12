@@ -41,4 +41,9 @@ class EnvWeeeCrudSaver {
         );
         return weeeEntity;
     }
+
+    public void delete(EnvWeeeEntity weeeEntity){
+        repository.delete(weeeEntity);
+        log.info(String.format("Weee card (id:%d) has been deleted", weeeEntity.getId()));
+    }
 }

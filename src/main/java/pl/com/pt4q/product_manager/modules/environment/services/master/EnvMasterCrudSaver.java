@@ -34,4 +34,9 @@ class EnvMasterCrudSaver {
         );
         return masterEntity;
     }
+
+    public void delete(EnvMasterEntity masterEntity){
+        repository.delete(masterEntity);
+        log.info(String.format("Master card (id:%s) has been deleted"));
+    }
 }

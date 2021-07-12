@@ -35,4 +35,8 @@ public class EnvMasterSaverService {
         this.envMasterFinderService.findByIdOrThrowException(masterEntity.getId());
         return envMasterCrudSaver.update(masterEntity);
     }
+
+    public void delete(EnvMasterEntity masterEntity){
+        this.envMasterCrudSaver.delete(masterEntity);
+    }
 }
