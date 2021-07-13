@@ -14,15 +14,14 @@ import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEnti
 import pl.com.pt4q.product_manager.modules.environment.data.weee.EnvWeeeEntity;
 import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterFinderService;
 import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterSaverService;
-import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterNotFoundException;
 import pl.com.pt4q.product_manager.modules.environment.services.weee.EnvWeeeFinderService;
 import pl.com.pt4q.product_manager.modules.environment.services.weee.EnvWeeeSaverService;
 import pl.com.pt4q.product_manager.modules.environment.services.weee.exceptions.EnvWeeeAlreadyExistsException;
-import pl.com.pt4q.product_manager.modules.environment.services.weee.exceptions.EnvWeeeNotFoundException;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.detail.EnvMasterDetailView;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
 import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
+import pl.com.pt4q.product_manager.view_utils.UrlLinkWithParamCreator;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 import java.util.List;
@@ -81,10 +80,8 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
     }
 
     private EnvWeeeEntity getWeeeFromMasterOrInitNew(EnvMasterEntity masterEntity) {
-        if(masterEntity != null)
-            return envMasterEntity.getWeee() != null ?
-                envMasterEntity.getWeee()
-                : new EnvWeeeEntity();
+        if (masterEntity != null)
+            return envMasterEntity.getWeee() != null ? envMasterEntity.getWeee() : new EnvWeeeEntity();
         else
             return null;
     }
@@ -100,9 +97,9 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
 
             if (formBinder.isValid()) {
                 try {
-                        this.envMasterEntity = envWeeeSaverService.createWeeeAndAddItToMaster(this. envMasterEntity, formBinder.getBean());
-                        saveMasterToContext(this.envMasterEntity);
-                        Notification.show(String.format("%s: WEEE card has been created for %s", PAGE_TITLE, this.envMasterEntity.getProduct().getSku()));
+                    this.envMasterEntity = envWeeeSaverService.createWeeeAndAddItToMaster(this.envMasterEntity, formBinder.getBean());
+                    saveMasterToContext(this.envMasterEntity);
+                    Notification.show(String.format("%s: WEEE card has been created for %s", PAGE_TITLE, this.envMasterEntity.getProduct().getSku()));
 
                 } catch (EnvWeeeAlreadyExistsException e) {
                     try {
@@ -126,11 +123,11 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
         this.saveObjectAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
             Binder<EnvWeeeEntity> weeeEntityBinder = this.weeeEditorDiv.getWeeeEntityBinder();
 
-            if (weeeEntityBinder.getBean() != null) {
-                if (weeeEntityBinder.getBean().getId() != null)
-                    this.envMasterEntity.setWeee(weeeEntityBinder.getBean());
-                else
-                    Notification.show(String.format("WEEE card for %s product has not been saved", envMasterEntity.getProduct().getSku()));
+            if (weeeEntityBinder.getBean() != null && weeeEntityBinder.getBean().getId() != null)
+                this.envMasterEntity.setWeee(weeeEntityBinder.getBean());
+            else {
+                this.envMasterEntity.setWeee(null);
+                Notification.show(String.format("WEEE card for %s product has not been saved", envMasterEntity.getProduct().getSku()));
             }
 
             saveMasterToContext(this.envMasterEntity);

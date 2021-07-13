@@ -10,6 +10,7 @@ import lombok.Getter;
 import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.detail.EnvMasterDetailView;
 import pl.com.pt4q.product_manager.modules.environment.ui.weee.EnvWeeeView;
+import pl.com.pt4q.product_manager.view_utils.UrlLinkWithParamCreator;
 
 import java.util.List;
 
@@ -70,7 +71,7 @@ class EnvMasterGeneralGridDiv extends Div {
                 .setAutoWidth(true);
         this.masterGrid
                 .addColumn(masterEntity -> masterEntity.getWeee() != null ?
-                        new ComponentRenderer<Anchor, EnvMasterEntity>(envMasterEntity -> new Anchor(createLinkWithParam(EnvWeeeView.ROUTE, EnvWeeeView.QUERY_PARAM_ID_NAME, envMasterEntity.getId()), "Yes"))
+                        new ComponentRenderer<Anchor, EnvMasterEntity>(envMasterEntity -> new Anchor(UrlLinkWithParamCreator.createLinkWithParam(EnvWeeeView.ROUTE, EnvWeeeView.QUERY_PARAM_ID_NAME, envMasterEntity.getId()), "Yes"))
                         : "No")
                 .setHeader("WEEE")
                 .setSortable(true)

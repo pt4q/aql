@@ -45,23 +45,19 @@ public class EnvWeeeSaverService {
 
     private EnvMasterEntity connectWeeeWithMaster(EnvMasterEntity masterEntity) {
         try {
-            masterEntity = envMasterFinderService.findByIdOrThrowException(masterEntity.getId());
-        } catch (EnvMasterNotFoundException e1) {
+            masterEntity = envMasterSaverService.create(masterEntity);
+            log.info(String.format("Master (id=%d) has been created for weee (id:%d)",
+                    masterEntity.getId(),
+                    masterEntity.getWeee().getId()));
+        } catch (EnvMasterAlreadyExistsException e2) {
             try {
-                masterEntity = envMasterSaverService.create(masterEntity);
-                log.info(String.format("Master (id=%d) has been created for weee (id:%d)",
+                masterEntity = envMasterSaverService.update(masterEntity);
+            } catch (EnvMasterNotFoundException e3) {
+                envWeeeCrudSaver.delete(masterEntity.getWeee());
+                log.error(String.format("Error when try to update existing master (id:%d) with weee (id:%d): %s",
                         masterEntity.getId(),
-                        masterEntity.getWeee().getId()));
-            } catch (EnvMasterAlreadyExistsException e2) {
-                try {
-                    masterEntity = envMasterSaverService.update(masterEntity);
-                } catch (EnvMasterNotFoundException e3) {
-                    envWeeeCrudSaver.delete(masterEntity.getWeee());
-                    log.error(String.format("Error when try to update existing master (id:%d) with weee (id:%d): %s",
-                            masterEntity.getId(),
-                            masterEntity.getWeee().getId(),
-                            e3.getMessage()));
-                }
+                        masterEntity.getWeee().getId(),
+                        e3.getMessage()));
             }
         }
         return masterEntity;
