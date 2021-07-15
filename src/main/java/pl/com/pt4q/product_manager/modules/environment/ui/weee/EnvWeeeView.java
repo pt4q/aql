@@ -21,7 +21,6 @@ import pl.com.pt4q.product_manager.modules.environment.services.weee.exceptions.
 import pl.com.pt4q.product_manager.modules.environment.ui.master.detail.EnvMasterDetailView;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
 import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
-import pl.com.pt4q.product_manager.view_utils.UrlLinkWithParamCreator;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 import java.util.List;
@@ -61,14 +60,16 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
         this.unitCrudService = unitCrudService;
 
         this.envMasterEntity = getMasterEntityFromContext();
-        this.envMasterEntity.setWeee(getWeeeFromMasterOrInitNew(this.envMasterEntity));
+        if (this.envMasterEntity != null)
+            this.envMasterEntity.setWeee(getWeeeFromMasterOrInitNew(this.envMasterEntity));
 
         this.weeeEditorDiv = new EnvWeeeEditorDiv(unitCrudService, this.envMasterEntity);
 
         initSaveButton();
         initBackButton();
 
-        populateWeeeForm(this.envMasterEntity.getWeee());
+        if (this.envMasterEntity != null)
+            populateWeeeForm(this.envMasterEntity.getWeee());
 
         VerticalLayout layout = new VerticalLayout();
         layout.add(this.saveObjectAndBackButtonsDiv, this.weeeEditorDiv);

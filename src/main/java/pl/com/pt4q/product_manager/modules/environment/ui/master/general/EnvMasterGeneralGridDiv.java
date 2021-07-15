@@ -70,9 +70,9 @@ class EnvMasterGeneralGridDiv extends Div {
                 .setSortable(true)
                 .setAutoWidth(true);
         this.masterGrid
-                .addColumn(masterEntity -> masterEntity.getWeee() != null ?
-                        new ComponentRenderer<Anchor, EnvMasterEntity>(envMasterEntity -> new Anchor(UrlLinkWithParamCreator.createLinkWithParam(EnvWeeeView.ROUTE, EnvWeeeView.QUERY_PARAM_ID_NAME, envMasterEntity.getId()), "Yes"))
-                        : "No")
+                .addColumn(new ComponentRenderer<>(masterEntity -> masterEntity.getWeee() != null ?
+                        new Anchor(UrlLinkWithParamCreator.createLinkWithParam(EnvWeeeView.ROUTE, EnvWeeeView.QUERY_PARAM_ID_NAME, masterEntity.getId()), "Yes")
+                        : new Anchor(UrlLinkWithParamCreator.createLinkWithParam(EnvMasterDetailView.ROUTE, EnvMasterDetailView.QUERY_PARAM_ID_NAME, masterEntity.getId()),"No")))
                 .setHeader("WEEE")
                 .setSortable(true)
                 .setAutoWidth(true);
