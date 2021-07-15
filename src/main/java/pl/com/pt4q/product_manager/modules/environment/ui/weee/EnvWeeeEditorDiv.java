@@ -150,24 +150,31 @@ class EnvWeeeEditorDiv extends Div {
                         null);
 
         this.weeeEntityBinder.forField(itemHeightNumberField)
+                .asRequired("Item height cannot be empty")
                 .bind(EnvWeeeEntity::getItemHeight, EnvWeeeEntity::setItemHeight);
         this.weeeEntityBinder.forField(itemLengthNumberField)
+                .asRequired("Item length cannot be empty")
                 .bind(EnvWeeeEntity::getItemLength, EnvWeeeEntity::setItemLength);
         this.weeeEntityBinder.forField(itemDepthNumberField)
+                .asRequired("Item depth cannot be empty")
                 .bind(EnvWeeeEntity::getItemDepth, EnvWeeeEntity::setItemDepth);
         this.weeeEntityBinder.forField(lengthUnitComboBox)
+                .asRequired("Select a unit of length")
                 .bind(envWeeeEntity -> envWeeeEntity.getItemLengthUnit() != null ? envWeeeEntity.getItemLengthUnit().getUnits() : "",
                         (envWeeeEntity, s) -> unitCrudService.findByUnits(s).ifPresent(envWeeeEntity::setItemLengthUnit));
 
         this.weeeEntityBinder.forField(netWeightNumberField)
+                .asRequired("Item net weight cannot be empty")
                 .bind(EnvWeeeEntity::getNetWeight, EnvWeeeEntity::setNetWeight);
         this.weeeEntityBinder.forField(netWeightUnitComboBox)
+                .asRequired("Select a unit of weight")
                 .bind(envWeeeEntity -> envWeeeEntity.getNetWeightUnit() != null ? envWeeeEntity.getNetWeightUnit().getUnits() : "",
                         (envWeeeEntity, s) -> unitCrudService.findByUnits(s).ifPresent(envWeeeEntity::setNetWeightUnit));
 
         this.weeeEntityBinder.forField(sourceTypeComboBox)
+                .asRequired("Select a type of source")
                 .bind(envWeeeEntity -> envWeeeEntity.getSourceType() != null ? new EnvSourceTypeEnumWrapper().getUnitTypeStringFromEnum(envWeeeEntity.getSourceType()) : "",
-                        (envWeeeEntity, s) -> new EnvSourceTypeEnumWrapper().getUnitTypeFromString(s));
+                        (envWeeeEntity, s) -> envWeeeEntity.setSourceType(new EnvSourceTypeEnumWrapper().getUnitTypeFromString(s)));
 
         this.weeeEntityBinder.setBean(new EnvWeeeEntity());
     }
