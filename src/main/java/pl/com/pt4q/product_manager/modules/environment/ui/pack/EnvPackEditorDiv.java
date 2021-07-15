@@ -13,8 +13,11 @@ import com.vaadin.flow.data.binder.Binder;
 import lombok.Getter;
 import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
 import pl.com.pt4q.product_manager.modules.environment.data.pack.EnvPackagingEntity;
-import pl.com.pt4q.product_manager.modules.environment.data.weee.EnvWeeeEntity;
+import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 class EnvPackEditorDiv extends Div {
 
@@ -37,6 +40,8 @@ class EnvPackEditorDiv extends Div {
 
     public EnvPackEditorDiv(UnitCrudService unitCrudService, EnvMasterEntity envMasterEntity) {
         this.unitCrudService = unitCrudService;
+
+        setUpComboBoxItems();
 
         initOtherFields();
         initWeightLayout();
@@ -93,8 +98,12 @@ class EnvPackEditorDiv extends Div {
         return hl;
     }
 
-    private void setUpComboBoxItems(){
-
+    private void setUpComboBoxItems() {
+        List<String> units = unitCrudService.getAll()
+                .stream()
+                .map(UnitEntity::getUnits)
+                .collect(Collectors.toList());
+        this.netWeightUnitComboBox.setItems(units);
     }
 
     private void initOtherFields() {
@@ -124,6 +133,16 @@ class EnvPackEditorDiv extends Div {
         this.packEntityBinder.forField(validToDatePicker)
                 .bind(envWeeeEntity -> envMasterEntity != null ? envMasterEntity.getValidTo() : null,
                         null);
+
+
+
+        this.packEntityBinder.forField(netWeightNumberField)
+                .asRequired("Item net weight cannot be empty")
+                .bind(EnvPackagingEntity::getNetWeight, EnvPackagingEntity::setNetWeight);
+        this.packEntityBinder.forField(netWeightUnitComboBox)
+                .asRequired("Select a unit of weight")
+                .bind(envPackagingEntity -> envPackagingEntity.getNetWeightUnit() != null ? envPackagingEntity.getNetWeightUnit().getUnits() : "",
+                        (envWeeeEntity, s) -> unitCrudService.findByUnits(s).ifPresent(envWeeeEntity::setNetWeightUnit));
 
         this.packEntityBinder.setBean(new EnvPackagingEntity());
     }

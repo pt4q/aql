@@ -15,7 +15,6 @@ import pl.com.pt4q.product_manager.modules.environment.data.weee.EnvWeeeEntity;
 import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterFinderService;
 import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterSaverService;
 import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterNotFoundException;
-import pl.com.pt4q.product_manager.modules.environment.services.weee.EnvWeeeFinderService;
 import pl.com.pt4q.product_manager.modules.environment.services.weee.EnvWeeeSaverService;
 import pl.com.pt4q.product_manager.modules.environment.services.weee.exceptions.EnvWeeeAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.detail.EnvMasterDetailView;
@@ -38,7 +37,6 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
     private SaveObjectAndBackButtonsDiv saveObjectAndBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save WEEE card");
     private EnvWeeeEditorDiv weeeEditorDiv;
 
-    private EnvWeeeFinderService envWeeeFinderService;
     private EnvWeeeSaverService envWeeeSaverService;
     private EnvMasterFinderService envMasterFinderService;
     private EnvMasterSaverService envMasterSaverService;
@@ -47,13 +45,11 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
     private EnvMasterEntity envMasterEntity;
 
     @Autowired
-    public EnvWeeeView(EnvWeeeFinderService envWeeeFinderService,
-                       EnvWeeeSaverService envWeeeSaverService,
+    public EnvWeeeView(EnvWeeeSaverService envWeeeSaverService,
                        EnvMasterFinderService envMasterFinderService,
                        EnvMasterSaverService envMasterSaverService,
                        UnitCrudService unitCrudService) {
 
-        this.envWeeeFinderService = envWeeeFinderService;
         this.envWeeeSaverService = envWeeeSaverService;
         this.envMasterFinderService = envMasterFinderService;
         this.envMasterSaverService = envMasterSaverService;
@@ -63,7 +59,7 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
         if (this.envMasterEntity != null)
             this.envMasterEntity.setWeee(getWeeeFromMasterOrInitNew(this.envMasterEntity));
 
-        this.weeeEditorDiv = new EnvWeeeEditorDiv(unitCrudService, this.envMasterEntity);
+        this.weeeEditorDiv = new EnvWeeeEditorDiv(this.unitCrudService, this.envMasterEntity);
 
         initSaveButton();
         initBackButton();
