@@ -37,7 +37,7 @@ public class EnvPackSaverService {
             masterEntity.setPackaging(packagingEntity);
             return connectWeeeWithMaster(masterEntity);
         }
-        throw new EnvWeeeAlreadyExistsException(String.format("Weee card (id:%d) already exists",
+        throw new EnvWeeeAlreadyExistsException(String.format("Pack card (id:%d) already exists",
                 packagingEntity.getId()
         ));
     }
@@ -45,7 +45,7 @@ public class EnvPackSaverService {
     private EnvMasterEntity connectWeeeWithMaster(EnvMasterEntity masterEntity) {
         try {
             masterEntity = envMasterSaverService.create(masterEntity);
-            log.info(String.format("Master (id=%d) has been created for weee (id:%d)",
+            log.info(String.format("Master (id=%d) has been created for pack (id:%d)",
                     masterEntity.getId(),
                     masterEntity.getWeee().getId()));
         } catch (EnvMasterAlreadyExistsException e2) {
@@ -53,7 +53,7 @@ public class EnvPackSaverService {
                 masterEntity = envMasterSaverService.update(masterEntity);
             } catch (EnvMasterNotFoundException e3) {
                 envPackCrudSaver.delete(masterEntity.getPackaging());
-                log.error(String.format("Error when try to update existing master (id:%d) with weee (id:%d): %s",
+                log.error(String.format("Error when try to update existing master (id:%d) with pack (id:%d): %s",
                         masterEntity.getId(),
                         masterEntity.getWeee().getId(),
                         e3.getMessage()));

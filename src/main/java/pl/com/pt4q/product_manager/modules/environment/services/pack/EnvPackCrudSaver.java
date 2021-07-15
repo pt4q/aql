@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.pt4q.product_manager.modules.environment.data.pack.EnvPackagingEntity;
-import pl.com.pt4q.product_manager.modules.environment.data.weee.EnvWeeeEntity;
 
 @Slf4j
 @Service
@@ -15,7 +14,7 @@ class EnvPackCrudSaver {
 
     public EnvPackagingEntity save(EnvPackagingEntity packagingEntity) {
         packagingEntity = repository.save(packagingEntity);
-        log.info(String.format("Packaging card (id:%d) has been created",
+        log.info(String.format("Pack card (id:%d) has been created",
                 packagingEntity.getId()
                 )
         );
@@ -24,7 +23,7 @@ class EnvPackCrudSaver {
 
     public EnvPackagingEntity update(EnvPackagingEntity packagingEntity) {
         packagingEntity = repository.save(packagingEntity);
-        log.info(String.format("Packaging card (id:%d) has been updated",
+        log.info(String.format("Pack card (id:%d) has been updated",
                 packagingEntity.getId()
                 )
         );
