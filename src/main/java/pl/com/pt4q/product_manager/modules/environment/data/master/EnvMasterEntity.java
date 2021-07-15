@@ -37,7 +37,7 @@ public class EnvMasterEntity {
     @ManyToOne
     private UnitEntity grossWeightUnit;
 
-    @OneToOne(mappedBy = "master")
+    @OneToOne
     private EnvWeeeEntity weee;
 
     @OneToOne(mappedBy = "master")

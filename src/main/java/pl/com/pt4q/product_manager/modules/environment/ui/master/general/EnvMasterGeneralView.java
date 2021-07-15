@@ -27,7 +27,7 @@ public class EnvMasterGeneralView extends Div {
 
     private FilterTextFieldDiv productFilterDiv = new FilterTextFieldDiv("Filter by product");
     private FilterComboBoxDiv masterStatusFilterDiv = new FilterComboBoxDiv("Filter by product status");
-    private EnvMasterGeneralGridDiv masterGridDiv = new EnvMasterGeneralGridDiv();
+    private EnvMasterGeneralGridDiv masterGridDiv;
 
     private Button addNewProductButton = new Button("Add new env condition");
     private Button createEnvironmentConditionsButton = new Button("Create report");
@@ -36,7 +36,10 @@ public class EnvMasterGeneralView extends Div {
 
     @Autowired
     public EnvMasterGeneralView(EnvMasterFinderService envMasterFinderService) {
+
         this.envMasterFinderService = envMasterFinderService;
+
+        this.masterGridDiv = new EnvMasterGeneralGridDiv();
 
         initAddProductButton();
         initCreateEnvironmentReportButton();

@@ -22,8 +22,8 @@ public class EnvWeeeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    @OneToOne
-    private EnvMasterEntity master;
+//    @OneToOne
+//    private EnvMasterEntity master;
 
 //    private LocalDate validFrom;
 //    private LocalDate validTo;
@@ -32,9 +32,9 @@ public class EnvWeeeEntity {
     @ManyToOne
     private UnitEntity netWeightUnit;
 
-    private Integer itemHeight;
-    private Integer itemLength;
-    private Integer itemDepth;
+    private Double itemHeight;
+    private Double itemLength;
+    private Double itemDepth;
     @ManyToOne
     private UnitEntity itemLengthUnit;
 

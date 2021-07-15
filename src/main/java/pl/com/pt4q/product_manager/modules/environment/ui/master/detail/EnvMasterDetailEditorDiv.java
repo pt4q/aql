@@ -16,16 +16,19 @@ import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
 import pl.com.pt4q.product_manager.modules.product.services.product.ProductFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
 
-@Getter
 class EnvMasterDetailEditorDiv extends Div {
 
+    @Getter
     private ComboBox<String> productComboBox = new ComboBox<>("Product");
     private TextArea productDescriptionTextArea = new TextArea("Product description");
     private DatePicker validFromDatePicker = new DatePicker("Valid from");
     private DatePicker validToDatePicker = new DatePicker("Valid to");
     private NumberField grossWeightNumberField = new NumberField("Gross weight");
+
+    @Getter
     private ComboBox<String> grossWeightUnitComboBox = new ComboBox<>("Gross weight unit");
 
+    @Getter
     private Binder<EnvMasterEntity> masterBinder = new Binder<>();
 
     private ProductFinderService productFinderService;
@@ -67,7 +70,7 @@ class EnvMasterDetailEditorDiv extends Div {
         return hl;
     }
 
-    private void setUpComboBoxItems(){
+    private void setUpComboBoxItems() {
         this.productComboBox.setItems(productFinderService.findAll()
                 .stream()
                 .map(ProductEntity::getSku)
@@ -95,6 +98,7 @@ class EnvMasterDetailEditorDiv extends Div {
 
     private void initBinder() {
         this.masterBinder.forField(productComboBox)
+                .asRequired("Product can't be empty")
                 .bind(
                         masterEntity -> masterEntity.getProduct() != null ? masterEntity.getProduct().getSku() : "",
                         (masterEntity, s) -> productFinderService.findBySku(s).ifPresent(masterEntity::setProduct)
@@ -126,6 +130,7 @@ class EnvMasterDetailEditorDiv extends Div {
     }
 
     public void populateForm(EnvMasterEntity masterEntity) {
-        this.masterBinder.readBean(masterEntity);
+//        this.masterBinder.readBean(masterEntity);
+        this.masterBinder.setBean(masterEntity);
     }
 }

@@ -1,28 +1,33 @@
 package pl.com.pt4q.product_manager.modules.environment.data.data_utils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class EnvSourceTypeEnumWrapper {
 
-    private Map<String, EnvSourceTypeEnum> sources;
+    private Map<EnvSourceTypeEnum, String> sources;
 
     public EnvSourceTypeEnumWrapper() {
         sources = new HashMap<>();
 
-        sources.put("Importer (non-EU)", EnvSourceTypeEnum.NON_EU);
-        sources.put("Exporter (EU)", EnvSourceTypeEnum.EU);
+        sources.put(EnvSourceTypeEnum.NON_EU, "Importer (non-EU)");
+        sources.put(EnvSourceTypeEnum.EU, "Exporter (EU)");
     }
 
     public EnvSourceTypeEnum getUnitTypeFromString(String unitTypeString) {
-        return sources.get(unitTypeString);
+        Optional<EnvSourceTypeEnum> sourceTypeEnum = sources.entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().equals(unitTypeString))
+                .map(Map.Entry::getKey)
+                .findFirst();
+        return sourceTypeEnum.orElse(null);
+    }
+
+    public String getUnitTypeStringFromEnum(EnvSourceTypeEnum typeEnum){
+        return sources.get(typeEnum);
     }
 
     public List<String> getUnitsStringsForComboBox() {
-        return sources.keySet()
-                .stream()
-                .collect(Collectors.toList());
+        return new ArrayList<>(sources.values());
     }
 }
