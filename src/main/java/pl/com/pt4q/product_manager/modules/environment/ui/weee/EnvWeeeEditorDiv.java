@@ -11,7 +11,7 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import lombok.Getter;
-import pl.com.pt4q.product_manager.modules.environment.data.data_utils.EnvSourceTypeEnumWrapper;
+import pl.com.pt4q.product_manager.modules.environment.data.weee.EnvSourceTypeEnumWrapper;
 import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
 import pl.com.pt4q.product_manager.modules.environment.data.weee.EnvWeeeEntity;
 import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;

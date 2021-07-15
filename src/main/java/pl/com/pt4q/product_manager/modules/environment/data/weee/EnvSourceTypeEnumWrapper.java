@@ -1,7 +1,6 @@
-package pl.com.pt4q.product_manager.modules.environment.data.data_utils;
+package pl.com.pt4q.product_manager.modules.environment.data.weee;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class EnvSourceTypeEnumWrapper {
 

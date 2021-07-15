@@ -46,7 +46,7 @@ public class EnvMasterEntity {
     @OneToOne(mappedBy = "master")
     private EnvBatteryEntity battery;
 
-    @OneToOne(mappedBy = "master")
+    @OneToOne
     private EnvPackagingEntity packaging;
 
 //    private boolean copyright;

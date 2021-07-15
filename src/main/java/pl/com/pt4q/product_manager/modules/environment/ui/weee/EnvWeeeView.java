@@ -128,7 +128,7 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
                 this.envMasterEntity.setWeee(weeeEntityBinder.getBean());
             else {
                 this.envMasterEntity.setWeee(null);
-                Notification.show(String.format("WEEE card for %s product has not been saved", envMasterEntity.getProduct().getSku()));
+                showNotification(String.format("WEEE card for %s product has not been saved", envMasterEntity.getProduct().getSku()));
             }
 
             saveMasterToContext(this.envMasterEntity);

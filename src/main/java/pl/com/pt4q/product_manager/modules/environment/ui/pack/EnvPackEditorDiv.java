@@ -10,11 +10,15 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import lombok.Getter;
+import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
+import pl.com.pt4q.product_manager.modules.environment.data.pack.EnvPackagingEntity;
 import pl.com.pt4q.product_manager.modules.environment.data.weee.EnvWeeeEntity;
+import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
 
 class EnvPackEditorDiv extends Div {
 
-    private TextField productComboBox = new TextField("Product");
+    private TextField productTextField = new TextField("Product");
     private TextArea productDescriptionTextArea = new TextArea("Product description");
     private DatePicker validFromDatePicker = new DatePicker("Valid from");
     private DatePicker validToDatePicker = new DatePicker("Valid to");
@@ -26,13 +30,17 @@ class EnvPackEditorDiv extends Div {
     private ComboBox<String> materialDetailComboBox = new ComboBox<>("Material - detail");
     private ComboBox<String> typeOfPackaging = new ComboBox<>("Type of packaging");
 
+    @Getter
+    private Binder<EnvPackagingEntity> packEntityBinder = new Binder<>();
 
-    private Binder<EnvWeeeEntity> lsEntityBinder = new Binder<>();
+    private UnitCrudService unitCrudService;
 
-    public EnvPackEditorDiv() {
+    public EnvPackEditorDiv(UnitCrudService unitCrudService, EnvMasterEntity envMasterEntity) {
+        this.unitCrudService = unitCrudService;
+
         initOtherFields();
         initWeightLayout();
-        initBinder();
+        initBinder(envMasterEntity);
 
         setMinWidth("20%");
         setMaxWidth("40%");
@@ -42,7 +50,7 @@ class EnvPackEditorDiv extends Div {
     private Div initFormLayoutDiv() {
         VerticalLayout formLayout = new VerticalLayout();
         formLayout.add(
-                this.productComboBox,
+                this.productTextField,
                 this.productDescriptionTextArea,
                 this.validFromDatePicker,
                 this.validToDatePicker,
@@ -85,9 +93,13 @@ class EnvPackEditorDiv extends Div {
         return hl;
     }
 
+    private void setUpComboBoxItems(){
+
+    }
+
     private void initOtherFields() {
-        this.productComboBox.setSizeFull();
-        this.productComboBox.setReadOnly(true);
+        this.productTextField.setSizeFull();
+        this.productTextField.setReadOnly(true);
         this.productDescriptionTextArea.setSizeFull();
         this.productDescriptionTextArea.setReadOnly(true);
 
@@ -99,7 +111,28 @@ class EnvPackEditorDiv extends Div {
         this.typeOfPackaging.setSizeFull();
     }
 
-    private void initBinder() {
+    private void initBinder(EnvMasterEntity envMasterEntity) {
+        this.packEntityBinder.forField(productTextField)
+                .bind(envWeeeEntity -> envMasterEntity != null ? envMasterEntity.getProduct().getSku() : "",
+                        null);
+        this.packEntityBinder.forField(productDescriptionTextArea)
+                .bind(envWeeeEntity -> envMasterEntity != null ? envMasterEntity.getProduct().getDescriptionPL() : "",
+                        null);
+        this.packEntityBinder.forField(validFromDatePicker)
+                .bind(envWeeeEntity -> envMasterEntity != null ? envMasterEntity.getValidFrom() : null,
+                        null);
+        this.packEntityBinder.forField(validToDatePicker)
+                .bind(envWeeeEntity -> envMasterEntity != null ? envMasterEntity.getValidTo() : null,
+                        null);
 
+        this.packEntityBinder.setBean(new EnvPackagingEntity());
+    }
+
+    private void cleanForm() {
+        populateForm(null);
+    }
+
+    public void populateForm(EnvPackagingEntity packEntity) {
+        this.packEntityBinder.setBean(packEntity);
     }
 }
