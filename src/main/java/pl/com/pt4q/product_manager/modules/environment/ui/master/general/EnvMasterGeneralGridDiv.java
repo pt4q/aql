@@ -9,7 +9,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import lombok.Getter;
 import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.detail.EnvMasterDetailView;
-import pl.com.pt4q.product_manager.modules.environment.ui.pack.EnvPackView;
+import pl.com.pt4q.product_manager.modules.environment.ui.pack.EnvPacksView;
 import pl.com.pt4q.product_manager.modules.environment.ui.weee.EnvWeeeView;
 import pl.com.pt4q.product_manager.view_utils.UrlLinkWithParamCreator;
 
@@ -94,8 +94,8 @@ class EnvMasterGeneralGridDiv extends Div {
 //                .setSortable(true)
 //                .setAutoWidth(true);
         this.masterGrid
-                .addColumn(new ComponentRenderer<>(masterEntity -> masterEntity.getPackaging() != null ?
-                        new Anchor(createLinkWithParam(EnvPackView.ROUTE, EnvPackView.QUERY_PARAM_ID_NAME, masterEntity.getId()), "Yes")
+                .addColumn(new ComponentRenderer<>(masterEntity -> !masterEntity.getPacks().isEmpty() ?
+                        new Anchor(createLinkWithParam(EnvPacksView.ROUTE, EnvPacksView.QUERY_PARAM_ID_NAME, masterEntity.getId()), "Yes")
                         : new Anchor(UrlLinkWithParamCreator.createLinkWithParam(EnvMasterDetailView.ROUTE, EnvMasterDetailView.QUERY_PARAM_ID_NAME, masterEntity.getId()), "No")))
                 .setHeader("PACK")
                 .setSortable(true)

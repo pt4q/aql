@@ -28,13 +28,13 @@ public class EnvPackSaverService {
     @Autowired
     private EnvMasterFinderService envMasterFinderService;
 
-    public EnvMasterEntity createWeeeAndAddItToMaster(EnvMasterEntity masterEntity, EnvPackagingEntity packagingEntity) throws EnvWeeeAlreadyExistsException {
+    public EnvMasterEntity createPackAndAddItToMaster(EnvMasterEntity masterEntity, EnvPackagingEntity packagingEntity) throws EnvWeeeAlreadyExistsException {
         try {
             packagingEntity = envPackFinderService.findByIdOrThrowException(packagingEntity.getId());
         } catch (EnvPackNotFoundException e) {
             packagingEntity = envPackCrudSaver.save(packagingEntity);
 
-            masterEntity.setPackaging(packagingEntity);
+//            masterEntity.setPackaging(packagingEntity);
             return connectWeeeWithMaster(masterEntity);
         }
         throw new EnvWeeeAlreadyExistsException(String.format("Pack card (id:%d) already exists",
@@ -52,7 +52,7 @@ public class EnvPackSaverService {
             try {
                 masterEntity = envMasterSaverService.update(masterEntity);
             } catch (EnvMasterNotFoundException e3) {
-                envPackCrudSaver.delete(masterEntity.getPackaging());
+//                envPackCrudSaver.delete(masterEntity.getPackaging());
                 log.error(String.format("Error when try to update existing master (id:%d) with pack (id:%d): %s",
                         masterEntity.getId(),
                         masterEntity.getWeee().getId(),

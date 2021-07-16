@@ -22,13 +22,15 @@ import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService
 import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Log4j2
-@Route(value = EnvPackView.ROUTE, layout = MainView.class)
-@PageTitle(EnvPackView.PAGE_TITLE)
-public class EnvPackView extends Div implements HasUrlParameter<String> {
+@Route(value = EnvPacksView.ROUTE, layout = MainView.class)
+@PageTitle(EnvPacksView.PAGE_TITLE)
+public class EnvPacksView extends Div implements HasUrlParameter<String> {
 
     public static final String PAGE_TITLE = "Product PACK card";
     public static final String ROUTE = EnvMasterDetailView.ROUTE + "-pack";
@@ -45,10 +47,10 @@ public class EnvPackView extends Div implements HasUrlParameter<String> {
     private EnvMasterEntity envMasterEntity;
 
     @Autowired
-    public EnvPackView(EnvPackSaverService envPackSaverService,
-                       EnvMasterFinderService envMasterFinderService,
-                       EnvMasterSaverService envMasterSaverService,
-                       UnitCrudService unitCrudService) {
+    public EnvPacksView(EnvPackSaverService envPackSaverService,
+                        EnvMasterFinderService envMasterFinderService,
+                        EnvMasterSaverService envMasterSaverService,
+                        UnitCrudService unitCrudService) {
 
         this.envPackSaverService = envPackSaverService;
         this.envMasterFinderService = envMasterFinderService;
@@ -57,15 +59,15 @@ public class EnvPackView extends Div implements HasUrlParameter<String> {
 
         this.envMasterEntity = getMasterEntityFromContext();
         if (this.envMasterEntity != null)
-            this.envMasterEntity.setPackaging(getPackFromMasterOrInitNew(this.envMasterEntity));
+            this.envMasterEntity.setPacks(getPackFromMasterOrInitNew(this.envMasterEntity));
 
         this.packEditorDiv = new EnvPackEditorDiv(this.unitCrudService, this.envMasterEntity);
 
         initSaveButton();
         initBackButton();
 
-        if (this.envMasterEntity != null)
-            populatePackForm(this.envMasterEntity.getPackaging());
+//        if (this.envMasterEntity != null)
+//            populatePackForm(this.envMasterEntity.getPackaging());
 
         VerticalLayout layout = new VerticalLayout();
         layout.add(this.saveObjectAndBackButtonsDiv, this.packEditorDiv);
@@ -76,9 +78,9 @@ public class EnvPackView extends Div implements HasUrlParameter<String> {
         add(layout);
     }
 
-    private EnvPackagingEntity getPackFromMasterOrInitNew(EnvMasterEntity masterEntity) {
+    private Set<EnvPackagingEntity> getPackFromMasterOrInitNew(EnvMasterEntity masterEntity) {
         if (masterEntity != null)
-            return envMasterEntity.getPackaging() != null ? envMasterEntity.getPackaging() : new EnvPackagingEntity();
+            return envMasterEntity.getPacks() != null ? envMasterEntity.getPacks() : new HashSet<>();
         else
             return null;
     }
@@ -94,13 +96,13 @@ public class EnvPackView extends Div implements HasUrlParameter<String> {
 
             if (formBinder.isValid()) {
                 try {
-                    this.envMasterEntity = envPackSaverService.createWeeeAndAddItToMaster(this.envMasterEntity, formBinder.getBean());
+                    this.envMasterEntity = envPackSaverService.createPackAndAddItToMaster(this.envMasterEntity, formBinder.getBean());
                     saveMasterToContext(this.envMasterEntity);
                     Notification.show(String.format("%s: PACK card has been created for %s", PAGE_TITLE, this.envMasterEntity.getProduct().getSku()));
 
                 } catch (EnvWeeeAlreadyExistsException e) {
                     try {
-                        this.envMasterEntity.setPackaging(formBinder.getBean());
+//                        this.envMasterEntity.setPackaging(formBinder.getBean());
                         this.envMasterEntity = envMasterSaverService.update(this.envMasterEntity);
 
                     } catch (EnvMasterNotFoundException ex) {
@@ -118,10 +120,11 @@ public class EnvPackView extends Div implements HasUrlParameter<String> {
         this.saveObjectAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
             Binder<EnvPackagingEntity> packagingEntityBinder = this.packEditorDiv.getPackEntityBinder();
 
-            if (packagingEntityBinder.getBean() != null && packagingEntityBinder.getBean().getId() != null)
-                this.envMasterEntity.setPackaging(packagingEntityBinder.getBean());
+            if (packagingEntityBinder.getBean() != null && packagingEntityBinder.getBean().getId() != null) {
+//                this.envMasterEntity.setPackaging(packagingEntityBinder.getBean());
+            }
             else {
-                this.envMasterEntity.setPackaging(null);
+                this.envMasterEntity.setPacks(null);
                 showNotification(String.format("PACK card for %s product has not been saved", envMasterEntity.getProduct().getSku()));
             }
 
@@ -141,7 +144,7 @@ public class EnvPackView extends Div implements HasUrlParameter<String> {
             try {
                 this.envMasterEntity = envMasterFinderService.findByIdOrThrowException(id);
                 saveMasterToContext(this.envMasterEntity);
-                populatePackForm(this.envMasterEntity.getPackaging());
+//                populatePackForm(this.envMasterEntity.getPackaging());
             } catch (EnvMasterNotFoundException e) {
                 log.warn(showNotification(e.getMessage()));
             }

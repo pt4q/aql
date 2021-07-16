@@ -26,6 +26,7 @@ public class EnvPackagingEntity {
     @Enumerated(EnumType.STRING)
     private EnvPackagingMaterialGeneralEnum materialGeneral;
 
+//    private materialDetail;
 
     @Enumerated(EnumType.STRING)
     private EnvPackagingTypeEnum typeOfPackaging;

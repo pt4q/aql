@@ -19,7 +19,7 @@ import pl.com.pt4q.product_manager.modules.environment.services.weee.EnvWeeeFind
 import pl.com.pt4q.product_manager.modules.environment.ui.bat.EnvBatView;
 import pl.com.pt4q.product_manager.modules.environment.ui.light_source.EnvLightSourceView;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.general.EnvMasterGeneralView;
-import pl.com.pt4q.product_manager.modules.environment.ui.pack.EnvPackView;
+import pl.com.pt4q.product_manager.modules.environment.ui.pack.EnvPacksView;
 import pl.com.pt4q.product_manager.modules.environment.ui.weee.EnvWeeeView;
 import pl.com.pt4q.product_manager.modules.product.services.product.ProductFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
@@ -106,13 +106,13 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
             this.buttonsDiv.getAddLightSourceButton().setText("Open LS");
         if (this.envMasterEntity.getBattery() != null)
             this.buttonsDiv.getAddBatButton().setText("Open BAT");
-        if (this.envMasterEntity.getPackaging() != null)
+        if (this.envMasterEntity.getPacks() != null)
             this.buttonsDiv.getAddPackButton().setText("Open PACK");
 
         this.buttonsDiv.getAddWeeButton().addClickListener(buttonClickEvent -> saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvWeeeView.ROUTE));
         this.buttonsDiv.getAddLightSourceButton().addClickListener(buttonClickEvent -> saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvLightSourceView.ROUTE));
         this.buttonsDiv.getAddBatButton().addClickListener(buttonClickEvent -> saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvBatView.ROUTE));
-        this.buttonsDiv.getAddPackButton().addClickListener(buttonClickEvent -> saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvPackView.ROUTE));
+        this.buttonsDiv.getAddPackButton().addClickListener(buttonClickEvent -> saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvPacksView.ROUTE));
     }
 
     private void saveMasterToContextIfBinderIsValidAndRouteToEndpoint(String route) {

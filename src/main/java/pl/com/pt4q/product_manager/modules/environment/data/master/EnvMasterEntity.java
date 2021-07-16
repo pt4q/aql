@@ -13,6 +13,7 @@ import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -46,8 +47,8 @@ public class EnvMasterEntity {
     @OneToOne(mappedBy = "master")
     private EnvBatteryEntity battery;
 
-    @OneToOne
-    private EnvPackagingEntity packaging;
+    @OneToMany(fetch = FetchType.EAGER)
+    private Set<EnvPackagingEntity> packs;
 
 //    private boolean copyright;
 
