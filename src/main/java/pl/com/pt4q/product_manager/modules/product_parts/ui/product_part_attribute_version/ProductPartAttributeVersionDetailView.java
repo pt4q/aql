@@ -10,7 +10,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.*;
 import pl.com.pt4q.product_manager.modules.product_parts.data.product_part_attribute.ProductPartAttributeEntity;
 import pl.com.pt4q.product_manager.modules.product_parts.data.product_part_attribute_version.ProductPartAttributeVersionEntity;
-import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
+import pl.com.pt4q.product_manager.view_utils.SaveAndBackButtonsDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class ProductPartAttributeVersionDetailView extends Div implements HasUrl
     private DatePicker validFromDateDatePicker = new DatePicker("Valid from date");
     private ComboBox<String> previousAttributeVersionValue = new ComboBox<>("Previous attribute version");
 
-    private SaveObjectAndBackButtonsDiv saveObjectAndBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save value version");
+    private SaveAndBackButtonsDiv saveAndBackButtonsDiv = new SaveAndBackButtonsDiv("Save value version");
 
     private Binder<ProductPartAttributeVersionEntity> attributeVersionForm = new Binder<>();
 
@@ -37,7 +37,7 @@ public class ProductPartAttributeVersionDetailView extends Div implements HasUrl
 
     public ProductPartAttributeVersionDetailView() {
         VerticalLayout layout = new VerticalLayout(
-                saveObjectAndBackButtonsDiv,
+                saveAndBackButtonsDiv,
                 attributeValueTextField,
                 productSeriesComboBox,
                 validFromDateDatePicker,

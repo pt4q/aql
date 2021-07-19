@@ -4,8 +4,7 @@ import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.*;
 import lombok.extern.log4j.Log4j2;
@@ -19,7 +18,7 @@ import pl.com.pt4q.product_manager.modules.environment.services.pack.EnvPackSave
 import pl.com.pt4q.product_manager.modules.environment.services.weee.exceptions.EnvWeeeAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.detail.EnvMasterDetailView;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
-import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
+import pl.com.pt4q.product_manager.view_utils.SaveAndBackButtonsDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 import java.util.HashSet;
@@ -35,9 +34,11 @@ public class EnvPacksView extends Div implements HasUrlParameter<String> {
     public static final String PAGE_TITLE = "Product PACK card";
     public static final String ROUTE = EnvMasterDetailView.ROUTE + "-pack";
     public static final String QUERY_PARAM_ID_NAME = "productId";
+    public static final String CSS = "./views/env_module/pack/pack-view.css";
 
-    private SaveObjectAndBackButtonsDiv saveObjectAndBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save PACK card");
+    private SaveAndBackButtonsDiv saveAndBackButtonsDiv = new SaveAndBackButtonsDiv("Save PACK card");
     private EnvPackEditorDiv packEditorDiv;
+    private EnvPacksGridDiv envPacksGridDiv;
 
     private EnvPackSaverService envPackSaverService;
     private EnvMasterFinderService envMasterFinderService;
@@ -62,6 +63,7 @@ public class EnvPacksView extends Div implements HasUrlParameter<String> {
             this.envMasterEntity.setPacks(getPackFromMasterOrInitNew(this.envMasterEntity));
 
         this.packEditorDiv = new EnvPackEditorDiv(this.unitCrudService, this.envMasterEntity);
+        this.envPacksGridDiv = new EnvPacksGridDiv();
 
         initSaveButton();
         initBackButton();
@@ -69,11 +71,17 @@ public class EnvPacksView extends Div implements HasUrlParameter<String> {
 //        if (this.envMasterEntity != null)
 //            populatePackForm(this.envMasterEntity.getPackaging());
 
-        VerticalLayout layout = new VerticalLayout();
-        layout.add(this.saveObjectAndBackButtonsDiv, this.packEditorDiv);
-        layout.setAlignItems(FlexComponent.Alignment.CENTER);
+        SplitLayout layout = new SplitLayout();
+        layout.addToPrimary(this.envPacksGridDiv);
+        layout.addToSecondary(this.packEditorDiv);
         layout.setSizeFull();
 
+//        VerticalLayout layout = new VerticalLayout();
+//        layout.add(this.saveObjectAndBackButtonsDiv, this.packEditorDiv);
+//        layout.setAlignItems(FlexComponent.Alignment.CENTER);
+//        layout.setSizeFull();
+
+        addClassName(ROUTE + "-view");
         setSizeFull();
         add(layout);
     }
@@ -90,7 +98,7 @@ public class EnvPacksView extends Div implements HasUrlParameter<String> {
     }
 
     private void initSaveButton() {
-        this.saveObjectAndBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
+        this.saveAndBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
             Binder<EnvPackagingEntity> formBinder = this.packEditorDiv.getPackEntityBinder();
             formBinder.validate().getBeanValidationErrors();
 
@@ -117,7 +125,7 @@ public class EnvPacksView extends Div implements HasUrlParameter<String> {
     }
 
     private void initBackButton() {
-        this.saveObjectAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
+        this.saveAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
             Binder<EnvPackagingEntity> packagingEntityBinder = this.packEditorDiv.getPackEntityBinder();
 
             if (packagingEntityBinder.getBean() != null && packagingEntityBinder.getBean().getId() != null) {

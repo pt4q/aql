@@ -19,7 +19,7 @@ import pl.com.pt4q.product_manager.modules.environment.services.weee.EnvWeeeSave
 import pl.com.pt4q.product_manager.modules.environment.services.weee.exceptions.EnvWeeeAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.detail.EnvMasterDetailView;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
-import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
+import pl.com.pt4q.product_manager.view_utils.SaveAndBackButtonsDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 import java.util.List;
@@ -34,7 +34,7 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
     public static final String ROUTE = EnvMasterDetailView.ROUTE + "-weee";
     public static final String QUERY_PARAM_ID_NAME = "productId";
 
-    private SaveObjectAndBackButtonsDiv saveObjectAndBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save WEEE card");
+    private SaveAndBackButtonsDiv saveAndBackButtonsDiv = new SaveAndBackButtonsDiv("Save WEEE card");
     private EnvWeeeEditorDiv weeeEditorDiv;
 
     private EnvWeeeSaverService envWeeeSaverService;
@@ -68,7 +68,7 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
             populateWeeeForm(this.envMasterEntity.getWeee());
 
         VerticalLayout layout = new VerticalLayout();
-        layout.add(this.saveObjectAndBackButtonsDiv, this.weeeEditorDiv);
+        layout.add(this.saveAndBackButtonsDiv, this.weeeEditorDiv);
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
         layout.setSizeFull();
 
@@ -88,7 +88,7 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
     }
 
     private void initSaveButton() {
-        this.saveObjectAndBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
+        this.saveAndBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
             Binder<EnvWeeeEntity> formBinder = this.weeeEditorDiv.getWeeeEntityBinder();
             formBinder.validate().getBeanValidationErrors();
 
@@ -117,7 +117,7 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
     }
 
     private void initBackButton() {
-        this.saveObjectAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
+        this.saveAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
             Binder<EnvWeeeEntity> weeeEntityBinder = this.weeeEditorDiv.getWeeeEntityBinder();
 
             if (weeeEntityBinder.getBean() != null && weeeEntityBinder.getBean().getId() != null)

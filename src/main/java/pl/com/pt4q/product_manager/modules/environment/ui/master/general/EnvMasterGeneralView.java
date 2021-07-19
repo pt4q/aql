@@ -23,7 +23,7 @@ import pl.com.pt4q.product_manager.views.main.MainView;
 public class EnvMasterGeneralView extends Div {
 
     public static final String PAGE_TITLE = "Environmental conditions";
-    public static final String ROUTE = "environment";
+    public static final String ROUTE = "env";
 
     private FilterTextFieldDiv productFilterDiv = new FilterTextFieldDiv("Filter by product");
     private FilterComboBoxDiv masterStatusFilterDiv = new FilterComboBoxDiv("Filter by product status");

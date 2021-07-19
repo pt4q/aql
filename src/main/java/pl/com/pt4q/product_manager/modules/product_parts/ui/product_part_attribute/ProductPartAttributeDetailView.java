@@ -22,7 +22,7 @@ import pl.com.pt4q.product_manager.modules.product_parts.services.product_part_a
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
 import pl.com.pt4q.product_manager.modules.product_parts.ui.product_part.ProductPartDetailView;
 import pl.com.pt4q.product_manager.modules.product_parts.ui.product_part_attribute_version.ProductPartAttributeVersionDetailView;
-import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
+import pl.com.pt4q.product_manager.view_utils.SaveAndBackButtonsDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class ProductPartAttributeDetailView extends Div implements HasUrlParamet
     public static final String ROUTE = "product-part-attribute-detail";
     public static final String QUERY_PARAM_ID_NAME = "partAttributeId";
 
-    private SaveObjectAndBackButtonsDiv saveObjectAndBackButtonsDiv;
+    private SaveAndBackButtonsDiv saveAndBackButtonsDiv;
     private ProductPartAttributeEditorDiv productPartAttributeEditorDiv;
     private ProductPartAttributeVersionsGridDiv productPartAttributeVersionsGridDiv;
 
@@ -65,7 +65,7 @@ public class ProductPartAttributeDetailView extends Div implements HasUrlParamet
 
         this.productPartAttribute = getProductPartAttributeFromContext();
 
-        this.saveObjectAndBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save attribute");
+        this.saveAndBackButtonsDiv = new SaveAndBackButtonsDiv("Save attribute");
         this.productPartAttributeEditorDiv = new ProductPartAttributeEditorDiv(this.productPartAttribute);
         this.productPartAttributeVersionsGridDiv = new ProductPartAttributeVersionsGridDiv(this.productPartAttribute);
 
@@ -76,7 +76,7 @@ public class ProductPartAttributeDetailView extends Div implements HasUrlParamet
         initAddNewAttributeVersion();
 
         VerticalLayout layout = new VerticalLayout(
-                saveObjectAndBackButtonsDiv,
+                saveAndBackButtonsDiv,
                 productPartAttributeEditorDiv,
                 productPartAttributeVersionsGridDiv
         );
@@ -129,7 +129,7 @@ public class ProductPartAttributeDetailView extends Div implements HasUrlParamet
     }
 
     private void initSaveButtonListener() {
-        this.saveObjectAndBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
+        this.saveAndBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
             ProductPartAttributeEntity partAttributeFromForm = productPartAttributeEditorDiv.getProductPartAttributeEntityBinder().getBean();
             ProductPartEntity productPartFromPartAttribute = createProductPartIfNotCreatedYet(partAttributeFromForm.getPart());
 
@@ -165,7 +165,7 @@ public class ProductPartAttributeDetailView extends Div implements HasUrlParamet
     }
 
     private void initBackButtonListener() {
-        this.saveObjectAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
+        this.saveAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
             ProductPartEntity productPart = this.productPartAttribute.getPart();
             UI ui = UI.getCurrent();
             ComponentUtil.setData(ui, ProductPartEntity.class, productPart);

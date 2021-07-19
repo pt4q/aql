@@ -10,14 +10,14 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import lombok.Getter;
 
-public class SaveObjectAndBackButtonsDiv<T> extends Div {
+public class SaveAndBackButtonsDiv extends Div {
 
     @Getter
     private Button saveButton;
     @Getter
     private Button backButton;
 
-    public SaveObjectAndBackButtonsDiv(String saveButtonLabel) {
+    public SaveAndBackButtonsDiv(String saveButtonLabel) {
         initSaveButton(saveButtonLabel);
         initBackButton();
 

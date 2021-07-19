@@ -2,14 +2,15 @@ package pl.com.pt4q.product_manager.modules.environment.ui.pack;
 
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import lombok.Getter;
 import pl.com.pt4q.product_manager.modules.environment.data.pack.EnvPackagingEntity;
 
 import java.util.Set;
 
 class EnvPacksGridDiv extends Div {
 
+    @Getter
     private Grid<EnvPackagingEntity> grid = new Grid<>(EnvPackagingEntity.class);
-
 
     public EnvPacksGridDiv() {
         initGrid();

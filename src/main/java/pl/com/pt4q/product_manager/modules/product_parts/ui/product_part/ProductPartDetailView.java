@@ -18,7 +18,7 @@ import pl.com.pt4q.product_manager.modules.product_parts.services.product_part.e
 import pl.com.pt4q.product_manager.modules.product.services.product_series.ProductSeriesCrudService;
 import pl.com.pt4q.product_manager.modules.product.ui.product.detail.ProductDetailView;
 import pl.com.pt4q.product_manager.modules.product.ui.product.general.ProductsGeneralView;
-import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
+import pl.com.pt4q.product_manager.view_utils.SaveAndBackButtonsDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 import java.util.Collections;
@@ -33,7 +33,7 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
     public static final String ROUTE = "product-part-detail";
     public static final String QUERY_PARAM_ID_NAME = "productPartId";
 
-    private SaveObjectAndBackButtonsDiv saveProductPartOrBackButtonsDiv;
+    private SaveAndBackButtonsDiv saveProductPartOrBackButtonsDiv;
     private ProductPartFormDiv productPartFormDiv;
     private ProductPartAttributesGridDiv productPartAttributesGridDiv;
 
@@ -61,7 +61,7 @@ public class ProductPartDetailView extends VerticalLayout implements HasUrlParam
         this.productPart = getProductPartFromContext();
 //        ifPartIsNullThenRedirectToProductDetailView(productPart);
 
-        this.saveProductPartOrBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save part");
+        this.saveProductPartOrBackButtonsDiv = new SaveAndBackButtonsDiv("Save part");
         this.productPartFormDiv = new ProductPartFormDiv(this.productPart);
         this.productPartAttributesGridDiv = new ProductPartAttributesGridDiv(this.productPart, productSeriesCrudService, productPartCreatorService, productPartAttributeFinderService);
 

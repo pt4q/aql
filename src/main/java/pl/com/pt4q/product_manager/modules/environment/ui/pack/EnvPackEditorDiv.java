@@ -15,6 +15,7 @@ import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEnti
 import pl.com.pt4q.product_manager.modules.environment.data.pack.EnvPackagingEntity;
 import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
+import pl.com.pt4q.product_manager.view_utils.SaveClearAndDeleteButtonsDiv;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,6 +35,9 @@ class EnvPackEditorDiv extends Div {
     private ComboBox<String> typeOfPackaging = new ComboBox<>("Type of packaging");
 
     @Getter
+    private SaveClearAndDeleteButtonsDiv buttonsDiv = new SaveClearAndDeleteButtonsDiv();
+
+    @Getter
     private Binder<EnvPackagingEntity> packEntityBinder = new Binder<>();
 
     private UnitCrudService unitCrudService;
@@ -47,6 +51,7 @@ class EnvPackEditorDiv extends Div {
         initWeightLayout();
         initBinder(envMasterEntity);
 
+        setId("editor");
         setMinWidth("20%");
         setMaxWidth("40%");
         add(initFormLayoutDiv());
@@ -54,6 +59,7 @@ class EnvPackEditorDiv extends Div {
 
     private Div initFormLayoutDiv() {
         VerticalLayout formLayout = new VerticalLayout();
+        formLayout.setId("editor-layout");
         formLayout.add(
                 this.productTextField,
                 this.productDescriptionTextArea,
@@ -61,7 +67,8 @@ class EnvPackEditorDiv extends Div {
                 this.validToDatePicker,
                 initWeightLayout(),
                 initMaterialGeneralAndDetailLayout(),
-                typeOfPackaging
+                typeOfPackaging,
+                this.buttonsDiv
         );
         formLayout.setSizeFull();
         formLayout.setAlignItems(FlexComponent.Alignment.CENTER);
@@ -88,7 +95,9 @@ class EnvPackEditorDiv extends Div {
 
     private HorizontalLayout initMaterialGeneralAndDetailLayout() {
         this.materialGeneralComboBox.setSizeFull();
+        this.materialGeneralComboBox.setMinWidth("10%");
         this.materialDetailComboBox.setSizeFull();
+        this.materialDetailComboBox.setMinWidth("10%");
 
         HorizontalLayout hl = new HorizontalLayout();
         hl.add(this.materialGeneralComboBox, this.materialDetailComboBox);

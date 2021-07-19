@@ -23,7 +23,7 @@ import pl.com.pt4q.product_manager.modules.environment.ui.pack.EnvPacksView;
 import pl.com.pt4q.product_manager.modules.environment.ui.weee.EnvWeeeView;
 import pl.com.pt4q.product_manager.modules.product.services.product.ProductFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
-import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
+import pl.com.pt4q.product_manager.view_utils.SaveAndBackButtonsDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 import java.util.List;
@@ -38,7 +38,7 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
     public static final String ROUTE = EnvMasterGeneralView.ROUTE + "-detail";
     public static final String QUERY_PARAM_ID_NAME = "masterId";
 
-    private SaveObjectAndBackButtonsDiv saveObjectAndBackButtonsDiv;
+    private SaveAndBackButtonsDiv saveAndBackButtonsDiv;
     private EnvMasterDetailEditorDiv masterDetailEditorDiv;
     private AddAdditionalEnvCardsButtonsDiv buttonsDiv;
 
@@ -66,7 +66,7 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
 
         this.envMasterEntity = getMasterFromContextOrCreateNew();
 
-        this.saveObjectAndBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save master card");
+        this.saveAndBackButtonsDiv = new SaveAndBackButtonsDiv("Save master card");
         this.masterDetailEditorDiv = new EnvMasterDetailEditorDiv(this.productFinderService, this.unitCrudService);
         this.buttonsDiv = new AddAdditionalEnvCardsButtonsDiv();
 
@@ -78,7 +78,7 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
         populateForm(this.envMasterEntity);
 
         VerticalLayout layout = new VerticalLayout();
-        layout.add(this.saveObjectAndBackButtonsDiv, this.masterDetailEditorDiv, this.buttonsDiv);
+        layout.add(this.saveAndBackButtonsDiv, this.masterDetailEditorDiv, this.buttonsDiv);
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
         layout.setSizeFull();
 
@@ -145,7 +145,7 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
     }
 
     private void initBackButton() {
-        this.saveObjectAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
+        this.saveAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
             UI ui = UI.getCurrent();
             saveMasterToContext(ui, null);
             ui.navigate(EnvMasterGeneralView.ROUTE);
@@ -153,7 +153,7 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
     }
 
     private void initSaveButton() {
-        this.saveObjectAndBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
+        this.saveAndBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
             Binder<EnvMasterEntity> formBinder = this.masterDetailEditorDiv.getMasterBinder();
             formBinder.validate().getBeanValidationErrors();
 
