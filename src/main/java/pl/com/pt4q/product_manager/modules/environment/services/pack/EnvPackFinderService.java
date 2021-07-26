@@ -2,10 +2,12 @@ package pl.com.pt4q.product_manager.modules.environment.services.pack;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
 import pl.com.pt4q.product_manager.modules.environment.data.pack.EnvPackagingEntity;
 import pl.com.pt4q.product_manager.modules.environment.services.pack.exceptions.EnvPackNotFoundException;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class EnvPackFinderService {
@@ -23,5 +25,9 @@ public class EnvPackFinderService {
                 throw new EnvPackNotFoundException(String.format(errorMessage, id));
         } else
             throw new EnvPackNotFoundException(String.format(errorMessage, id));
+    }
+
+    public Set<EnvPackagingEntity> findByMaster(EnvMasterEntity master){
+        return repository.findByMaster(master);
     }
 }

@@ -38,8 +38,8 @@ public class EnvMasterEntity {
     @ManyToOne
     private UnitEntity grossWeightUnit;
 
-    @OneToOne
-    private EnvWeeeEntity weee;
+//    @OneToOne
+//    private EnvWeeeEntity weee;
 
     @OneToOne(mappedBy = "master")
     private EnvLightSourceEntity lightSource;
@@ -47,8 +47,8 @@ public class EnvMasterEntity {
     @OneToOne(mappedBy = "master")
     private EnvBatteryEntity battery;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    private Set<EnvPackagingEntity> packs;
+//    @OneToMany(fetch = FetchType.EAGER) //managed from packs
+//    private Set<EnvPackagingEntity> packs;
 
 //    private boolean copyright;
 

@@ -4,6 +4,8 @@ import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.*;
@@ -14,17 +16,17 @@ import pl.com.pt4q.product_manager.modules.environment.data.pack.EnvPackagingEnt
 import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterFinderService;
 import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterSaverService;
 import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterNotFoundException;
+import pl.com.pt4q.product_manager.modules.environment.services.pack.EnvPackFinderService;
 import pl.com.pt4q.product_manager.modules.environment.services.pack.EnvPackSaverService;
+import pl.com.pt4q.product_manager.modules.environment.services.pack.exceptions.EnvPackAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.environment.services.weee.exceptions.EnvWeeeAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.detail.EnvMasterDetailView;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
-import pl.com.pt4q.product_manager.view_utils.SaveAndBackButtonsDiv;
+import pl.com.pt4q.product_manager.view_utils.BackButtonDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Log4j2
 @Route(value = EnvPacksView.ROUTE, layout = MainView.class)
@@ -36,11 +38,12 @@ public class EnvPacksView extends Div implements HasUrlParameter<String> {
     public static final String QUERY_PARAM_ID_NAME = "productId";
     public static final String CSS = "./views/env_module/pack/pack-view.css";
 
-    private SaveAndBackButtonsDiv saveAndBackButtonsDiv = new SaveAndBackButtonsDiv("Save PACK card");
+    private BackButtonDiv backButtonDiv = new BackButtonDiv();
     private EnvPackEditorDiv packEditorDiv;
     private EnvPacksGridDiv envPacksGridDiv;
 
     private EnvPackSaverService envPackSaverService;
+    private EnvPackFinderService envPackFinderService;
     private EnvMasterFinderService envMasterFinderService;
     private EnvMasterSaverService envMasterSaverService;
     private UnitCrudService unitCrudService;
@@ -49,66 +52,85 @@ public class EnvPacksView extends Div implements HasUrlParameter<String> {
 
     @Autowired
     public EnvPacksView(EnvPackSaverService envPackSaverService,
+                        EnvPackFinderService envPackFinderService,
                         EnvMasterFinderService envMasterFinderService,
                         EnvMasterSaverService envMasterSaverService,
                         UnitCrudService unitCrudService) {
 
         this.envPackSaverService = envPackSaverService;
+        this.envPackFinderService = envPackFinderService;
         this.envMasterFinderService = envMasterFinderService;
         this.envMasterSaverService = envMasterSaverService;
         this.unitCrudService = unitCrudService;
 
         this.envMasterEntity = getMasterEntityFromContext();
-        if (this.envMasterEntity != null)
-            this.envMasterEntity.setPacks(getPackFromMasterOrInitNew(this.envMasterEntity));
+//        if (this.envMasterEntity != null)
+//            this.envMasterEntity.setPacks(getPackFromMasterOrInitNew(this.envMasterEntity));
 
         this.packEditorDiv = new EnvPackEditorDiv(this.unitCrudService, this.envMasterEntity);
         this.envPacksGridDiv = new EnvPacksGridDiv();
 
+        initSelectItemInGrid();
         initSaveButton();
+        initClearButton();
+        initDeleteButton();
         initBackButton();
 
 //        if (this.envMasterEntity != null)
 //            populatePackForm(this.envMasterEntity.getPackaging());
 
-        SplitLayout layout = new SplitLayout();
-        layout.addToPrimary(this.envPacksGridDiv);
-        layout.addToSecondary(this.packEditorDiv);
-        layout.setSizeFull();
+        SplitLayout splitLayout = new SplitLayout();
+        splitLayout.addToPrimary(this.envPacksGridDiv);
+        splitLayout.addToSecondary(this.packEditorDiv);
+        splitLayout.setSizeFull();
 
-//        VerticalLayout layout = new VerticalLayout();
-//        layout.add(this.saveObjectAndBackButtonsDiv, this.packEditorDiv);
-//        layout.setAlignItems(FlexComponent.Alignment.CENTER);
-//        layout.setSizeFull();
+        VerticalLayout layout = new VerticalLayout();
+        layout.add(this.backButtonDiv);
+        layout.add(splitLayout);
+        layout.setSizeFull();
+        layout.setAlignItems(FlexComponent.Alignment.CENTER);
 
         addClassName(ROUTE + "-view");
         setSizeFull();
         add(layout);
     }
 
-    private Set<EnvPackagingEntity> getPackFromMasterOrInitNew(EnvMasterEntity masterEntity) {
-        if (masterEntity != null)
-            return envMasterEntity.getPacks() != null ? envMasterEntity.getPacks() : new HashSet<>();
-        else
-            return null;
-    }
+//    private Set<EnvPackagingEntity> getPackFromMasterOrInitNew(EnvMasterEntity masterEntity) {
+//        if (masterEntity != null)
+//            return envMasterEntity.getPacks() != null ? envMasterEntity.getPacks() : new HashSet<>();
+//        else
+//            return null;
+//    }
 
     private void populatePackForm(EnvPackagingEntity packagingEntity) {
         this.packEditorDiv.populateForm(packagingEntity);
     }
 
+    private void reloadGrid(EnvMasterEntity master){
+        this.envPacksGridDiv.reloadGrid(this.envPackFinderService.findByMaster(master));
+    }
+
+    private void initSelectItemInGrid(){
+        this.envPacksGridDiv.getGrid().addItemClickListener(envPackagingEntityItemClickEvent -> {
+            this.envPacksGridDiv.getGrid().getSelectedItems()
+                    .stream()
+                    .findFirst()
+                    .ifPresent(this::populatePackForm);
+        });
+    }
+
     private void initSaveButton() {
-        this.saveAndBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
+        this.packEditorDiv.getButtonsDiv().getSaveButton().addClickListener(buttonClickEvent -> {
             Binder<EnvPackagingEntity> formBinder = this.packEditorDiv.getPackEntityBinder();
             formBinder.validate().getBeanValidationErrors();
 
             if (formBinder.isValid()) {
                 try {
-                    this.envMasterEntity = envPackSaverService.createPackAndAddItToMaster(this.envMasterEntity, formBinder.getBean());
+                    envPackSaverService.createPack(formBinder.getBean());
                     saveMasterToContext(this.envMasterEntity);
                     Notification.show(String.format("%s: PACK card has been created for %s", PAGE_TITLE, this.envMasterEntity.getProduct().getSku()));
 
-                } catch (EnvWeeeAlreadyExistsException e) {
+                } catch (EnvPackAlreadyExistsException e) {
                     try {
 //                        this.envMasterEntity.setPackaging(formBinder.getBean());
                         this.envMasterEntity = envMasterSaverService.update(this.envMasterEntity);
@@ -124,15 +146,22 @@ public class EnvPacksView extends Div implements HasUrlParameter<String> {
         });
     }
 
+    private void initClearButton() {
+        populatePackForm(null);
+    }
+
+    private void initDeleteButton() {
+        Notification.show("Not implemented yet");
+    }
+
     private void initBackButton() {
-        this.saveAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
+        this.backButtonDiv.getBackButton().addClickListener(buttonClickEvent -> {
             Binder<EnvPackagingEntity> packagingEntityBinder = this.packEditorDiv.getPackEntityBinder();
 
             if (packagingEntityBinder.getBean() != null && packagingEntityBinder.getBean().getId() != null) {
 //                this.envMasterEntity.setPackaging(packagingEntityBinder.getBean());
-            }
-            else {
-                this.envMasterEntity.setPacks(null);
+            } else {
+//                this.envMasterEntity.setPacks(null);
                 showNotification(String.format("PACK card for %s product has not been saved", envMasterEntity.getProduct().getSku()));
             }
 

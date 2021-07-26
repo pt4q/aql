@@ -56,8 +56,8 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
         this.unitCrudService = unitCrudService;
 
         this.envMasterEntity = getMasterEntityFromContext();
-        if (this.envMasterEntity != null)
-            this.envMasterEntity.setWeee(getWeeeFromMasterOrInitNew(this.envMasterEntity));
+//        if (this.envMasterEntity != null)
+//            this.envMasterEntity.setWeee(getWeeeFromMasterOrInitNew(this.envMasterEntity));
 
         this.weeeEditorDiv = new EnvWeeeEditorDiv(this.unitCrudService, this.envMasterEntity);
 
@@ -94,13 +94,13 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
 
             if (formBinder.isValid()) {
                 try {
-                    this.envMasterEntity = envWeeeSaverService.createWeeeAndAddItToMaster(this.envMasterEntity, formBinder.getBean());
+                    envWeeeSaverService.createWeee(formBinder.getBean());
                     saveMasterToContext(this.envMasterEntity);
                     Notification.show(String.format("%s: WEEE card has been created for %s", PAGE_TITLE, this.envMasterEntity.getProduct().getSku()));
 
                 } catch (EnvWeeeAlreadyExistsException e) {
                     try {
-                        this.envMasterEntity.setWeee(formBinder.getBean());
+//                        this.envMasterEntity.setWeee(formBinder.getBean());
                         this.envMasterEntity = envMasterSaverService.update(this.envMasterEntity);
                         saveMasterToContext(this.envMasterEntity);
                         Notification.show(String.format("%s: WEEE card has been updated for %s", PAGE_TITLE, this.envMasterEntity.getProduct().getSku()));

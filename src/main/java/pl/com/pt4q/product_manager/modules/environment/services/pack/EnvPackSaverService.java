@@ -5,14 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
 import pl.com.pt4q.product_manager.modules.environment.data.pack.EnvPackagingEntity;
-import pl.com.pt4q.product_manager.modules.environment.data.weee.EnvWeeeEntity;
 import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterFinderService;
 import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterSaverService;
 import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterNotFoundException;
+import pl.com.pt4q.product_manager.modules.environment.services.pack.exceptions.EnvPackAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.environment.services.pack.exceptions.EnvPackNotFoundException;
-import pl.com.pt4q.product_manager.modules.environment.services.weee.exceptions.EnvWeeeAlreadyExistsException;
-import pl.com.pt4q.product_manager.modules.environment.services.weee.exceptions.EnvWeeeNotFoundException;
 
 @Slf4j
 @Service
@@ -28,36 +26,37 @@ public class EnvPackSaverService {
     @Autowired
     private EnvMasterFinderService envMasterFinderService;
 
-    public EnvMasterEntity createPackAndAddItToMaster(EnvMasterEntity masterEntity, EnvPackagingEntity packagingEntity) throws EnvWeeeAlreadyExistsException {
+    public EnvPackagingEntity createPack(EnvPackagingEntity packagingEntity) throws EnvPackAlreadyExistsException {
         try {
             packagingEntity = envPackFinderService.findByIdOrThrowException(packagingEntity.getId());
         } catch (EnvPackNotFoundException e) {
-            packagingEntity = envPackCrudSaver.save(packagingEntity);
+            EnvMasterEntity masterEntity = null;
+            try {
+                masterEntity = createMasterIfNotExists(packagingEntity.getMaster());
+                packagingEntity.setMaster(masterEntity);
+                packagingEntity = envPackCrudSaver.save(packagingEntity);
 
-//            masterEntity.setPackaging(packagingEntity);
-            return connectWeeeWithMaster(masterEntity);
+                log.info(String.format("PACK (id:%d) has been connected with master (id:%d)",
+                        packagingEntity.getId(),
+                        masterEntity.getId()));
+
+                return packagingEntity;
+
+            } catch (EnvMasterNotFoundException e2) {
+                log.error(String.format("Error when try to create PACK: %s", e2.getMessage()));
+            }
         }
-        throw new EnvWeeeAlreadyExistsException(String.format("Pack card (id:%d) already exists",
-                packagingEntity.getId()
+        throw new EnvPackAlreadyExistsException(String.format("Pack card (id:%d) already exists for master (id:%d)",
+                packagingEntity.getId(),
+                packagingEntity.getMaster().getId()
         ));
     }
 
-    private EnvMasterEntity connectWeeeWithMaster(EnvMasterEntity masterEntity) {
+    private EnvMasterEntity createMasterIfNotExists(EnvMasterEntity masterEntity) throws EnvMasterNotFoundException {
         try {
             masterEntity = envMasterSaverService.create(masterEntity);
-            log.info(String.format("Master (id=%d) has been created for pack (id:%d)",
-                    masterEntity.getId(),
-                    masterEntity.getWeee().getId()));
         } catch (EnvMasterAlreadyExistsException e2) {
-            try {
-                masterEntity = envMasterSaverService.update(masterEntity);
-            } catch (EnvMasterNotFoundException e3) {
-//                envPackCrudSaver.delete(masterEntity.getPackaging());
-                log.error(String.format("Error when try to update existing master (id:%d) with pack (id:%d): %s",
-                        masterEntity.getId(),
-                        masterEntity.getWeee().getId(),
-                        e3.getMessage()));
-            }
+            masterEntity = envMasterSaverService.update(masterEntity);
         }
         return masterEntity;
     }

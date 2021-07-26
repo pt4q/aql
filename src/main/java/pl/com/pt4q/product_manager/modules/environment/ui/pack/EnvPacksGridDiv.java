@@ -16,7 +16,7 @@ class EnvPacksGridDiv extends Div {
         initGrid();
 
         setId("grid-wrapper");
-        setWidthFull();
+        setSizeFull();
         add(this.grid);
     }
 
@@ -43,7 +43,7 @@ class EnvPacksGridDiv extends Div {
                 .setSortable(true);
     }
 
-    private void reloadGrid(Set<EnvPackagingEntity> packages) {
+    public void reloadGrid(Set<EnvPackagingEntity> packages) {
         this.grid.setItems(packages);
     }
 }

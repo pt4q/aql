@@ -26,39 +26,37 @@ public class EnvWeeeSaverService {
     @Autowired
     private EnvMasterFinderService envMasterFinderService;
 
-    public EnvMasterEntity createWeeeAndAddItToMaster(EnvMasterEntity masterEntity, EnvWeeeEntity weeeEntity) throws EnvWeeeAlreadyExistsException {
+    public EnvWeeeEntity createWeee(EnvWeeeEntity weeeEntity) throws EnvWeeeAlreadyExistsException {
         try {
             weeeEntity = envWeeeFinderService.findByIdOrThrowException(weeeEntity.getId());
         } catch (EnvWeeeNotFoundException e) {
-            weeeEntity = envWeeeCrudSaver.save(weeeEntity);
+            EnvMasterEntity masterEntity = null;
+            try {
+                masterEntity = createMasterIfNotExists(weeeEntity.getMaster());
+                weeeEntity.setMaster(masterEntity);
+                weeeEntity = envWeeeCrudSaver.save(weeeEntity);
 
-            masterEntity.setWeee(weeeEntity);
-            return connectWeeeWithMaster(masterEntity);
+                log.info(String.format("WEEE (id:%d) has been connected with master (id:%d)",
+                        weeeEntity.getId(),
+                        masterEntity.getId()));
+
+                return weeeEntity;
+
+            } catch (EnvMasterNotFoundException e2) {
+                log.error(String.format("Error when try to create WEEE: %s", e2.getMessage()));
+            }
         }
-        throw new EnvWeeeAlreadyExistsException(String.format("Weee card (id:%d) already exists",
-                weeeEntity.getId()
-//                envMasterEntity.getId(),
-//                productEntity != null ? productEntity.getSku() : null,
-//                productEntity != null ? productEntity.getId() : null
+        throw new EnvWeeeAlreadyExistsException(String.format("Weee card (id:%d) already exists for master (id:%d)",
+                weeeEntity.getId(),
+                weeeEntity.getMaster().getId()
         ));
     }
 
-    private EnvMasterEntity connectWeeeWithMaster(EnvMasterEntity masterEntity) {
+    private EnvMasterEntity createMasterIfNotExists(EnvMasterEntity masterEntity) throws EnvMasterNotFoundException {
         try {
             masterEntity = envMasterSaverService.create(masterEntity);
-            log.info(String.format("Master (id=%d) has been created for weee (id:%d)",
-                    masterEntity.getId(),
-                    masterEntity.getWeee().getId()));
         } catch (EnvMasterAlreadyExistsException e2) {
-            try {
-                masterEntity = envMasterSaverService.update(masterEntity);
-            } catch (EnvMasterNotFoundException e3) {
-                envWeeeCrudSaver.delete(masterEntity.getWeee());
-                log.error(String.format("Error when try to update existing master (id:%d) with weee (id:%d): %s",
-                        masterEntity.getId(),
-                        masterEntity.getWeee().getId(),
-                        e3.getMessage()));
-            }
+            masterEntity = envMasterSaverService.update(masterEntity);
         }
         return masterEntity;
     }

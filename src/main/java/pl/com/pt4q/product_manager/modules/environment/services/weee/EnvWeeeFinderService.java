@@ -2,6 +2,7 @@ package pl.com.pt4q.product_manager.modules.environment.services.weee;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
 import pl.com.pt4q.product_manager.modules.environment.data.weee.EnvWeeeEntity;
 import pl.com.pt4q.product_manager.modules.environment.services.weee.exceptions.EnvWeeeNotFoundException;
 
@@ -23,5 +24,9 @@ public class EnvWeeeFinderService {
                 throw new EnvWeeeNotFoundException(String.format(errorMessage, id));
         } else
             throw new EnvWeeeNotFoundException(String.format(errorMessage, id));
+    }
+
+    public Optional<EnvWeeeEntity> findByMaster(EnvMasterEntity masterEntity){
+        return repository.findByMaster(masterEntity);
     }
 }

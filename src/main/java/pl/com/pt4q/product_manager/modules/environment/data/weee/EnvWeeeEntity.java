@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
 import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
 
 import javax.persistence.*;
@@ -18,6 +19,9 @@ public class EnvWeeeEntity {
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
+
+    @OneToOne
+    private EnvMasterEntity master;
 
     private Double netWeight;
     @ManyToOne
