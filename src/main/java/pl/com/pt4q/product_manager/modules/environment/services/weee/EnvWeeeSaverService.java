@@ -26,7 +26,7 @@ public class EnvWeeeSaverService {
     @Autowired
     private EnvMasterFinderService envMasterFinderService;
 
-    public EnvWeeeEntity createWeee(EnvWeeeEntity weeeEntity) throws EnvWeeeAlreadyExistsException {
+    public EnvWeeeEntity create(EnvWeeeEntity weeeEntity) throws EnvWeeeAlreadyExistsException {
         try {
             weeeEntity = envWeeeFinderService.findByIdOrThrowException(weeeEntity.getId());
         } catch (EnvWeeeNotFoundException e) {
@@ -62,7 +62,9 @@ public class EnvWeeeSaverService {
     }
 
     public EnvWeeeEntity update(EnvWeeeEntity weeeEntity) throws EnvWeeeNotFoundException {
-        this.envWeeeFinderService.findByIdOrThrowException(weeeEntity.getId());
+        EnvWeeeEntity weeeInDb = this.envWeeeFinderService.findByIdOrThrowException(weeeEntity.getId());
+        weeeEntity.setMaster(weeeInDb.getMaster());
+
         return envWeeeCrudSaver.update(weeeEntity);
     }
 }

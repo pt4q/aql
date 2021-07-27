@@ -6,6 +6,7 @@ import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEnti
 import pl.com.pt4q.product_manager.modules.environment.data.pack.EnvPackagingEntity;
 import pl.com.pt4q.product_manager.modules.environment.services.pack.exceptions.EnvPackNotFoundException;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
@@ -27,7 +28,10 @@ public class EnvPackFinderService {
             throw new EnvPackNotFoundException(String.format(errorMessage, id));
     }
 
-    public Set<EnvPackagingEntity> findByMaster(EnvMasterEntity master){
-        return repository.findByMaster(master);
+    public Set<EnvPackagingEntity> findByMaster(EnvMasterEntity master) {
+        if (master != null && master.getId() != null)
+            return repository.findByMaster(master);
+        else
+            return Collections.emptySet();
     }
 }

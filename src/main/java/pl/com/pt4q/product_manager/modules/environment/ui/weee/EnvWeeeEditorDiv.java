@@ -176,7 +176,7 @@ class EnvWeeeEditorDiv extends Div {
                 .bind(envWeeeEntity -> envWeeeEntity.getSourceType() != null ? new EnvSourceTypeEnumWrapper().getUnitTypeStringFromEnum(envWeeeEntity.getSourceType()) : "",
                         (envWeeeEntity, s) -> envWeeeEntity.setSourceType(new EnvSourceTypeEnumWrapper().getUnitTypeFromString(s)));
 
-        this.weeeEntityBinder.setBean(new EnvWeeeEntity());
+        this.weeeEntityBinder.setBean(EnvWeeeEntity.builder().master(envMasterEntity).build());
     }
 
     private void cleanForm() {

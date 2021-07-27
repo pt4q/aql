@@ -19,7 +19,6 @@ import pl.com.pt4q.product_manager.modules.environment.services.master.exception
 import pl.com.pt4q.product_manager.modules.environment.services.pack.EnvPackFinderService;
 import pl.com.pt4q.product_manager.modules.environment.services.pack.EnvPackSaverService;
 import pl.com.pt4q.product_manager.modules.environment.services.pack.exceptions.EnvPackAlreadyExistsException;
-import pl.com.pt4q.product_manager.modules.environment.services.weee.exceptions.EnvWeeeAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.detail.EnvMasterDetailView;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
 import pl.com.pt4q.product_manager.view_utils.BackButtonDiv;
@@ -106,11 +105,11 @@ public class EnvPacksView extends Div implements HasUrlParameter<String> {
         this.packEditorDiv.populateForm(packagingEntity);
     }
 
-    private void reloadGrid(EnvMasterEntity master){
+    private void reloadGrid(EnvMasterEntity master) {
         this.envPacksGridDiv.reloadGrid(this.envPackFinderService.findByMaster(master));
     }
 
-    private void initSelectItemInGrid(){
+    private void initSelectItemInGrid() {
         this.envPacksGridDiv.getGrid().addItemClickListener(envPackagingEntityItemClickEvent -> {
             this.envPacksGridDiv.getGrid().getSelectedItems()
                     .stream()
@@ -181,7 +180,7 @@ public class EnvPacksView extends Div implements HasUrlParameter<String> {
             try {
                 this.envMasterEntity = envMasterFinderService.findByIdOrThrowException(id);
                 saveMasterToContext(this.envMasterEntity);
-//                populatePackForm(this.envMasterEntity.getPackaging());
+                reloadGrid(this.envMasterEntity);
             } catch (EnvMasterNotFoundException e) {
                 log.warn(showNotification(e.getMessage()));
             }

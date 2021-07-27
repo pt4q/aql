@@ -26,7 +26,10 @@ public class EnvWeeeFinderService {
             throw new EnvWeeeNotFoundException(String.format(errorMessage, id));
     }
 
-    public Optional<EnvWeeeEntity> findByMaster(EnvMasterEntity masterEntity){
-        return repository.findByMaster(masterEntity);
+    public Optional<EnvWeeeEntity> findByMaster(EnvMasterEntity masterEntity) {
+        if (masterEntity != null && masterEntity.getId() != null)
+            return repository.findByMaster(masterEntity);
+        else
+            return Optional.empty();
     }
 }

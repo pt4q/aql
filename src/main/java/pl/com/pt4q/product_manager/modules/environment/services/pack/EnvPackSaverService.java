@@ -62,7 +62,9 @@ public class EnvPackSaverService {
     }
 
     public EnvPackagingEntity update(EnvPackagingEntity packagingEntity) throws EnvPackNotFoundException {
-        this.envPackFinderService.findByIdOrThrowException(packagingEntity.getId());
+        EnvPackagingEntity packInDb = this.envPackFinderService.findByIdOrThrowException(packagingEntity.getId());
+        packagingEntity.setMaster(packInDb.getMaster());
+
         return envPackCrudSaver.update(packagingEntity);
     }
 }

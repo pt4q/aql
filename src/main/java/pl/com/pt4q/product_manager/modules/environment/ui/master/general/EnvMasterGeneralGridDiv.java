@@ -25,15 +25,12 @@ class EnvMasterGeneralGridDiv extends Div {
     @Getter
     private Grid<EnvMasterEntity> masterGrid = new Grid<>();
 
-    private EnvMasterFinderService masterFinderService;
     private EnvWeeeFinderService weeeFinderService;
     private EnvPackFinderService packFinderService;
 
-    public EnvMasterGeneralGridDiv(EnvMasterFinderService masterFinderService,
-                                   EnvWeeeFinderService weeeFinderService,
+    public EnvMasterGeneralGridDiv(EnvWeeeFinderService weeeFinderService,
                                    EnvPackFinderService packFinderService) {
 
-        this.masterFinderService = masterFinderService;
         this.weeeFinderService = weeeFinderService;
         this.packFinderService = packFinderService;
 

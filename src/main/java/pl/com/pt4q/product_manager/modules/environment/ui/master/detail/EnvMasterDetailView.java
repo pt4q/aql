@@ -15,6 +15,7 @@ import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMaster
 import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterSaverService;
 import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterNotFoundException;
+import pl.com.pt4q.product_manager.modules.environment.services.pack.EnvPackFinderService;
 import pl.com.pt4q.product_manager.modules.environment.services.weee.EnvWeeeFinderService;
 import pl.com.pt4q.product_manager.modules.environment.ui.bat.EnvBatView;
 import pl.com.pt4q.product_manager.modules.environment.ui.light_source.EnvLightSourceView;
@@ -46,6 +47,8 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
     private UnitCrudService unitCrudService;
 
     private EnvWeeeFinderService weeeFinderService;
+    private EnvPackFinderService packFinderService;
+
     private EnvMasterFinderService masterFinderService;
     private EnvMasterSaverService masterSaverService;
 
@@ -55,12 +58,14 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
     public EnvMasterDetailView(ProductFinderService productFinderService,
                                UnitCrudService unitCrudService,
                                EnvWeeeFinderService weeeFinderService,
+                               EnvPackFinderService packFinderService,
                                EnvMasterFinderService masterFinderService,
                                EnvMasterSaverService masterSaverService) {
 
         this.productFinderService = productFinderService;
         this.unitCrudService = unitCrudService;
         this.weeeFinderService = weeeFinderService;
+        this.packFinderService = packFinderService;
         this.masterFinderService = masterFinderService;
         this.masterSaverService = masterSaverService;
 
@@ -100,13 +105,14 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
     }
 
     private void initMasterAdditionalCardsButtons() {
-        if (this.envMasterEntity.getWeee() != null)
+        if (this.weeeFinderService.findByMaster(this.envMasterEntity).isPresent())
             this.buttonsDiv.getAddWeeButton().setText("Open WEEE");
+
         if (this.envMasterEntity.getLightSource() != null)
             this.buttonsDiv.getAddLightSourceButton().setText("Open LS");
         if (this.envMasterEntity.getBattery() != null)
             this.buttonsDiv.getAddBatButton().setText("Open BAT");
-        if (this.envMasterEntity.getPacks() != null)
+        if (!this.packFinderService.findByMaster(null).isEmpty())
             this.buttonsDiv.getAddPackButton().setText("Open PACK");
 
         this.buttonsDiv.getAddWeeButton().addClickListener(buttonClickEvent -> saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvWeeeView.ROUTE));
