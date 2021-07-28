@@ -26,7 +26,7 @@ public class EnvPackSaverService {
     @Autowired
     private EnvMasterFinderService envMasterFinderService;
 
-    public EnvPackagingEntity createPack(EnvPackagingEntity packagingEntity) throws EnvPackAlreadyExistsException {
+    public EnvPackagingEntity create(EnvPackagingEntity packagingEntity) throws EnvPackAlreadyExistsException {
         try {
             packagingEntity = envPackFinderService.findByIdOrThrowException(packagingEntity.getId());
         } catch (EnvPackNotFoundException e) {

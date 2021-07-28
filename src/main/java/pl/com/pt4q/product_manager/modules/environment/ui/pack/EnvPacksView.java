@@ -19,6 +19,7 @@ import pl.com.pt4q.product_manager.modules.environment.services.master.exception
 import pl.com.pt4q.product_manager.modules.environment.services.pack.EnvPackFinderService;
 import pl.com.pt4q.product_manager.modules.environment.services.pack.EnvPackSaverService;
 import pl.com.pt4q.product_manager.modules.environment.services.pack.exceptions.EnvPackAlreadyExistsException;
+import pl.com.pt4q.product_manager.modules.environment.services.pack.exceptions.EnvPackNotFoundException;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.detail.EnvMasterDetailView;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
 import pl.com.pt4q.product_manager.view_utils.BackButtonDiv;
@@ -124,17 +125,21 @@ public class EnvPacksView extends Div implements HasUrlParameter<String> {
             formBinder.validate().getBeanValidationErrors();
 
             if (formBinder.isValid()) {
+                EnvPackagingEntity packFromForm = formBinder.getBean();
                 try {
-                    envPackSaverService.createPack(formBinder.getBean());
-                    saveMasterToContext(this.envMasterEntity);
+                    this.envPackSaverService.create(packFromForm);
+                    populatePackForm(null);
+                    reloadGrid(this.envMasterEntity);
                     Notification.show(String.format("%s: PACK card has been created for %s", PAGE_TITLE, this.envMasterEntity.getProduct().getSku()));
 
                 } catch (EnvPackAlreadyExistsException e) {
                     try {
-//                        this.envMasterEntity.setPackaging(formBinder.getBean());
-                        this.envMasterEntity = envMasterSaverService.update(this.envMasterEntity);
+                        this.envPackSaverService.update(packFromForm);
+                        populatePackForm(null);
+                        reloadGrid(this.envMasterEntity);
+                        Notification.show(String.format("%s: PACK card has been updated for %s", PAGE_TITLE, this.envMasterEntity.getProduct().getSku()));
 
-                    } catch (EnvMasterNotFoundException ex) {
+                    } catch (EnvPackNotFoundException ex) {
                         String errMsg = ex.getMessage();
                         EnvPackagingEntity fromBinder = formBinder.getBean();
                         log.error(String.format("%s: %s for object %s", PAGE_TITLE, errMsg, fromBinder.toString()));

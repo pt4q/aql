@@ -153,7 +153,7 @@ class EnvPackEditorDiv extends Div {
                 .bind(envPackagingEntity -> envPackagingEntity.getNetWeightUnit() != null ? envPackagingEntity.getNetWeightUnit().getUnits() : "",
                         (envWeeeEntity, s) -> unitCrudService.findByUnits(s).ifPresent(envWeeeEntity::setNetWeightUnit));
 
-        this.packEntityBinder.setBean(new EnvPackagingEntity());
+        this.packEntityBinder.setBean(EnvPackagingEntity.builder().master(envMasterEntity).build());
     }
 
     private void cleanForm() {
