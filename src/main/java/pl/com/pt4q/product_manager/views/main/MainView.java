@@ -2,7 +2,9 @@ package pl.com.pt4q.product_manager.views.main;
 
 import java.util.Optional;
 
+import pl.com.pt4q.product_manager.modules.environment.data.material.general.EnvMaterialGeneralEntity;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.general.EnvMasterGeneralView;
+import pl.com.pt4q.product_manager.modules.environment.ui.material.general.EnvMaterialGeneralView;
 import pl.com.pt4q.product_manager.modules.product.ui.product.general.ProductsGeneralView;
 import pl.com.pt4q.product_manager.modules.product.ui.product_category.ProductCategoriesView;
 import pl.com.pt4q.product_manager.modules.product.ui.manufacturer.ManufacturersView;
@@ -94,6 +96,7 @@ public class MainView extends AppLayout {
                 createTab(ProductCategoriesView.PAGE_TITLE, ProductCategoriesView.class),
                 createTab(ManufacturersView.PAGE_TITLE, ManufacturersView.class),
                 createTab(UnitsView.PAGE_TITLE, UnitsView.class),
+                createTab(EnvMaterialGeneralView.PAGE_TITLE, EnvMaterialGeneralView.class),
                 createTab(ProductsGeneralView.PAGE_TITLE, ProductsGeneralView.class),
                 createTab(EnvMasterGeneralView.PAGE_TITLE, EnvMasterGeneralView.class)
 //                createTab(TestCardsMainView.PAGE_TITLE, TestCardsMainView.class)
