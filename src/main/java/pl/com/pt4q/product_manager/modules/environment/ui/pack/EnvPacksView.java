@@ -34,8 +34,8 @@ import java.util.Map;
 public class EnvPacksView extends Div implements HasUrlParameter<String> {
 
     public static final String PAGE_TITLE = "Product PACK card";
-    public static final String ROUTE = EnvMasterDetailView.ROUTE + "-pack";
-    public static final String QUERY_PARAM_ID_NAME = "productId";
+    public static final String ROUTE = EnvMasterDetailView.ROUTE + "/pack";
+    public static final String QUERY_PARAM_ID_NAME = "masterId";
     public static final String CSS = "./views/env_module/pack/pack-view.css";
 
     private BackButtonDiv backButtonDiv = new BackButtonDiv();
@@ -76,8 +76,8 @@ public class EnvPacksView extends Div implements HasUrlParameter<String> {
         initDeleteButton();
         initBackButton();
 
-//        if (this.envMasterEntity != null)
-//            populatePackForm(this.envMasterEntity.getPackaging());
+        if (this.envMasterEntity != null)
+            reloadGrid(this.envMasterEntity);
 
         SplitLayout splitLayout = new SplitLayout();
         splitLayout.addToPrimary(this.envPacksGridDiv);
@@ -151,25 +151,29 @@ public class EnvPacksView extends Div implements HasUrlParameter<String> {
     }
 
     private void initClearButton() {
-        populatePackForm(null);
+        this.packEditorDiv.getButtonsDiv().getClearButton().addClickListener(buttonClickEvent -> {
+            populatePackForm(EnvPackagingEntity.builder().master(this.envMasterEntity).build());
+        });
     }
 
     private void initDeleteButton() {
-        Notification.show("Not implemented yet");
+        this.packEditorDiv.getButtonsDiv().getDeleteButton().addClickListener(buttonClickEvent -> {
+            Notification.show("Not implemented yet");
+        });
     }
 
     private void initBackButton() {
         this.backButtonDiv.getBackButton().addClickListener(buttonClickEvent -> {
-            Binder<EnvPackagingEntity> packagingEntityBinder = this.packEditorDiv.getPackEntityBinder();
-
-            if (packagingEntityBinder.getBean() != null && packagingEntityBinder.getBean().getId() != null) {
-//                this.envMasterEntity.setPackaging(packagingEntityBinder.getBean());
-            } else {
-//                this.envMasterEntity.setPacks(null);
-                showNotification(String.format("PACK card for %s product has not been saved", envMasterEntity.getProduct().getSku()));
-            }
-
-            saveMasterToContext(this.envMasterEntity);
+//            Binder<EnvPackagingEntity> packagingEntityBinder = this.packEditorDiv.getPackEntityBinder();
+//
+//            if (packagingEntityBinder.getBean() != null && packagingEntityBinder.getBean().getId() != null) {
+////                this.envMasterEntity.setPackaging(packagingEntityBinder.getBean());
+//            } else {
+////                this.envMasterEntity.setPacks(null);
+//                showNotification(String.format("PACK card for %s product has not been saved", envMasterEntity.getProduct().getSku()));
+//            }
+//
+//            saveMasterToContext(this.envMasterEntity);
             UI.getCurrent().navigate(EnvMasterDetailView.ROUTE);
         });
     }

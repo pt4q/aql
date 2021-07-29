@@ -10,7 +10,7 @@ import java.util.Set;
 class EnvPacksGridDiv extends Div {
 
     @Getter
-    private Grid<EnvPackagingEntity> grid = new Grid<>(EnvPackagingEntity.class);
+    private Grid<EnvPackagingEntity> grid = new Grid<>();
 
     public EnvPacksGridDiv() {
         initGrid();
@@ -22,6 +22,10 @@ class EnvPacksGridDiv extends Div {
 
     private void initGrid() {
         this.grid
+                .addColumn(envPackagingEntity -> envPackagingEntity.getTypeOfPackaging().name())
+                .setHeader("Type of packaging")
+                .setSortable(true);
+        this.grid
                 .addColumn(EnvPackagingEntity::getMaterialGeneral)
                 .setHeader("Material general")
                 .setSortable(true);
@@ -29,10 +33,6 @@ class EnvPacksGridDiv extends Div {
 //                .addColumn(EnvPackagingEntity::)
 //                .setHeader("Material detail")
 //                .setSortable(true);
-        this.grid
-                .addColumn(EnvPackagingEntity::getTypeOfPackaging)
-                .setHeader("Type of packaging")
-                .setSortable(true);
         this.grid
                 .addColumn(EnvPackagingEntity::getNetWeight)
                 .setHeader("Net weight")

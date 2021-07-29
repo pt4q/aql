@@ -2,6 +2,7 @@ package pl.com.pt4q.product_manager.modules.environment.ui.master.detail;
 
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -25,6 +26,7 @@ import pl.com.pt4q.product_manager.modules.environment.ui.weee.EnvWeeeView;
 import pl.com.pt4q.product_manager.modules.product.services.product.ProductFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
 import pl.com.pt4q.product_manager.view_utils.SaveAndBackButtonsDiv;
+import pl.com.pt4q.product_manager.view_utils.UrlLinkWithParamCreator;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 import java.util.List;
@@ -36,7 +38,7 @@ import java.util.Map;
 public class EnvMasterDetailView extends Div implements HasUrlParameter<String> {
 
     public static final String PAGE_TITLE = EnvMasterGeneralView.PAGE_TITLE + " of product";
-    public static final String ROUTE = EnvMasterGeneralView.ROUTE + "-detail";
+    public static final String ROUTE = EnvMasterGeneralView.ROUTE + "/detail";
     public static final String QUERY_PARAM_ID_NAME = "masterId";
 
     private SaveAndBackButtonsDiv saveAndBackButtonsDiv;
@@ -112,13 +114,15 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
             this.buttonsDiv.getAddLightSourceButton().setText("Open LS");
         if (this.envMasterEntity.getBattery() != null)
             this.buttonsDiv.getAddBatButton().setText("Open BAT");
-        if (!this.packFinderService.findByMaster(null).isEmpty())
+        if (!this.packFinderService.findByMaster(this.envMasterEntity).isEmpty())
             this.buttonsDiv.getAddPackButton().setText("Open PACK");
 
-        this.buttonsDiv.getAddWeeButton().addClickListener(buttonClickEvent -> saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvWeeeView.ROUTE));
-        this.buttonsDiv.getAddLightSourceButton().addClickListener(buttonClickEvent -> saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvLightSourceView.ROUTE));
-        this.buttonsDiv.getAddBatButton().addClickListener(buttonClickEvent -> saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvBatView.ROUTE));
-        this.buttonsDiv.getAddPackButton().addClickListener(buttonClickEvent -> saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvPacksView.ROUTE));
+        if (this.envMasterEntity != null) {
+            this.buttonsDiv.getAddWeeButton().addClickListener(buttonClickEvent -> saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvWeeeView.ROUTE));
+            this.buttonsDiv.getAddLightSourceButton().addClickListener(buttonClickEvent -> saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvLightSourceView.ROUTE));
+            this.buttonsDiv.getAddBatButton().addClickListener(buttonClickEvent -> saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvBatView.ROUTE));
+            this.buttonsDiv.getAddPackButton().addClickListener(buttonClickEvent -> saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvPacksView.ROUTE));
+        }
     }
 
     private void saveMasterToContextIfBinderIsValidAndRouteToEndpoint(String route) {

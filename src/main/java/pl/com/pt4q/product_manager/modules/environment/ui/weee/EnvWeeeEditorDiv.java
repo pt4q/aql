@@ -104,7 +104,7 @@ class EnvWeeeEditorDiv extends Div {
 //        List<String> sourceTypes = Arrays.stream(EnvSourceTypeEnum.values())
 //                .map(Enum::name)
 //                .collect(Collectors.toList());
-        this.sourceTypeComboBox.setItems(new EnvSourceTypeEnumWrapper().getUnitsStringsForComboBox());
+        this.sourceTypeComboBox.setItems(new EnvSourceTypeEnumWrapper().getSourceTypeStringsForComboBox());
     }
 
     private void initFields() {
@@ -174,7 +174,7 @@ class EnvWeeeEditorDiv extends Div {
         this.weeeEntityBinder.forField(sourceTypeComboBox)
                 .asRequired("Select a type of source")
                 .bind(envWeeeEntity -> envWeeeEntity.getSourceType() != null ? new EnvSourceTypeEnumWrapper().getUnitTypeStringFromEnum(envWeeeEntity.getSourceType()) : "",
-                        (envWeeeEntity, s) -> envWeeeEntity.setSourceType(new EnvSourceTypeEnumWrapper().getUnitTypeFromString(s)));
+                        (envWeeeEntity, s) -> envWeeeEntity.setSourceType(new EnvSourceTypeEnumWrapper().getSourceTypeFromString(s)));
 
         this.weeeEntityBinder.setBean(EnvWeeeEntity.builder().master(envMasterEntity).build());
     }

@@ -13,6 +13,8 @@ import com.vaadin.flow.data.binder.Binder;
 import lombok.Getter;
 import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
 import pl.com.pt4q.product_manager.modules.environment.data.pack.EnvPackagingEntity;
+import pl.com.pt4q.product_manager.modules.environment.data.pack.EnvPackagingTypeWrapper;
+import pl.com.pt4q.product_manager.modules.environment.data.weee.EnvSourceTypeEnumWrapper;
 import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
 import pl.com.pt4q.product_manager.view_utils.SaveClearAndDeleteButtonsDiv;
@@ -38,7 +40,7 @@ class EnvPackEditorDiv extends Div {
     private SaveClearAndDeleteButtonsDiv buttonsDiv = new SaveClearAndDeleteButtonsDiv();
 
     @Getter
-    private Binder<EnvPackagingEntity> packEntityBinder = new Binder<>();
+    private Binder<EnvPackagingEntity> packEntityBinder = new Binder<>(EnvPackagingEntity.class);
 
     private UnitCrudService unitCrudService;
 
@@ -113,6 +115,8 @@ class EnvPackEditorDiv extends Div {
                 .map(UnitEntity::getUnits)
                 .collect(Collectors.toList());
         this.netWeightUnitComboBox.setItems(units);
+
+        this.typeOfPackaging.setItems(new EnvPackagingTypeWrapper().getTypesStringsForComboBox());
     }
 
     private void initOtherFields() {
@@ -151,7 +155,11 @@ class EnvPackEditorDiv extends Div {
         this.packEntityBinder.forField(netWeightUnitComboBox)
                 .asRequired("Select a unit of weight")
                 .bind(envPackagingEntity -> envPackagingEntity.getNetWeightUnit() != null ? envPackagingEntity.getNetWeightUnit().getUnits() : "",
-                        (envWeeeEntity, s) -> unitCrudService.findByUnits(s).ifPresent(envWeeeEntity::setNetWeightUnit));
+                        (envPackagingEntity, s) -> unitCrudService.findByUnits(s).ifPresent(envPackagingEntity::setNetWeightUnit));
+        this.packEntityBinder.forField(typeOfPackaging)
+                .asRequired("Type of packaging cannot be empty")
+                .bind(envPackagingEntity -> envPackagingEntity.getTypeOfPackaging() != null ? envPackagingEntity.getTypeOfPackaging().name() : "",
+                        (envPackagingEntity, s) -> envPackagingEntity.setTypeOfPackaging(new EnvPackagingTypeWrapper().getTypeOfPackagingFromString(s)));
 
         this.packEntityBinder.setBean(EnvPackagingEntity.builder().master(envMasterEntity).build());
     }
