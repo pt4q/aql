@@ -141,8 +141,8 @@ public class EnvPacksView extends Div implements HasUrlParameter<String> {
 
                     } catch (EnvPackNotFoundException ex) {
                         String errMsg = ex.getMessage();
-                        EnvPackagingEntity fromBinder = formBinder.getBean();
-                        log.error(String.format("%s: %s for object %s", PAGE_TITLE, errMsg, fromBinder.toString()));
+                        EnvPackagingEntity fromForm = formBinder.getBean();
+                        log.error(String.format("%s: %s for object %s", PAGE_TITLE, errMsg, fromForm.toString()));
                         Notification.show(String.format("%s: Cannot update PACK card for %s", PAGE_TITLE, this.envMasterEntity.getProduct()));
                     }
                 }

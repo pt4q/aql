@@ -40,7 +40,7 @@ class EnvPackEditorDiv extends Div {
     private SaveClearAndDeleteButtonsDiv buttonsDiv = new SaveClearAndDeleteButtonsDiv();
 
     @Getter
-    private Binder<EnvPackagingEntity> packEntityBinder = new Binder<>(EnvPackagingEntity.class);
+    private Binder<EnvPackagingEntity> packEntityBinder = new Binder<>();
 
     private UnitCrudService unitCrudService;
 
