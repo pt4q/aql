@@ -53,4 +53,8 @@ public class EnvMaterialGroupCrudService implements CustomCrudServiceInterface<E
     public List<EnvMaterialGroupEntity> getAll(){
         return groupRepository.findAll();
     }
+
+    public Optional<EnvMaterialGroupEntity> findByNameENG(String nameENG){
+        return groupRepository.findByNameENG(nameENG);
+    }
 }

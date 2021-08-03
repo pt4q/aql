@@ -59,4 +59,8 @@ public class EnvMaterialCrudService implements CustomCrudServiceInterface<EnvMat
     public Set<EnvMaterialEntity> findAllByMaterialGroup(EnvMaterialGroupEntity group){
         return materialRepository.findAllByGroup(group);
     }
+
+    public Optional<EnvMaterialEntity> findByNameENG(String namENG){
+        return materialRepository.findByNameENG(namENG);
+    }
 }

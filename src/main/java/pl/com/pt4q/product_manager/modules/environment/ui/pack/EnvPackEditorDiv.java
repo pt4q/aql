@@ -12,14 +12,18 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import lombok.Getter;
 import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
+import pl.com.pt4q.product_manager.modules.environment.data.material_associated.group_of_material.EnvMaterialGroupEntity;
+import pl.com.pt4q.product_manager.modules.environment.data.material_associated.material.EnvMaterialEntity;
 import pl.com.pt4q.product_manager.modules.environment.data.pack.EnvPackagingEntity;
 import pl.com.pt4q.product_manager.modules.environment.data.pack.EnvPackagingTypeWrapper;
-import pl.com.pt4q.product_manager.modules.environment.data.weee.EnvSourceTypeEnumWrapper;
+import pl.com.pt4q.product_manager.modules.environment.services.material_associated.group_of_material.EnvMaterialGroupCrudService;
+import pl.com.pt4q.product_manager.modules.environment.services.material_associated.material.EnvMaterialCrudService;
 import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
 import pl.com.pt4q.product_manager.view_utils.SaveClearAndDeleteButtonsDiv;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 class EnvPackEditorDiv extends Div {
@@ -43,9 +47,17 @@ class EnvPackEditorDiv extends Div {
     private Binder<EnvPackagingEntity> packEntityBinder = new Binder<>();
 
     private UnitCrudService unitCrudService;
+    private EnvMaterialGroupCrudService materialGroupCrudService;
+    private EnvMaterialCrudService materialCrudService;
 
-    public EnvPackEditorDiv(UnitCrudService unitCrudService, EnvMasterEntity envMasterEntity) {
+    public EnvPackEditorDiv(UnitCrudService unitCrudService,
+                            EnvMaterialGroupCrudService materialGroupCrudService,
+                            EnvMaterialCrudService materialCrudService,
+                            EnvMasterEntity envMasterEntity) {
+
         this.unitCrudService = unitCrudService;
+        this.materialGroupCrudService = materialGroupCrudService;
+        this.materialCrudService = materialCrudService;
 
         setUpComboBoxItems();
 
@@ -110,11 +122,34 @@ class EnvPackEditorDiv extends Div {
     }
 
     private void setUpComboBoxItems() {
-        List<String> units = unitCrudService.getAll()
+        List<String> units = this.unitCrudService.getAll()
                 .stream()
                 .map(UnitEntity::getUnits)
                 .collect(Collectors.toList());
         this.netWeightUnitComboBox.setItems(units);
+
+        List<String> groupsOfMaterials = this.materialGroupCrudService.getAll()
+                .stream()
+                .map(EnvMaterialGroupEntity::getNameENG)
+                .collect(Collectors.toList());
+        this.materialGeneralComboBox.setItems(groupsOfMaterials);
+        this.materialGeneralComboBox.addValueChangeListener(event -> {
+            Optional<EnvMaterialGroupEntity> groupEntityOptional = this.materialGroupCrudService.findByNameENG(this.materialGeneralComboBox.getValue());
+            groupEntityOptional.ifPresent(group -> this.materialDetailComboBox.setItems(this.materialCrudService.findAllByMaterialGroup(group)
+                    .stream()
+                    .map(EnvMaterialEntity::getNameENG)
+                    .collect(Collectors.toList())));
+        });
+
+        List<String> materials = this.materialCrudService.getAll()
+                .stream()
+                .map(EnvMaterialEntity::getNameENG)
+                .collect(Collectors.toList());
+        this.materialDetailComboBox.setItems(materials);
+        this.materialDetailComboBox.addValueChangeListener(event -> {
+            Optional<EnvMaterialEntity> materialEntityOptional = this.materialCrudService.findByNameENG(this.materialDetailComboBox.getValue());
+            materialEntityOptional.ifPresent(materialEntity -> this.materialGeneralComboBox.setItems(materialEntityOptional.get().getNameENG()));
+        });
 
         this.typeOfPackaging.setItems(new EnvPackagingTypeWrapper().getTypesStringsForComboBox());
     }
@@ -148,14 +183,23 @@ class EnvPackEditorDiv extends Div {
                         null);
 
 
-
         this.packEntityBinder.forField(netWeightNumberField)
                 .asRequired("Item net weight cannot be empty")
                 .bind(EnvPackagingEntity::getNetWeight, EnvPackagingEntity::setNetWeight);
         this.packEntityBinder.forField(netWeightUnitComboBox)
                 .asRequired("Select a unit of weight")
                 .bind(envPackagingEntity -> envPackagingEntity.getNetWeightUnit() != null ? envPackagingEntity.getNetWeightUnit().getUnits() : "",
-                        (envPackagingEntity, s) -> unitCrudService.findByUnits(s).ifPresent(envPackagingEntity::setNetWeightUnit));
+                        (envPackagingEntity, s) -> this.unitCrudService.findByUnits(s).ifPresent(envPackagingEntity::setNetWeightUnit));
+
+        this.packEntityBinder.forField(materialGeneralComboBox)
+                .asRequired("Select material")
+                .bind(envPackagingEntity -> envPackagingEntity.getMaterialGeneral() != null ? envPackagingEntity.getMaterialGeneral().getNameENG() : "",
+                        (envPackagingEntity, s) -> this.materialGroupCrudService.findByNameENG(s).ifPresent(envPackagingEntity::setMaterialGeneral));
+        this.packEntityBinder.forField(materialDetailComboBox)
+                .asRequired("Select material group")
+                .bind(envPackagingEntity -> envPackagingEntity.getMaterialDetail() != null ? envPackagingEntity.getMaterialDetail().getNameENG() : "",
+                        (envPackagingEntity, s) -> this.materialCrudService.findByNameENG(s).ifPresent(envPackagingEntity::setMaterialDetail));
+
         this.packEntityBinder.forField(typeOfPackaging)
                 .asRequired("Type of packaging cannot be empty")
                 .bind(envPackagingEntity -> envPackagingEntity.getTypeOfPackaging() != null ? envPackagingEntity.getTypeOfPackaging().name() : "",

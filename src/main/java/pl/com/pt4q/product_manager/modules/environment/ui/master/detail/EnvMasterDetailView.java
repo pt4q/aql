@@ -2,7 +2,6 @@ package pl.com.pt4q.product_manager.modules.environment.ui.master.detail;
 
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -26,7 +25,6 @@ import pl.com.pt4q.product_manager.modules.environment.ui.weee.EnvWeeeView;
 import pl.com.pt4q.product_manager.modules.product.services.product.ProductFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
 import pl.com.pt4q.product_manager.view_utils.SaveAndBackButtonsDiv;
-import pl.com.pt4q.product_manager.view_utils.UrlLinkWithParamCreator;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 import java.util.List;

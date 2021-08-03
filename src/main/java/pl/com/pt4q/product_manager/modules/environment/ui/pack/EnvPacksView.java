@@ -16,6 +16,8 @@ import pl.com.pt4q.product_manager.modules.environment.data.pack.EnvPackagingEnt
 import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterFinderService;
 import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterSaverService;
 import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterNotFoundException;
+import pl.com.pt4q.product_manager.modules.environment.services.material_associated.group_of_material.EnvMaterialGroupCrudService;
+import pl.com.pt4q.product_manager.modules.environment.services.material_associated.material.EnvMaterialCrudService;
 import pl.com.pt4q.product_manager.modules.environment.services.pack.EnvPackFinderService;
 import pl.com.pt4q.product_manager.modules.environment.services.pack.EnvPackSaverService;
 import pl.com.pt4q.product_manager.modules.environment.services.pack.exceptions.EnvPackAlreadyExistsException;
@@ -46,7 +48,10 @@ public class EnvPacksView extends Div implements HasUrlParameter<String> {
     private EnvPackFinderService envPackFinderService;
     private EnvMasterFinderService envMasterFinderService;
     private EnvMasterSaverService envMasterSaverService;
+
     private UnitCrudService unitCrudService;
+    private EnvMaterialGroupCrudService materialGroupCrudService;
+    private EnvMaterialCrudService materialCrudService;
 
     private EnvMasterEntity envMasterEntity;
 
@@ -55,19 +60,24 @@ public class EnvPacksView extends Div implements HasUrlParameter<String> {
                         EnvPackFinderService envPackFinderService,
                         EnvMasterFinderService envMasterFinderService,
                         EnvMasterSaverService envMasterSaverService,
-                        UnitCrudService unitCrudService) {
+                        UnitCrudService unitCrudService,
+                        EnvMaterialGroupCrudService materialGroupCrudService,
+                        EnvMaterialCrudService materialCrudService) {
 
         this.envPackSaverService = envPackSaverService;
         this.envPackFinderService = envPackFinderService;
         this.envMasterFinderService = envMasterFinderService;
         this.envMasterSaverService = envMasterSaverService;
+
         this.unitCrudService = unitCrudService;
+        this.materialGroupCrudService = materialGroupCrudService;
+        this.materialCrudService = materialCrudService;
 
         this.envMasterEntity = getMasterEntityFromContext();
 //        if (this.envMasterEntity != null)
 //            this.envMasterEntity.setPacks(getPackFromMasterOrInitNew(this.envMasterEntity));
 
-        this.packEditorDiv = new EnvPackEditorDiv(this.unitCrudService, this.envMasterEntity);
+        this.packEditorDiv = new EnvPackEditorDiv(this.unitCrudService, this.materialGroupCrudService, this.materialCrudService, this.envMasterEntity);
         this.envPacksGridDiv = new EnvPacksGridDiv();
 
         initSelectItemInGrid();

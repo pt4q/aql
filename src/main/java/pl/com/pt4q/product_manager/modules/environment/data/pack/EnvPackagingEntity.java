@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
+import pl.com.pt4q.product_manager.modules.environment.data.material_associated.group_of_material.EnvMaterialGroupEntity;
+import pl.com.pt4q.product_manager.modules.environment.data.material_associated.material.EnvMaterialEntity;
 import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
 
 import javax.persistence.*;
@@ -27,10 +29,11 @@ public class EnvPackagingEntity {
     @ManyToOne
     private UnitEntity netWeightUnit;
 
-    @Enumerated(EnumType.STRING)
-    private EnvPackagingMaterialGeneralEnum materialGeneral;
+    @ManyToOne
+    private EnvMaterialGroupEntity materialGeneral;
 
-//    private materialDetail;
+    @ManyToOne
+    private EnvMaterialEntity materialDetail;
 
     @Enumerated(EnumType.STRING)
     private EnvPackagingTypeEnum typeOfPackaging;
