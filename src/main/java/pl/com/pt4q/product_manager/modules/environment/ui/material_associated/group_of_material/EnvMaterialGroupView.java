@@ -12,6 +12,7 @@ import pl.com.pt4q.product_manager.modules.environment.data.material_associated.
 import pl.com.pt4q.product_manager.modules.environment.services.material_associated.group_of_material.EnvMaterialGroupCrudService;
 import pl.com.pt4q.product_manager.modules.environment.services.material_associated.group_of_material.exceptions.EnvMaterialGroupAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.environment.services.material_associated.group_of_material.exceptions.EnvMaterialGroupNotFoundException;
+import pl.com.pt4q.product_manager.modules.environment.services.material_associated.material.EnvMaterialCrudService;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 @Log4j2
@@ -19,22 +20,31 @@ import pl.com.pt4q.product_manager.views.main.MainView;
 @PageTitle(EnvMaterialGroupView.PAGE_TITLE)
 public class EnvMaterialGroupView extends Div {
 
-    public static final String PAGE_TITLE = "Materials";
-    public static final String ROUTE = "material";
+    public static final String PAGE_TITLE = "Group of materials";
+    public static final String ROUTE = "material-groups";
 
-    private EnvMaterialGroupGridDiv gridDiv = new EnvMaterialGroupGridDiv();
-    private EnvMaterialGroupEditorDiv editorDiv = new EnvMaterialGroupEditorDiv();
+    private EnvMaterialGroupGridDiv gridDiv;
+    private EnvMaterialGroupEditorDiv editorDiv;
 
     private EnvMaterialGroupCrudService materialGroupCrudService;
+    private EnvMaterialCrudService materialCrudService;
 
     @Autowired
-    public EnvMaterialGroupView(EnvMaterialGroupCrudService materialGroupCrudService) {
+    public EnvMaterialGroupView(EnvMaterialGroupCrudService materialGroupCrudService,
+                                EnvMaterialCrudService materialCrudService) {
+
         this.materialGroupCrudService = materialGroupCrudService;
+        this.materialCrudService = materialCrudService;
+
+        this.gridDiv = new EnvMaterialGroupGridDiv(materialCrudService);
+        this.editorDiv = new EnvMaterialGroupEditorDiv();
 
         initGridSelectAction();
         initSaveButtonAction();
         initClearButtonAction();
         initDeleteButtonAction();
+
+        reloadGrid();
 
         SplitLayout layout = new SplitLayout();
         layout.addToPrimary(gridDiv);
@@ -64,7 +74,7 @@ public class EnvMaterialGroupView extends Div {
                     this.materialGroupCrudService.create(group);
                     populateForm(null);
                     reloadGrid();
-                    Notification.show(String.format("%s: Group of materials '%s' card has been created", PAGE_TITLE, group.getName()));
+                    Notification.show(String.format("%s: Group of materials '%s' card has been created", PAGE_TITLE, group.getNamePL()));
 
                 } catch (EnvMaterialGroupAlreadyExistsException e) {
                     try {
@@ -73,7 +83,7 @@ public class EnvMaterialGroupView extends Div {
                         String errMsg = ex.getMessage();
                         EnvMaterialGroupEntity fromForm = formBinder.getBean();
                         log.error(String.format("%s: %s for object %s", PAGE_TITLE, errMsg, fromForm.toString()));
-                        Notification.show(String.format("%s: Cannot update group of materials '%s'", PAGE_TITLE, fromForm.getName()));
+                        Notification.show(String.format("%s: Cannot update group of materials '%s'", PAGE_TITLE, fromForm.getNamePL()));
                     }
                 }
             }

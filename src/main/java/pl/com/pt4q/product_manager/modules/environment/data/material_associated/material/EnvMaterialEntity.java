@@ -6,10 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.com.pt4q.product_manager.modules.environment.data.material_associated.group_of_material.EnvMaterialGroupEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,5 +22,9 @@ public class EnvMaterialEntity {
     @ManyToOne
     private EnvMaterialGroupEntity group;
 
-    private String name;
+    @Column(name = "name_pl")
+    private String namePL;
+
+    @Column(name = "name_eng")
+    private String nameENG;
 }

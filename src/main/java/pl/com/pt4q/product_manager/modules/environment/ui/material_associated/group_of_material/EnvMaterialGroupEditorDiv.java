@@ -11,7 +11,8 @@ import pl.com.pt4q.product_manager.view_utils.SaveClearAndDeleteButtonsDiv;
 
 class EnvMaterialGroupEditorDiv extends Div {
 
-    private TextField groupName = new TextField("Group name");
+    private TextField groupNamePL = new TextField("Group of materials name in PL");
+    private TextField groupNameENG = new TextField("Group of materials name in ENG");
 
     @Getter
     private SaveClearAndDeleteButtonsDiv buttonsDiv = new SaveClearAndDeleteButtonsDiv();
@@ -32,7 +33,8 @@ class EnvMaterialGroupEditorDiv extends Div {
         VerticalLayout formLayout = new VerticalLayout();
         formLayout.setId("editor-layout");
         formLayout.add(
-                this.groupName,
+                this.groupNamePL,
+                this.groupNameENG,
                 this.buttonsDiv
         );
         formLayout.setSizeFull();
@@ -45,13 +47,17 @@ class EnvMaterialGroupEditorDiv extends Div {
     }
 
     private void initFields() {
-        this.groupName.setSizeFull();
+        this.groupNamePL.setSizeFull();
+        this.groupNameENG.setSizeFull();
     }
 
     private void initBinder(){
-        this.binder.forField(groupName)
+        this.binder.forField(groupNamePL)
                 .asRequired("Group name cannot be empty")
-                .bind(EnvMaterialGroupEntity::getName, EnvMaterialGroupEntity::setName);
+                .bind(EnvMaterialGroupEntity::getNamePL, EnvMaterialGroupEntity::setNamePL);
+        this.binder.forField(groupNameENG)
+                .asRequired("Group name cannot be empty")
+                .bind(EnvMaterialGroupEntity::getNameENG, EnvMaterialGroupEntity::setNameENG);
 
         this.binder.setBean(new EnvMaterialGroupEntity());
     }

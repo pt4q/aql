@@ -1,12 +1,16 @@
 package pl.com.pt4q.product_manager.modules.environment.ui.material_associated.group_of_material;
 
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import lombok.Getter;
-import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
 import pl.com.pt4q.product_manager.modules.environment.data.material_associated.group_of_material.EnvMaterialGroupEntity;
+import pl.com.pt4q.product_manager.modules.environment.services.material_associated.material.EnvMaterialCrudService;
+import pl.com.pt4q.product_manager.modules.environment.ui.material_associated.material.EnvMaterialView;
+import pl.com.pt4q.product_manager.view_utils.UrlLinkWithParamCreator;
 
 import java.util.List;
 
@@ -15,8 +19,8 @@ class EnvMaterialGroupGridDiv extends Div {
     @Getter
     private Grid<EnvMaterialGroupEntity> materialGroupGrid = new Grid<>();
 
-    public EnvMaterialGroupGridDiv() {
-        initGrid();
+    public EnvMaterialGroupGridDiv(EnvMaterialCrudService materialCrudService) {
+        initGrid(materialCrudService);
 
         VerticalLayout layout = new VerticalLayout(materialGroupGrid);
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
@@ -26,21 +30,27 @@ class EnvMaterialGroupGridDiv extends Div {
         add(layout);
     }
 
-    private void initGrid() {
+    private void initGrid(EnvMaterialCrudService materialCrudService) {
         String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
 
         this.materialGroupGrid
-                .addColumn(EnvMaterialGroupEntity::getName)
-                .setHeader("Group name")
+                .addColumn(EnvMaterialGroupEntity::getNamePL)
+                .setHeader("Group name (PL)")
                 .setSortable(true)
                 .setAutoWidth(true);
-
-//        this.materialGroupGrid
-//                .addColumn(new ComponentRenderer<>(envMasterEntity ->
-//                        new Anchor(createLinkWithParam(EnvMasterDetailView.ROUTE, EnvMasterDetailView.QUERY_PARAM_ID_NAME, envMasterEntity.getId()), envMasterEntity.getProduct().getSku())))
-//                .setHeader("Product SKU")
-//                .setSortable(true)
-//                .setAutoWidth(true);
+        this.materialGroupGrid
+                .addColumn(EnvMaterialGroupEntity::getNameENG)
+                .setHeader("Group name (ENG)")
+                .setSortable(true)
+                .setAutoWidth(true);
+        this.materialGroupGrid
+                .addColumn(new ComponentRenderer<>(materialGroup ->
+                        new Anchor(UrlLinkWithParamCreator.createLinkWithParam(EnvMaterialView.ROUTE, EnvMaterialView.QUERY_PARAM_ID_NAME, materialGroup.getId()),
+                                String.valueOf(materialCrudService.findAllByMaterialGroup(materialGroup).size())))
+                )
+                .setHeader("Number of materials in group")
+                .setSortable(true)
+                .setAutoWidth(true);
 
         this.materialGroupGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         this.materialGroupGrid.setSizeFull();
