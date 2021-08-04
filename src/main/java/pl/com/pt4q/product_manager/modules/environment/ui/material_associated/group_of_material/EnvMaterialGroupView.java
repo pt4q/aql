@@ -74,7 +74,7 @@ public class EnvMaterialGroupView extends Div {
                     this.materialGroupCrudService.create(group);
                     populateForm(null);
                     reloadGrid();
-                    Notification.show(String.format("%s: Group of materials '%s' card has been created", PAGE_TITLE, group.getNamePL()));
+                    Notification.show(String.format("%s: Group of materials '%s' card has been created", PAGE_TITLE, group.getNameENG()));
 
                 } catch (EnvMaterialGroupAlreadyExistsException e) {
                     try {
@@ -83,7 +83,7 @@ public class EnvMaterialGroupView extends Div {
                         String errMsg = ex.getMessage();
                         EnvMaterialGroupEntity fromForm = formBinder.getBean();
                         log.error(String.format("%s: %s for object %s", PAGE_TITLE, errMsg, fromForm.toString()));
-                        Notification.show(String.format("%s: Cannot update group of materials '%s'", PAGE_TITLE, fromForm.getNamePL()));
+                        Notification.show(String.format("%s: Cannot update group of materials '%s'", PAGE_TITLE, fromForm.getNameENG()));
                     }
                 }
             }

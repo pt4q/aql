@@ -46,7 +46,7 @@ class EnvMaterialGroupGridDiv extends Div {
         this.materialGroupGrid
                 .addColumn(new ComponentRenderer<>(materialGroup ->
                         new Anchor(UrlLinkWithParamCreator.createLinkWithParam(EnvMaterialView.ROUTE, EnvMaterialView.QUERY_PARAM_ID_NAME, materialGroup.getId()),
-                                String.valueOf(materialCrudService.findAllByMaterialGroup(materialGroup).size())))
+                                countMaterialsInGroup(materialCrudService, materialGroup)))
                 )
                 .setHeader("Number of materials in group")
                 .setSortable(true)
@@ -57,8 +57,8 @@ class EnvMaterialGroupGridDiv extends Div {
         this.materialGroupGrid.setHeightByRows(true);
     }
 
-    private String createLinkWithParam(String url, String paramName, Long id) {
-        return url + "?" + paramName + "=" + id.toString();
+    private String countMaterialsInGroup(EnvMaterialCrudService materialCrudService, EnvMaterialGroupEntity group){
+        return String.valueOf(materialCrudService.findAllByMaterialGroup(group).size());
     }
 
     public void refreshGrid(List<EnvMaterialGroupEntity> groups) {
