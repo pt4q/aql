@@ -6,6 +6,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import lombok.Getter;
+import lombok.Setter;
 import pl.com.pt4q.product_manager.modules.environment.data.material_associated.group_of_material.EnvMaterialGroupEntity;
 import pl.com.pt4q.product_manager.modules.environment.data.material_associated.material.EnvMaterialEntity;
 import pl.com.pt4q.product_manager.view_utils.SaveClearAndDeleteButtonsDiv;
@@ -20,14 +21,13 @@ class EnvMaterialEditorDiv extends Div {
     @Getter
     private Binder<EnvMaterialEntity> binder = new Binder<>();
 
+    @Setter
     private EnvMaterialGroupEntity materialGroupEntity;
 
     public EnvMaterialEditorDiv(EnvMaterialGroupEntity materialGroupEntity) {
 
-        this.materialGroupEntity = materialGroupEntity;
-
         initFields();
-        initBinder(materialGroupEntity);
+        initBinder();
 
         setId("editor");
         setMinWidth("20%");
@@ -57,7 +57,7 @@ class EnvMaterialEditorDiv extends Div {
         this.groupNameENG.setSizeFull();
     }
 
-    private void initBinder(EnvMaterialGroupEntity materialGroupEntity){
+    private void initBinder(){
         this.binder.forField(groupNamePL)
                 .asRequired("Material name cannot be empty")
                 .bind(EnvMaterialEntity::getNamePL, EnvMaterialEntity::setNamePL);
@@ -65,7 +65,7 @@ class EnvMaterialEditorDiv extends Div {
                 .asRequired("Material name cannot be empty")
                 .bind(EnvMaterialEntity::getNameENG, EnvMaterialEntity::setNameENG);
 
-        this.binder.setBean(EnvMaterialEntity.builder().group(materialGroupEntity).build());
+        this.binder.setBean(EnvMaterialEntity.builder().group(this.materialGroupEntity).build());
     }
 
     public void populateForm(EnvMaterialEntity material){

@@ -2,11 +2,15 @@ package pl.com.pt4q.product_manager.config;
 
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
+import pl.com.pt4q.product_manager.modules.environment.data.material_associated.group_of_material.EnvMaterialGroupEntity;
 import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterSaverService;
 import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterAlreadyExistsException;
+import pl.com.pt4q.product_manager.modules.environment.services.material_associated.group_of_material.EnvMaterialGroupCrudService;
+import pl.com.pt4q.product_manager.modules.environment.services.material_associated.group_of_material.exceptions.EnvMaterialGroupAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.product.data.manufacturer.ManufacturerEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product.ProductEntity;
 import pl.com.pt4q.product_manager.modules.product.data.product_category.ProductCategoryEntity;
@@ -46,6 +50,8 @@ public class AppInitializer implements CommandLineRunner {
     private ProductCreatorAndUpdaterService productCreatorAndUpdaterService;
     @Autowired
     private EnvMasterSaverService envMasterSaverService;
+    @Autowired
+    private EnvMaterialGroupCrudService envMaterialGroupCrudService;
 //    @Autowired
 //    private TestCardForProductCategoryCreator cardForProductCreator;
 
@@ -69,6 +75,9 @@ public class AppInitializer implements CommandLineRunner {
 
         List<EnvMasterEntity> envMasterCards = initEnvMasterCards(products);
         envMasterCards.forEach(master -> logToConsoleWhatWasCreated("master card", String.format("master for %s",master.getProduct().getSku()), master.getId()));
+
+        List<EnvMaterialGroupEntity> materialGroups = initMaterialGroups();
+        materialGroups.forEach(group -> logToConsoleWhatWasCreated("material group", group.getNameENG(), group.getId()));
 
 //        List<ProductPartEntity> firstProductParts = initProductParts(products.get(0), seriesList);
 //        firstProductParts.forEach(part -> logToConsoleWhatWasCreated("part", String.format("%s part for %s product (id:%d)", part.getPartModelOrPartName(), part.getProduct().getProductSku(), part.getProduct().getId()), part.getId()));
@@ -254,6 +263,26 @@ public class AppInitializer implements CommandLineRunner {
 //            add(testCardEntity);
 //        }};
 //    }
+
+    private List<EnvMaterialGroupEntity> initMaterialGroups(){
+        List<EnvMaterialGroupEntity> materialGroups = new ArrayList<>();
+        materialGroups.add(EnvMaterialGroupEntity.builder()
+                .nameENG("plastic")
+                .namePL("plastik")
+                .build());
+
+        return materialGroups.stream()
+                .map(group -> {
+                    try {
+                        return this.envMaterialGroupCrudService.create(group);
+                    } catch (EnvMaterialGroupAlreadyExistsException e) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+    }
 
     private void logToConsoleWhatWasCreated(String createdObjectType, String createdObjectName, Long objectId) {
         System.out.println(String.format("TEST INIT: Created %s: %s (id:%d)", createdObjectType, createdObjectName, objectId));

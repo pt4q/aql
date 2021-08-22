@@ -151,6 +151,7 @@ public class EnvMaterialView extends Div implements HasUrlParameter<String> {
             Long id = Long.valueOf(parametersMap.get(QUERY_PARAM_ID_NAME).get(0));
             try {
                 this.materialGroupEntity = this.groupCrudService.getByIdOrThrow(id);
+                this.editorDiv.setMaterialGroupEntity(this.materialGroupEntity);
                 initPageTitle();
             } catch (EnvMaterialGroupNotFoundException e) {
                 log.warn(showNotification(e.getMessage()));
