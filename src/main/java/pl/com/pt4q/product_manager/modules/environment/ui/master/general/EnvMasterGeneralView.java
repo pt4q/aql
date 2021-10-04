@@ -11,6 +11,8 @@ import com.vaadin.flow.router.Route;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterFinderService;
+import pl.com.pt4q.product_manager.modules.environment.services.pack.EnvPackFinderService;
+import pl.com.pt4q.product_manager.modules.environment.services.weee.EnvWeeeFinderService;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.detail.EnvMasterDetailView;
 import pl.com.pt4q.product_manager.modules.environment.ui.master_general_report.EnvMasterReportView;
 import pl.com.pt4q.product_manager.view_utils.FilterComboBoxDiv;
@@ -23,7 +25,7 @@ import pl.com.pt4q.product_manager.views.main.MainView;
 public class EnvMasterGeneralView extends Div {
 
     public static final String PAGE_TITLE = "Environmental conditions";
-    public static final String ROUTE = "environment";
+    public static final String ROUTE = "env";
 
     private FilterTextFieldDiv productFilterDiv = new FilterTextFieldDiv("Filter by product");
     private FilterComboBoxDiv masterStatusFilterDiv = new FilterComboBoxDiv("Filter by product status");
@@ -32,14 +34,21 @@ public class EnvMasterGeneralView extends Div {
     private Button addNewProductButton = new Button("Add new env condition");
     private Button createEnvironmentConditionsButton = new Button("Create report");
 
+    private EnvWeeeFinderService weeeFinderService;
+    private EnvPackFinderService packFinderService;
+
     private EnvMasterFinderService envMasterFinderService;
 
     @Autowired
-    public EnvMasterGeneralView(EnvMasterFinderService envMasterFinderService) {
+    public EnvMasterGeneralView(EnvMasterFinderService envMasterFinderService,
+                                EnvWeeeFinderService weeeFinderService,
+                                EnvPackFinderService packFinderService) {
 
         this.envMasterFinderService = envMasterFinderService;
+        this.weeeFinderService = weeeFinderService;
+        this.packFinderService = packFinderService;
 
-        this.masterGridDiv = new EnvMasterGeneralGridDiv();
+        this.masterGridDiv = new EnvMasterGeneralGridDiv(this.weeeFinderService, this.packFinderService);
 
         initAddProductButton();
         initCreateEnvironmentReportButton();

@@ -13,6 +13,7 @@ import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -37,8 +38,8 @@ public class EnvMasterEntity {
     @ManyToOne
     private UnitEntity grossWeightUnit;
 
-    @OneToOne
-    private EnvWeeeEntity weee;
+//    @OneToOne
+//    private EnvWeeeEntity weee;
 
     @OneToOne(mappedBy = "master")
     private EnvLightSourceEntity lightSource;
@@ -46,8 +47,8 @@ public class EnvMasterEntity {
     @OneToOne(mappedBy = "master")
     private EnvBatteryEntity battery;
 
-    @OneToOne(mappedBy = "master")
-    private EnvPackagingEntity packaging;
+//    @OneToMany(fetch = FetchType.EAGER) //managed from packs
+//    private Set<EnvPackagingEntity> packs;
 
 //    private boolean copyright;
 

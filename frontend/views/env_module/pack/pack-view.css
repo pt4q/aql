@@ -1,0 +1,33 @@
+.env-detail-pack-view {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+.env-detail-pack-view .grid-wrapper {
+  flex-grow: 1;
+  width: 100%;
+}
+
+.env-detail-pack-view .full-size {
+  width: 100%;
+  height: 100%;
+}
+
+.env-detail-pack-view #editor-layout {
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.env-detail-pack-view #editor {
+  padding: var(--lumo-space-l);
+  flex-grow: 1;
+}
+
+.env-detail-pack-view #button-layout {
+  width: 100%;
+  flex-wrap: wrap;
+  background-color: var(--lumo-contrast-5pct);
+  padding: var(--lumo-space-s) var(--lumo-space-l);
+}

@@ -1,13 +1,5 @@
 package pl.com.pt4q.product_manager.views.main;
 
-import java.util.Optional;
-
-import pl.com.pt4q.product_manager.modules.environment.ui.master.general.EnvMasterGeneralView;
-import pl.com.pt4q.product_manager.modules.product.ui.product.general.ProductsGeneralView;
-import pl.com.pt4q.product_manager.modules.product.ui.product_category.ProductCategoriesView;
-import pl.com.pt4q.product_manager.modules.product.ui.manufacturer.ManufacturersView;
-import pl.com.pt4q.product_manager.modules.product.ui.units.UnitsView;
-import pl.com.pt4q.product_manager.modules.test_card.ui.main_view.TestCardsMainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -15,17 +7,25 @@ import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
-import com.vaadin.flow.router.PageTitle;
+import pl.com.pt4q.product_manager.modules.environment.ui.master.general.EnvMasterGeneralView;
+import pl.com.pt4q.product_manager.modules.environment.ui.material_associated.group_of_material.EnvMaterialGroupView;
+import pl.com.pt4q.product_manager.modules.product.ui.manufacturer.ManufacturersView;
+import pl.com.pt4q.product_manager.modules.product.ui.product.general.ProductsGeneralView;
+import pl.com.pt4q.product_manager.modules.product.ui.product_category.ProductCategoriesView;
+import pl.com.pt4q.product_manager.modules.product.ui.units.UnitsView;
+
+import java.util.Optional;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -71,7 +71,7 @@ public class MainView extends AppLayout {
         logoLayout.setId("logo");
         logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         logoLayout.add(new Image("images/logo.png", "AQL logo"));
-        logoLayout.add(new H1("AQL"));
+        logoLayout.add(new H1(PWA_APP_NAME));
         layout.add(logoLayout, menu);
         return layout;
     }
@@ -94,6 +94,7 @@ public class MainView extends AppLayout {
                 createTab(ProductCategoriesView.PAGE_TITLE, ProductCategoriesView.class),
                 createTab(ManufacturersView.PAGE_TITLE, ManufacturersView.class),
                 createTab(UnitsView.PAGE_TITLE, UnitsView.class),
+                createTab(EnvMaterialGroupView.PAGE_TITLE, EnvMaterialGroupView.class),
                 createTab(ProductsGeneralView.PAGE_TITLE, ProductsGeneralView.class),
                 createTab(EnvMasterGeneralView.PAGE_TITLE, EnvMasterGeneralView.class)
 //                createTab(TestCardsMainView.PAGE_TITLE, TestCardsMainView.class)

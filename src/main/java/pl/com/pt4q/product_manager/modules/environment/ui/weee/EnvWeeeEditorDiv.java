@@ -11,7 +11,7 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import lombok.Getter;
-import pl.com.pt4q.product_manager.modules.environment.data.data_utils.EnvSourceTypeEnumWrapper;
+import pl.com.pt4q.product_manager.modules.environment.data.weee.EnvSourceTypeEnumWrapper;
 import pl.com.pt4q.product_manager.modules.environment.data.master.EnvMasterEntity;
 import pl.com.pt4q.product_manager.modules.environment.data.weee.EnvWeeeEntity;
 import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
@@ -104,7 +104,7 @@ class EnvWeeeEditorDiv extends Div {
 //        List<String> sourceTypes = Arrays.stream(EnvSourceTypeEnum.values())
 //                .map(Enum::name)
 //                .collect(Collectors.toList());
-        this.sourceTypeComboBox.setItems(new EnvSourceTypeEnumWrapper().getUnitsStringsForComboBox());
+        this.sourceTypeComboBox.setItems(new EnvSourceTypeEnumWrapper().getSourceTypeStringsForComboBox());
     }
 
     private void initFields() {
@@ -174,9 +174,9 @@ class EnvWeeeEditorDiv extends Div {
         this.weeeEntityBinder.forField(sourceTypeComboBox)
                 .asRequired("Select a type of source")
                 .bind(envWeeeEntity -> envWeeeEntity.getSourceType() != null ? new EnvSourceTypeEnumWrapper().getUnitTypeStringFromEnum(envWeeeEntity.getSourceType()) : "",
-                        (envWeeeEntity, s) -> envWeeeEntity.setSourceType(new EnvSourceTypeEnumWrapper().getUnitTypeFromString(s)));
+                        (envWeeeEntity, s) -> envWeeeEntity.setSourceType(new EnvSourceTypeEnumWrapper().getSourceTypeFromString(s)));
 
-        this.weeeEntityBinder.setBean(new EnvWeeeEntity());
+        this.weeeEntityBinder.setBean(EnvWeeeEntity.builder().master(envMasterEntity).build());
     }
 
     private void cleanForm() {

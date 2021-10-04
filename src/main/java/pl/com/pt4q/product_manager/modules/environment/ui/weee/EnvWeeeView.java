@@ -18,9 +18,10 @@ import pl.com.pt4q.product_manager.modules.environment.services.master.exception
 import pl.com.pt4q.product_manager.modules.environment.services.weee.EnvWeeeFinderService;
 import pl.com.pt4q.product_manager.modules.environment.services.weee.EnvWeeeSaverService;
 import pl.com.pt4q.product_manager.modules.environment.services.weee.exceptions.EnvWeeeAlreadyExistsException;
+import pl.com.pt4q.product_manager.modules.environment.services.weee.exceptions.EnvWeeeNotFoundException;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.detail.EnvMasterDetailView;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
-import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
+import pl.com.pt4q.product_manager.view_utils.SaveAndBackButtonsDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 import java.util.List;
@@ -35,44 +36,45 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
     public static final String ROUTE = EnvMasterDetailView.ROUTE + "-weee";
     public static final String QUERY_PARAM_ID_NAME = "productId";
 
-    private SaveObjectAndBackButtonsDiv saveObjectAndBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save WEEE card");
+    private SaveAndBackButtonsDiv saveAndBackButtonsDiv = new SaveAndBackButtonsDiv("Save WEEE card");
     private EnvWeeeEditorDiv weeeEditorDiv;
 
-    private EnvWeeeFinderService envWeeeFinderService;
     private EnvWeeeSaverService envWeeeSaverService;
+    private EnvWeeeFinderService envWeeeFinderService;
     private EnvMasterFinderService envMasterFinderService;
     private EnvMasterSaverService envMasterSaverService;
     private UnitCrudService unitCrudService;
 
     private EnvMasterEntity envMasterEntity;
+    private EnvWeeeEntity envWeeeEntity;
 
     @Autowired
-    public EnvWeeeView(EnvWeeeFinderService envWeeeFinderService,
-                       EnvWeeeSaverService envWeeeSaverService,
+    public EnvWeeeView(EnvWeeeSaverService envWeeeSaverService,
+                       EnvWeeeFinderService envWeeeFinderService,
                        EnvMasterFinderService envMasterFinderService,
                        EnvMasterSaverService envMasterSaverService,
                        UnitCrudService unitCrudService) {
 
-        this.envWeeeFinderService = envWeeeFinderService;
         this.envWeeeSaverService = envWeeeSaverService;
+        this.envWeeeFinderService = envWeeeFinderService;
         this.envMasterFinderService = envMasterFinderService;
         this.envMasterSaverService = envMasterSaverService;
         this.unitCrudService = unitCrudService;
 
         this.envMasterEntity = getMasterEntityFromContext();
-        if (this.envMasterEntity != null)
-            this.envMasterEntity.setWeee(getWeeeFromMasterOrInitNew(this.envMasterEntity));
+//        if (this.envMasterEntity != null)
+//            this.envMasterEntity.setWeee(getWeeeFromMasterOrInitNew(this.envMasterEntity));
 
-        this.weeeEditorDiv = new EnvWeeeEditorDiv(unitCrudService, this.envMasterEntity);
+        this.weeeEditorDiv = new EnvWeeeEditorDiv(this.unitCrudService, this.envMasterEntity);
 
         initSaveButton();
         initBackButton();
 
         if (this.envMasterEntity != null)
-            populateWeeeForm(this.envMasterEntity.getWeee());
+            this.envWeeeFinderService.findByMaster(this.envMasterEntity).ifPresent(this::populateWeeeForm);
 
         VerticalLayout layout = new VerticalLayout();
-        layout.add(this.saveObjectAndBackButtonsDiv, this.weeeEditorDiv);
+        layout.add(this.saveAndBackButtonsDiv, this.weeeEditorDiv);
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
         layout.setSizeFull();
 
@@ -80,36 +82,35 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
         add(layout);
     }
 
-    private EnvWeeeEntity getWeeeFromMasterOrInitNew(EnvMasterEntity masterEntity) {
-        if (masterEntity != null)
-            return envMasterEntity.getWeee() != null ? envMasterEntity.getWeee() : new EnvWeeeEntity();
-        else
-            return null;
-    }
+//    private EnvWeeeEntity getWeeeFromMasterOrInitNew(EnvMasterEntity masterEntity) {
+//        if (masterEntity != null)
+//            return envMasterEntity.getWeee() != null ? envMasterEntity.getWeee() : new EnvWeeeEntity();
+//        else
+//            return null;
+//    }
 
     private void populateWeeeForm(EnvWeeeEntity weeeEntity) {
         this.weeeEditorDiv.populateForm(weeeEntity);
     }
 
     private void initSaveButton() {
-        this.saveObjectAndBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
+        this.saveAndBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
             Binder<EnvWeeeEntity> formBinder = this.weeeEditorDiv.getWeeeEntityBinder();
             formBinder.validate().getBeanValidationErrors();
 
             if (formBinder.isValid()) {
                 try {
-                    this.envMasterEntity = envWeeeSaverService.createWeeeAndAddItToMaster(this.envMasterEntity, formBinder.getBean());
+                    this.envWeeeEntity = this.envWeeeSaverService.create(formBinder.getBean());
                     saveMasterToContext(this.envMasterEntity);
                     Notification.show(String.format("%s: WEEE card has been created for %s", PAGE_TITLE, this.envMasterEntity.getProduct().getSku()));
 
                 } catch (EnvWeeeAlreadyExistsException e) {
                     try {
-                        this.envMasterEntity.setWeee(formBinder.getBean());
-                        this.envMasterEntity = envMasterSaverService.update(this.envMasterEntity);
+                        this.envWeeeEntity = this.envWeeeSaverService.update(formBinder.getBean());
                         saveMasterToContext(this.envMasterEntity);
                         Notification.show(String.format("%s: WEEE card has been updated for %s", PAGE_TITLE, this.envMasterEntity.getProduct().getSku()));
 
-                    } catch (EnvMasterNotFoundException ex) {
+                    } catch (EnvWeeeNotFoundException ex) {
                         String errMsg = ex.getMessage();
                         EnvWeeeEntity fromBinder = formBinder.getBean();
                         log.error(String.format("%s: %s for object %s", PAGE_TITLE, errMsg, fromBinder.toString()));
@@ -121,15 +122,11 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
     }
 
     private void initBackButton() {
-        this.saveObjectAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
+        this.saveAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
             Binder<EnvWeeeEntity> weeeEntityBinder = this.weeeEditorDiv.getWeeeEntityBinder();
 
-            if (weeeEntityBinder.getBean() != null && weeeEntityBinder.getBean().getId() != null)
-                this.envMasterEntity.setWeee(weeeEntityBinder.getBean());
-            else {
-                this.envMasterEntity.setWeee(null);
-                Notification.show(String.format("WEEE card for %s product has not been saved", envMasterEntity.getProduct().getSku()));
-            }
+            if (weeeEntityBinder.getBean() != null && weeeEntityBinder.getBean().getId() == null)
+                showNotification(String.format("WEEE card for %s product has not been saved", envMasterEntity.getProduct().getSku()));
 
             saveMasterToContext(this.envMasterEntity);
             UI.getCurrent().navigate(EnvMasterDetailView.ROUTE);
@@ -147,7 +144,8 @@ public class EnvWeeeView extends Div implements HasUrlParameter<String> {
             try {
                 this.envMasterEntity = envMasterFinderService.findByIdOrThrowException(id);
                 saveMasterToContext(this.envMasterEntity);
-                populateWeeeForm(this.envMasterEntity.getWeee());
+                this.envWeeeFinderService.findByMaster(this.envMasterEntity).ifPresent(this::populateWeeeForm);
+
             } catch (EnvMasterNotFoundException e) {
                 log.warn(showNotification(e.getMessage()));
             }

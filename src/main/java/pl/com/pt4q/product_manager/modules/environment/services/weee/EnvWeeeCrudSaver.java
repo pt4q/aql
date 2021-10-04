@@ -16,13 +16,8 @@ class EnvWeeeCrudSaver {
 
     public EnvWeeeEntity save(EnvWeeeEntity weeeEntity) {
         weeeEntity = repository.save(weeeEntity);
-//        EnvMasterEntity envMasterEntity = weeeEntity.getMaster();
-//        ProductEntity productEntity = envMasterEntity.getProduct();
         log.info(String.format("Weee card (id:%d) has been created",
                 weeeEntity.getId()
-//                envMasterEntity.getId(),
-//                productEntity.getSku(),
-//                productEntity.getId()
                 )
         );
         return weeeEntity;
@@ -30,13 +25,8 @@ class EnvWeeeCrudSaver {
 
     public EnvWeeeEntity update(EnvWeeeEntity weeeEntity) {
         weeeEntity = repository.save(weeeEntity);
-//        EnvMasterEntity envMasterEntity = weeeEntity.getMaster();
-//        ProductEntity productEntity = envMasterEntity.getProduct();
         log.info(String.format("Weee card (id:%d) has been updated",
                 weeeEntity.getId()
-//                envMasterEntity.getId(),
-//                productEntity.getSku(),
-//                productEntity.getId()
                 )
         );
         return weeeEntity;

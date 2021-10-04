@@ -1,7 +1,6 @@
-package pl.com.pt4q.product_manager.modules.environment.data.data_utils;
+package pl.com.pt4q.product_manager.modules.environment.data.weee;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class EnvSourceTypeEnumWrapper {
 
@@ -14,7 +13,7 @@ public class EnvSourceTypeEnumWrapper {
         sources.put(EnvSourceTypeEnum.EU, "Exporter (EU)");
     }
 
-    public EnvSourceTypeEnum getUnitTypeFromString(String unitTypeString) {
+    public EnvSourceTypeEnum getSourceTypeFromString(String unitTypeString) {
         Optional<EnvSourceTypeEnum> sourceTypeEnum = sources.entrySet()
                 .stream()
                 .filter(entry -> entry.getValue().equals(unitTypeString))
@@ -27,7 +26,7 @@ public class EnvSourceTypeEnumWrapper {
         return sources.get(typeEnum);
     }
 
-    public List<String> getUnitsStringsForComboBox() {
+    public List<String> getSourceTypeStringsForComboBox() {
         return new ArrayList<>(sources.values());
     }
 }

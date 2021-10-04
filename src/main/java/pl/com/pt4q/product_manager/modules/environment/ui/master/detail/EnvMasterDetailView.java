@@ -15,15 +15,16 @@ import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMaster
 import pl.com.pt4q.product_manager.modules.environment.services.master.EnvMasterSaverService;
 import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.environment.services.master.exceptions.EnvMasterNotFoundException;
+import pl.com.pt4q.product_manager.modules.environment.services.pack.EnvPackFinderService;
 import pl.com.pt4q.product_manager.modules.environment.services.weee.EnvWeeeFinderService;
 import pl.com.pt4q.product_manager.modules.environment.ui.bat.EnvBatView;
 import pl.com.pt4q.product_manager.modules.environment.ui.light_source.EnvLightSourceView;
 import pl.com.pt4q.product_manager.modules.environment.ui.master.general.EnvMasterGeneralView;
-import pl.com.pt4q.product_manager.modules.environment.ui.pack.EnvPackView;
+import pl.com.pt4q.product_manager.modules.environment.ui.pack.EnvPacksView;
 import pl.com.pt4q.product_manager.modules.environment.ui.weee.EnvWeeeView;
 import pl.com.pt4q.product_manager.modules.product.services.product.ProductFinderService;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
-import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
+import pl.com.pt4q.product_manager.view_utils.SaveAndBackButtonsDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 import java.util.List;
@@ -35,10 +36,10 @@ import java.util.Map;
 public class EnvMasterDetailView extends Div implements HasUrlParameter<String> {
 
     public static final String PAGE_TITLE = EnvMasterGeneralView.PAGE_TITLE + " of product";
-    public static final String ROUTE = EnvMasterGeneralView.ROUTE + "-detail";
+    public static final String ROUTE = EnvMasterGeneralView.ROUTE + "/detail";
     public static final String QUERY_PARAM_ID_NAME = "masterId";
 
-    private SaveObjectAndBackButtonsDiv saveObjectAndBackButtonsDiv;
+    private SaveAndBackButtonsDiv saveAndBackButtonsDiv;
     private EnvMasterDetailEditorDiv masterDetailEditorDiv;
     private AddAdditionalEnvCardsButtonsDiv buttonsDiv;
 
@@ -46,6 +47,8 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
     private UnitCrudService unitCrudService;
 
     private EnvWeeeFinderService weeeFinderService;
+    private EnvPackFinderService packFinderService;
+
     private EnvMasterFinderService masterFinderService;
     private EnvMasterSaverService masterSaverService;
 
@@ -55,18 +58,20 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
     public EnvMasterDetailView(ProductFinderService productFinderService,
                                UnitCrudService unitCrudService,
                                EnvWeeeFinderService weeeFinderService,
+                               EnvPackFinderService packFinderService,
                                EnvMasterFinderService masterFinderService,
                                EnvMasterSaverService masterSaverService) {
 
         this.productFinderService = productFinderService;
         this.unitCrudService = unitCrudService;
         this.weeeFinderService = weeeFinderService;
+        this.packFinderService = packFinderService;
         this.masterFinderService = masterFinderService;
         this.masterSaverService = masterSaverService;
 
         this.envMasterEntity = getMasterFromContextOrCreateNew();
 
-        this.saveObjectAndBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save master card");
+        this.saveAndBackButtonsDiv = new SaveAndBackButtonsDiv("Save master card");
         this.masterDetailEditorDiv = new EnvMasterDetailEditorDiv(this.productFinderService, this.unitCrudService);
         this.buttonsDiv = new AddAdditionalEnvCardsButtonsDiv();
 
@@ -78,7 +83,7 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
         populateForm(this.envMasterEntity);
 
         VerticalLayout layout = new VerticalLayout();
-        layout.add(this.saveObjectAndBackButtonsDiv, this.masterDetailEditorDiv, this.buttonsDiv);
+        layout.add(this.saveAndBackButtonsDiv, this.masterDetailEditorDiv, this.buttonsDiv);
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
         layout.setSizeFull();
 
@@ -100,19 +105,22 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
     }
 
     private void initMasterAdditionalCardsButtons() {
-        if (this.envMasterEntity.getWeee() != null)
+        if (this.weeeFinderService.findByMaster(this.envMasterEntity).isPresent())
             this.buttonsDiv.getAddWeeButton().setText("Open WEEE");
+
         if (this.envMasterEntity.getLightSource() != null)
             this.buttonsDiv.getAddLightSourceButton().setText("Open LS");
         if (this.envMasterEntity.getBattery() != null)
             this.buttonsDiv.getAddBatButton().setText("Open BAT");
-        if (this.envMasterEntity.getPackaging() != null)
+        if (!this.packFinderService.findByMaster(this.envMasterEntity).isEmpty())
             this.buttonsDiv.getAddPackButton().setText("Open PACK");
 
-        this.buttonsDiv.getAddWeeButton().addClickListener(buttonClickEvent -> saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvWeeeView.ROUTE));
-        this.buttonsDiv.getAddLightSourceButton().addClickListener(buttonClickEvent -> saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvLightSourceView.ROUTE));
-        this.buttonsDiv.getAddBatButton().addClickListener(buttonClickEvent -> saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvBatView.ROUTE));
-        this.buttonsDiv.getAddPackButton().addClickListener(buttonClickEvent -> saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvPackView.ROUTE));
+        if (this.envMasterEntity != null) {
+            this.buttonsDiv.getAddWeeButton().addClickListener(buttonClickEvent -> saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvWeeeView.ROUTE));
+            this.buttonsDiv.getAddLightSourceButton().addClickListener(buttonClickEvent -> saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvLightSourceView.ROUTE));
+            this.buttonsDiv.getAddBatButton().addClickListener(buttonClickEvent -> saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvBatView.ROUTE));
+            this.buttonsDiv.getAddPackButton().addClickListener(buttonClickEvent -> saveMasterToContextIfBinderIsValidAndRouteToEndpoint(EnvPacksView.ROUTE));
+        }
     }
 
     private void saveMasterToContextIfBinderIsValidAndRouteToEndpoint(String route) {
@@ -145,7 +153,7 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
     }
 
     private void initBackButton() {
-        this.saveObjectAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
+        this.saveAndBackButtonsDiv.getBackButton().addClickListener(buttonClickEvent -> {
             UI ui = UI.getCurrent();
             saveMasterToContext(ui, null);
             ui.navigate(EnvMasterGeneralView.ROUTE);
@@ -153,7 +161,7 @@ public class EnvMasterDetailView extends Div implements HasUrlParameter<String> 
     }
 
     private void initSaveButton() {
-        this.saveObjectAndBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
+        this.saveAndBackButtonsDiv.getSaveButton().addClickListener(buttonClickEvent -> {
             Binder<EnvMasterEntity> formBinder = this.masterDetailEditorDiv.getMasterBinder();
             formBinder.validate().getBeanValidationErrors();
 

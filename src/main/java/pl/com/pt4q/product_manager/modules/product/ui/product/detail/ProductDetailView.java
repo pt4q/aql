@@ -22,7 +22,7 @@ import pl.com.pt4q.product_manager.modules.product_parts.services.product_part.P
 import pl.com.pt4q.product_manager.modules.product_parts.services.product_part.exceptions.ProductPartNotFoundException;
 import pl.com.pt4q.product_manager.modules.product.ui.product.general.ProductsGeneralView;
 import pl.com.pt4q.product_manager.modules.product_parts.ui.product_part.ProductPartDetailView;
-import pl.com.pt4q.product_manager.view_utils.SaveObjectAndBackButtonsDiv;
+import pl.com.pt4q.product_manager.view_utils.SaveAndBackButtonsDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
     public static final String ROUTE = "product-detail";
     public static final String QUERY_PARAM_ID_NAME = "productId";
 
-    private SaveObjectAndBackButtonsDiv saveProductOrBackButtonsDiv;
+    private SaveAndBackButtonsDiv saveProductOrBackButtonsDiv;
     private ProductDetailEditorDiv productDetailEditorDiv;
     private ProductPartsGridDiv productPartsGridDiv;
 
@@ -65,7 +65,7 @@ public class ProductDetailView extends Div implements HasUrlParameter<String> {
 
         this.product = getProductFromContextOrCreateNewEmptyInstance();
 
-        saveProductOrBackButtonsDiv = new SaveObjectAndBackButtonsDiv("Save product");
+        saveProductOrBackButtonsDiv = new SaveAndBackButtonsDiv("Save product");
         productDetailEditorDiv = new ProductDetailEditorDiv(this.product, productCategoryCrudService, manufacturerCrudService);
         productPartsGridDiv = new ProductPartsGridDiv();
 
