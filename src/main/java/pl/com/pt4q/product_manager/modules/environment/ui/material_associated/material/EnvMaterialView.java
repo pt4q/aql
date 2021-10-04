@@ -1,5 +1,6 @@
 package pl.com.pt4q.product_manager.modules.environment.ui.material_associated.material;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.notification.Notification;
@@ -17,6 +18,7 @@ import pl.com.pt4q.product_manager.modules.environment.services.material_associa
 import pl.com.pt4q.product_manager.modules.environment.services.material_associated.material.exception.EnvMaterialAlreadyExistsException;
 import pl.com.pt4q.product_manager.modules.environment.services.material_associated.material.exception.EnvMaterialNotFoundException;
 import pl.com.pt4q.product_manager.modules.environment.ui.material_associated.group_of_material.EnvMaterialGroupView;
+import pl.com.pt4q.product_manager.view_utils.BackButtonDiv;
 import pl.com.pt4q.product_manager.views.main.MainView;
 
 import java.util.List;
@@ -35,6 +37,7 @@ public class EnvMaterialView extends Div implements HasUrlParameter<String> {
 
     private EnvMaterialGridDiv gridDiv;
     private EnvMaterialEditorDiv editorDiv;
+    private BackButtonDiv backButtonDiv;
 
     private EnvMaterialCrudService materialCrudService;
     private EnvMaterialGroupCrudService groupCrudService;
@@ -52,12 +55,14 @@ public class EnvMaterialView extends Div implements HasUrlParameter<String> {
 
         initPageTitle();
         this.gridDiv = new EnvMaterialGridDiv();
-        this.editorDiv = new EnvMaterialEditorDiv(this.materialGroupEntity);
+        this.editorDiv = new EnvMaterialEditorDiv();
+        this.backButtonDiv = new BackButtonDiv();
 
         initGridSelectAction();
         initSaveButtonAction();
         initClearButtonAction();
         initDeleteButtonAction();
+        initBackButtonAction();
 
         reloadGrid();
 
@@ -68,6 +73,7 @@ public class EnvMaterialView extends Div implements HasUrlParameter<String> {
 
         VerticalLayout layout = new VerticalLayout();
         layout.add(this.pageTitle);
+        layout.add(this.backButtonDiv);
         layout.add(splitLayout);
         layout.setSizeFull();
 
@@ -105,11 +111,15 @@ public class EnvMaterialView extends Div implements HasUrlParameter<String> {
                     this.materialCrudService.create(group);
                     populateForm(null);
                     reloadGrid();
-                    Notification.show(String.format("%s: Material '%s' card has been created", PAGE_TITLE, group.getNameENG()));
+                    Notification.show(String.format("%s: Material '%s' has been created", PAGE_TITLE, group.getNameENG()));
 
                 } catch (EnvMaterialAlreadyExistsException e) {
                     try {
                         this.materialCrudService.updateOrThrow(group);
+                        populateForm(null);
+                        reloadGrid();
+                        Notification.show(String.format("%s: Material '%s' has been updated", PAGE_TITLE, group.getNameENG()));
+
                     } catch (EnvMaterialNotFoundException ex) {
                         String errMsg = ex.getMessage();
                         EnvMaterialEntity fromForm = formBinder.getBean();
@@ -133,6 +143,12 @@ public class EnvMaterialView extends Div implements HasUrlParameter<String> {
         });
     }
 
+    private void initBackButtonAction(){
+        this.backButtonDiv.getBackButton().addClickListener(buttonClickEvent -> {
+            UI.getCurrent().navigate(EnvMaterialGroupView.ROUTE);
+        });
+    }
+
     private void reloadGrid() {
         this.gridDiv.refreshGrid(this.materialCrudService.getAll());
     }
@@ -152,6 +168,7 @@ public class EnvMaterialView extends Div implements HasUrlParameter<String> {
             try {
                 this.materialGroupEntity = this.groupCrudService.getByIdOrThrow(id);
                 this.editorDiv.setMaterialGroupEntity(this.materialGroupEntity);
+                this.editorDiv.populateForm(EnvMaterialEntity.builder().build());
                 initPageTitle();
             } catch (EnvMaterialGroupNotFoundException e) {
                 log.warn(showNotification(e.getMessage()));

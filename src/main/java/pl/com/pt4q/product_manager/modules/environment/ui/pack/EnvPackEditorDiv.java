@@ -22,6 +22,7 @@ import pl.com.pt4q.product_manager.modules.product.data.unit.UnitEntity;
 import pl.com.pt4q.product_manager.modules.product.services.unit.UnitCrudService;
 import pl.com.pt4q.product_manager.view_utils.SaveClearAndDeleteButtonsDiv;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -141,15 +142,7 @@ class EnvPackEditorDiv extends Div {
                     .collect(Collectors.toList())));
         });
 
-        List<String> materials = this.materialCrudService.getAll()
-                .stream()
-                .map(EnvMaterialEntity::getNameENG)
-                .collect(Collectors.toList());
-        this.materialDetailComboBox.setItems(materials);
-        this.materialDetailComboBox.addValueChangeListener(event -> {
-            Optional<EnvMaterialEntity> materialEntityOptional = this.materialCrudService.findByNameENG(this.materialDetailComboBox.getValue());
-            materialEntityOptional.ifPresent(materialEntity -> this.materialGeneralComboBox.setItems(materialEntityOptional.get().getNameENG()));
-        });
+        this.materialDetailComboBox.setItems(Collections.emptyList());
 
         this.typeOfPackaging.setItems(new EnvPackagingTypeWrapper().getTypesStringsForComboBox());
     }

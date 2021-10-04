@@ -26,13 +26,13 @@ class EnvPacksGridDiv extends Div {
                 .setHeader("Type of packaging")
                 .setSortable(true);
         this.grid
-                .addColumn(EnvPackagingEntity::getMaterialGeneral)
+                .addColumn(envPackagingEntity -> envPackagingEntity.getMaterialGeneral().getNameENG())
                 .setHeader("Material general")
                 .setSortable(true);
-//        this.grid
-//                .addColumn(EnvPackagingEntity::)
-//                .setHeader("Material detail")
-//                .setSortable(true);
+        this.grid
+                .addColumn(envPackagingEntity -> envPackagingEntity.getMaterialDetail().getNameENG())
+                .setHeader("Material detail")
+                .setSortable(true);
         this.grid
                 .addColumn(EnvPackagingEntity::getNetWeight)
                 .setHeader("Net weight")

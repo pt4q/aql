@@ -24,7 +24,7 @@ class EnvMaterialEditorDiv extends Div {
     @Setter
     private EnvMaterialGroupEntity materialGroupEntity;
 
-    public EnvMaterialEditorDiv(EnvMaterialGroupEntity materialGroupEntity) {
+    public EnvMaterialEditorDiv() {
 
         initFields();
         initBinder();
@@ -69,7 +69,9 @@ class EnvMaterialEditorDiv extends Div {
     }
 
     public void populateForm(EnvMaterialEntity material){
-        material.setGroup(this.materialGroupEntity);
+        if (material != null)
+            material.setGroup(this.materialGroupEntity);
+
         this.binder.setBean(material);
     }
 }
